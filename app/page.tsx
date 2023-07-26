@@ -4,6 +4,9 @@ import styles from './page.module.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
+// api 함수
+
+
 export default function Home() {
   return (
     <main className={styles.main}>
