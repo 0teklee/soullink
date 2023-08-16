@@ -2,7 +2,6 @@ import React, { Dispatch, RefObject } from "react";
 import Image from "next/image";
 
 import { PlayerProps, PlayerState } from "@/types/common/playerTypes";
-import { secondsFormatter } from "@/utils/client/formatter";
 
 const PlayerController = (props: {
   playerState: PlayerState;
