@@ -1,8 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  TransitionStartFunction,
-} from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { PlayerState } from "@/types/common/playerTypes";
 
 const VolumeDropdown = ({
