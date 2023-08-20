@@ -1,14 +1,32 @@
-import React, { Dispatch, RefObject } from "react";
+import React, { Dispatch, RefObject, useState } from "react";
 import Image from "next/image";
 
-import { PlayerProps, PlayerState } from "@/types/common/playerTypes";
+import {
+  PlayerListItem,
+  PlayerProps,
+  PlayerState,
+} from "@/types/common/playerTypes";
+import VolumeDropdown from "@/components/player/module/VolumeDropdown";
+import ListMenuContainer from "@/components/player/module/ListMenuContainer";
+import { handleKeyPress } from "@/utils/client/eventHandler";
 
-const PlayerController = (props: {
+const PlayerController = ({
+  playerState,
+  setPlayerState,
+  playerRef,
+  setSongListIndex,
+  songList,
+  songListIndex,
+}: {
   playerState: PlayerState;
   setPlayerState: Dispatch<React.SetStateAction<PlayerState>>;
   playerRef: RefObject<PlayerProps>;
+  songListIndex: number;
+  setSongListIndex: Dispatch<React.SetStateAction<number>>;
+  songList: PlayerListItem[];
 }) => {
-  const { playerState, setPlayerState, playerRef } = props;
+  const playerCur = playerRef?.current;
+
   const {
     playing,
     played,
@@ -19,7 +37,12 @@ const PlayerController = (props: {
     durationSec,
     playedSec,
   } = playerState;
-  const playerCur = playerRef?.current;
+
+  const [isVolumeDropdownOpen, setIsVolumeDropdownOpen] = useState(false);
+  const [isListDropdownOpen, setIsListDropdownOpen] = useState(false);
+
+  const isListFirst = songListIndex === 0;
+  const isListLast = songListIndex === songList.length - 1;
 
   const handlePrev = () => {
     playerCur?.seekTo(playerCur?.getCurrentTime() - 3);
@@ -28,14 +51,46 @@ const PlayerController = (props: {
   const handleNext = () => {
     playerCur?.seekTo(playerCur?.getCurrentTime() + 3);
   };
+
+  const handlePrevList = () => {
+    if (songListIndex === 0) {
+      return;
+    }
+    setSongListIndex((prev) => prev - 1);
+  };
+
+  const handleNextList = () => {
+    if (songListIndex === songList.length - 1) {
+      return;
+    }
+    setSongListIndex((prev) => prev + 1);
+  };
+
   return (
     <div
       className={`absolute bottom-0 w-screen px-5 py-3 bg-white xs:py-3 xs:px-2`}
     >
+      <input
+        type={`text`}
+        className={`fixed hidden`}
+        onKeyDown={(e) => {
+          handleKeyPress(e, playerRef, setPlayerState);
+        }}
+      />
       <div className={`flex items-center justify-between gap-6 px-5 xs:px-0`}>
         <div
           className={`flex items-center max-w-5xl gap-2 xs:flex-0 xs:w-sm xs:gap-4`}
         >
+          {!isListFirst && (
+            <button className={`xs:hidden`} onClick={handlePrevList}>
+              <Image
+                src={`/image/player/prev_song.svg`}
+                width={24}
+                height={24}
+                alt={`prev`}
+              />
+            </button>
+          )}
           <button
             className={`xs:hidden`}
             onClick={() => {
@@ -70,16 +125,8 @@ const PlayerController = (props: {
               />
             )}
           </button>
-          <button
-            className={`xs:hidden`}
-            onKeyDown={(e) => {
-              console.log("next", e);
-              e.code === "ArrowRight" && handleNext();
-            }}
-            onClick={() => {
-              handleNext();
-            }}
-          >
+
+          <button className={`xs:hidden`} onClick={handleNext}>
             <Image
               src={`/image/player/next.svg`}
               width={24}
@@ -87,14 +134,42 @@ const PlayerController = (props: {
               alt={`next`}
             />
           </button>
-          <button>
-            <Image
-              src={`/image/player/volume.svg`}
-              width={24}
-              height={24}
-              alt={`volume`}
-            />
-          </button>
+          {!isListLast && (
+            <button className={`xs:hidden`} onClick={handleNextList}>
+              <Image
+                src={`/image/player/next_song.svg`}
+                width={24}
+                height={24}
+                alt={`next`}
+              />
+            </button>
+          )}
+          <div
+            className={`relative flex items-center`}
+            onMouseEnter={() => {
+              setIsVolumeDropdownOpen(true);
+            }}
+          >
+            <button
+              onClick={() => {
+                setPlayerState({ ...playerState, muted: !muted });
+              }}
+            >
+              <Image
+                src={`/image/player/${!muted ? "volume.svg" : "mute.svg"}`}
+                width={24}
+                height={24}
+                alt={`volume`}
+              />
+            </button>
+            {isVolumeDropdownOpen && (
+              <VolumeDropdown
+                playerState={playerState}
+                setPlayerState={setPlayerState}
+                setIsVolumeDropdownOpen={setIsVolumeDropdownOpen}
+              />
+            )}
+          </div>
         </div>
         <div
           className={`flex-1 flex items-center justify-evenly gap-4 xs:flex-0 xs:order-3 xs:gap-0 xs:max-w-fit xs:pr-3`}
@@ -103,7 +178,7 @@ const PlayerController = (props: {
             {played} / {duration}
           </p>
           <input
-            className={`relative w-full h-0.5 mx-10 xs:hidden bg-gray-300`}
+            className={`relative w-full h-2 mx-10 rounded-lg xs:hidden focus:appearance-none range`}
             type={`range`}
             value={playedSec}
             max={durationSec}
@@ -124,14 +199,28 @@ const PlayerController = (props: {
           className={`flex items-center justify-evenly gap-2 xs:justify-start xs:flex-1 xs:gap-3`}
         >
           <div className={`album_cover w-6 h-6 bg-gray-300 xs:hidden`} />
-          <button className={`xs:order-2 xs:flex-2`}>
-            <Image
-              src={`/image/player/list.svg`}
-              alt={`playlists`}
-              width={24}
-              height={24}
-            />
-          </button>
+          <div className={`relative flex items-center`}>
+            <button
+              className={`xs:order-2 xs:flex-2`}
+              onClick={() => {
+                setIsListDropdownOpen(!isListDropdownOpen);
+              }}
+            >
+              <Image
+                src={`/image/player/list.svg`}
+                alt={`playlists`}
+                width={24}
+                height={24}
+              />
+            </button>
+            {isListDropdownOpen && (
+              <ListMenuContainer
+                curIndex={songListIndex}
+                songList={songList}
+                setCurIndex={setSongListIndex}
+              />
+            )}
+          </div>
           <div
             className={`whitespace-nowrap xs:order-1 xs:flex-1 xs:text-center`}
           >
