@@ -19,3 +19,11 @@ export interface PlayerState {
   muted: boolean;
   seeking: boolean;
 }
+
+export interface PlayerListItem {
+  id: string;
+  listId: number;
+  url: string;
+  title: string;
+  artist: string;
+}
