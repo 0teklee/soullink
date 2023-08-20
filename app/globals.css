@@ -104,6 +104,41 @@ a {
   text-decoration: none;
 }
 
+
+
+.range {
+  margin: auto;
+  -webkit-appearance: none;
+  position: relative;
+  overflow: hidden;
+  height: 12px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.range::-webkit-slider-runnable-track
+{
+  background: #ddd;
+  border: none;
+}
+
+.range::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background-color: #01FF00;
+  border: 2px solid #fff;
+  box-shadow: -100vw 0 0 99vw #00FF11;
+  border-radius: 50%;
+}
+
+.volume_slider {
+  -webkit-appearance: slider-vertical;
+  accent-color: #01FF00;
+  height: 5rem;
+}
+
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
