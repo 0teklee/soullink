@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "prisma": {
+    "schema": "app/api/schema.prisma"
+  },
   "dependencies": {
     "@heroicons/react": "^2.0.17",
     "@types/node": "18.15.11",

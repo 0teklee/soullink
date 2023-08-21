@@ -1,0 +1,98 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String                 @id @default(uuid())
+  email            String                 @unique
+  name             String
+  bio              String                 @db.Char(30)
+  profilePic       String
+  isBlocked        Boolean
+  blockReason      String                 @default("NULL")
+  followers        Follow[]               @relation("following")
+  following        Follow[]               @relation("follower")
+  createdPlaylists Playlist[]
+  likedPlayLists   PlaylistLikedByUsers[]
+  likedSong        SongLikedByUsers[]
+  myComments       Comment[]              @relation("author")
+  profileComments  Comment[]              @relation("profile")
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+}
+
+model Follow {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+model Playlist {
+  id          String                 @id @default(uuid())
+  title       String                 @db.VarChar(255)
+  coverImage  String
+  description String
+  contentLink String // 이 필드는 무엇일까요?
+  createdBy   User                   @relation(fields: [creatorId], references: [id])
+  creatorId   String
+  songs       Song[]
+  comments    Comment[]
+  LikedBy     PlaylistLikedByUsers[]
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+}
+
+model PlaylistLikedByUsers {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+  playlistId String
+
+  @@id([userId, playlistId])
+}
+
+model Song {
+  id         String             @id @default(uuid())
+  title      String
+  artist     String
+  playlist   Playlist           @relation(fields: [playlistId], references: [id])
+  playlistId String
+  likedUsers SongLikedByUsers[]
+}
+
+model SongLikedByUsers {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  song   Song   @relation(fields: [songId], references: [id])
+  songId String
+
+  @@id([userId, songId])
+}
+
+model Comment {
+  id         String      @id @default(uuid())
+  comment    String
+  type       CommentType
+  isPrivate  Boolean
+  author     User        @relation("author", fields: [authorId], references: [id])
+  authorId   String
+  profile    User?       @relation("profile", fields: [profileId], references: [id])
+  profileId  String
+  playlist   Playlist?   @relation(fields: [playlistId], references: [id])
+  playlistId String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+enum CommentType {
+  PLAYLIST
+  USER
+}
