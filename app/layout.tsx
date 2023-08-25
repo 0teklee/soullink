@@ -16,7 +16,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <main className={`my-12 xs:my-10`}>{children}</main>
+        <main
+          className={`xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px]`}
+        >
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
