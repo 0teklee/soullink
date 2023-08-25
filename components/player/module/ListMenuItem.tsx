@@ -4,26 +4,27 @@ import { PlayerListItem } from "@/types/common/playerTypes";
 interface IListMenuItem extends PlayerListItem {
   curIndex: number;
   setCurIndex: Dispatch<React.SetStateAction<number>>;
+  index: number;
 }
 
 const ListMenuItem = ({
   title,
   url,
   artist,
-  listId,
+  index,
   curIndex,
   setCurIndex,
 }: IListMenuItem) => {
-  const isSelected = curIndex === listId;
+  const isSelected = curIndex === index;
   return (
     <div
       className={`flex flex-col w-full p-2 hover:bg-gray-300 cursor-pointer`}
       onClick={() => {
-        setCurIndex(listId);
+        setCurIndex(index);
       }}
     >
       <div className={`flex items-center gap-4`}>
-        <p className={`text-xs text-gray-700`}>{listId + 1}</p>
+        <p className={`text-xs text-gray-700`}>{index + 1}</p>
         <div className={``}>
           <p
             className={`text-sm ${
