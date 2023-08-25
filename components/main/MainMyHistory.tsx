@@ -1,8 +1,5 @@
 import React from "react";
 
-import Link from "next/link";
-import Image from "next/image";
-
 import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/types/common/PlaylistType";
 import PlayListSlider from "@/components/main/module/PlayListSlider";

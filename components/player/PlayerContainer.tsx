@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { PlayerListItem, PlayerProps } from "@/types/common/playerTypes";
+import { PlayerProps } from "@/types/common/playerTypes";
 import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
 import { handleKeyPress } from "@/utils/client/eventHandler";
