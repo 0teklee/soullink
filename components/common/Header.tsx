@@ -4,7 +4,7 @@ import Image from "next/image";
 const Header = () => {
   return (
     <div
-      className={`fixed flex items-center justify-start w-screen px-8 py-1.5 bg-gray-400 xs:py-0.5 xs:px-2 xs:justify-between`}
+      className={`fixed flex items-center justify-start w-screen px-8 py-1.5 bg-gray-400 z-10 xs:py-0.5 xs:px-2 xs:justify-between`}
     >
       <div className={`flex items-center w-full h-full gap-6 xs:flex-1`}>
         <Image src={`/soullink_logo.png`} alt="logo" width={36} height={36} />
