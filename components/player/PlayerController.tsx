@@ -1,4 +1,4 @@
-import React, { Dispatch, RefObject, useState } from "react";
+import React, { Dispatch, RefObject, useEffect, useState } from "react";
 import Image from "next/image";
 
 import {
@@ -31,11 +31,10 @@ const PlayerController = ({
     playing,
     played,
     duration,
-    seeking,
-    volume,
     muted,
     durationSec,
     playedSec,
+    isLoading,
   } = playerState;
 
   const [isVolumeDropdownOpen, setIsVolumeDropdownOpen] = useState(false);
@@ -66,9 +65,17 @@ const PlayerController = ({
     setSongListIndex((prev) => prev + 1);
   };
 
+  useEffect(() => {
+    if (songListIndex === songList.length - 1 || songListIndex === 0) {
+      return;
+    }
+
+    setPlayerState({ ...playerState, playing: true });
+  }, []);
+
   return (
     <div
-      className={`absolute bottom-0 w-screen px-5 py-3 bg-white xs:py-3 xs:px-2`}
+      className={`absolute bottom-0 w-screen px-5 py-3 bg-white border-t-[1px] border-gray-200 xs:py-3 xs:px-2`}
     >
       <input
         type={`text`}
@@ -175,7 +182,7 @@ const PlayerController = ({
           className={`flex-1 flex items-center justify-evenly gap-4 xs:flex-0 xs:order-3 xs:gap-0 xs:max-w-fit xs:pr-3`}
         >
           <p className={`text-xs text-gray-900 whitespace-nowrap`}>
-            {played} / {duration}
+            {isLoading ? `loading..` : `${played} / ${duration}`}
           </p>
           <input
             className={`relative w-full h-2 mx-10 rounded-lg xs:hidden focus:appearance-none range`}
@@ -224,11 +231,11 @@ const PlayerController = ({
           <div
             className={`whitespace-nowrap xs:order-1 xs:flex-1 xs:text-center`}
           >
-            <p
-              className={`text-xs text-gray-900 font-medium`}
-            >{`Song Title`}</p>
+            <p className={`text-xs text-gray-900 font-medium`}>
+              {songList[songListIndex].title}
+            </p>
             <p className={`text-xs text-gray-600 font-normal xs:hidden`}>
-              artist name
+              {songList[songListIndex].artist}
             </p>
           </div>
           <div className={`flex items-center gap-2 xs:order-2 xs:flex-2`}>
