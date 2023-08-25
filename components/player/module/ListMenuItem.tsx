@@ -9,7 +9,6 @@ interface IListMenuItem extends PlayerListItem {
 
 const ListMenuItem = ({
   title,
-  url,
   artist,
   index,
   curIndex,
