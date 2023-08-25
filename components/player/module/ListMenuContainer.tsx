@@ -30,6 +30,7 @@ const ListMenuContainer = ({
             {...song}
             setCurIndex={setCurIndex}
             curIndex={curIndex}
+            index={index}
           />
         ))}
       </div>
