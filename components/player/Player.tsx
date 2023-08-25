@@ -28,13 +28,30 @@ const Player = ({
         playing={playing}
         volume={volume}
         muted={muted}
-        pip={true}
+        onBuffer={() => {
+          setPlayerState({
+            ...playerState,
+            isLoading: true,
+          });
+        }}
+        onBufferEnd={() => {
+          setPlayerState({
+            ...playerState,
+            isLoading: false,
+          });
+        }}
         onReady={(ReactPlayer) => {
           setPlayerState({
             ...playerState,
             duration: secondsFormatter(ReactPlayer.getDuration()) || "00:00",
             durationSec: ReactPlayer.getDuration(),
-            playing: true,
+            isLoading: false,
+          });
+        }}
+        onPlay={() => {
+          setPlayerState({
+            ...playerState,
+            isLoading: false,
           });
         }}
         onProgress={(state) => {
