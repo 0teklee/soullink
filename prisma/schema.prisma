@@ -41,8 +41,8 @@ model Playlist {
   coverImage  String
   description String
   contentLink String // 이 필드는 무엇일까요?
-  createdBy   User                   @relation(fields: [creatorId], references: [id])
-  creatorId   String
+  author      User                   @relation(fields: [creatorId], references: [id])
+  authorId    String
   songs       Song[]
   comments    Comment[]
   LikedBy     PlaylistLikedByUsers[]
@@ -66,6 +66,7 @@ model Song {
   playlist   Playlist           @relation(fields: [playlistId], references: [id])
   playlistId String
   likedUsers SongLikedByUsers[]
+  playCount  Int                @default(0)
 }
 
 model SongLikedByUsers {

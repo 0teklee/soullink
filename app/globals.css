@@ -91,12 +91,7 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #ffffff;
 }
 
 a {
@@ -136,6 +131,18 @@ a {
   -webkit-appearance: slider-vertical;
   accent-color: #01FF00;
   height: 5rem;
+}
+
+.overflow-fadeout:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255, 0.5) 99%);
+  width: 50px;
+  height: 100%;
 }
 
 

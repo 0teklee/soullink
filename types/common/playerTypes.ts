@@ -1,4 +1,5 @@
 import { ReactPlayerProps } from "react-player";
+import { SongType } from "@/types/common/PlaylistType";
 
 export interface PlayerProps extends ReactPlayerProps {
   seekTo(amount: number, type?: "seconds" | "fraction"): void;
@@ -18,12 +19,7 @@ export interface PlayerState {
   volume: number;
   muted: boolean;
   seeking: boolean;
+  isLoading: boolean;
 }
 
-export interface PlayerListItem {
-  id: string;
-  listId: number;
-  url: string;
-  title: string;
-  artist: string;
-}
+export interface PlayerListItem extends SongType {}
