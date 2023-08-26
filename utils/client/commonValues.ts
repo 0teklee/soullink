@@ -1,5 +1,9 @@
-import { PlayerListItem } from "@/types/common/playerTypes";
-import { PlaylistType } from "@/types/common/PlaylistType";
+import { PlayerListItem, PlaylistType } from "@/types/common/playlistType";
+import { sampleUser, sampleUser2 } from "@/utils/client/userSampleValues";
+import {
+  sampleComments1,
+  sampleComments2,
+} from "@/utils/client/commentSampleValues";
 
 export const fakePlaylistSongsData: PlayerListItem[] = [
   {
@@ -25,11 +29,15 @@ export const fakeFirstPlaylistData: PlaylistType = {
   title: "First List",
   description: "This is the first list local test data",
   coverImage:
-    "https://res.cloudinary.com/dolziw8fv/image/upload/v1674568370/mz2z5khhrctswpwzofnb.png",
+    "https://res.cloudinary.com/dolziw8fv/image/upload/v1689606968/a1346689507_65_tbj0bd.jpg",
   songs: fakePlaylistSongsData,
-  author: "admin",
+  authorId: sampleUser.id,
+  author: sampleUser,
   createdAt: "2021-08-01T00:00:00.000Z",
   updatedAt: "2021-08-01T00:00:00.000Z",
+  playCount: 10,
+  likedBy: [sampleUser, sampleUser2],
+  comments: sampleComments1,
 };
 
 export const fakeSecondPlaylistData: PlaylistType = {
@@ -39,9 +47,13 @@ export const fakeSecondPlaylistData: PlaylistType = {
   coverImage:
     "https://res.cloudinary.com/dolziw8fv/image/upload/v1680175878/e9u4xoelipawp2wbxpyd.jpg",
   songs: fakePlaylistSongsData,
-  author: "admin2",
+  authorId: sampleUser.id,
+  author: sampleUser,
   createdAt: "2021-08-01T00:00:00.000Z",
   updatedAt: "2021-08-01T00:00:00.000Z",
+  playCount: 10,
+  likedBy: [sampleUser2],
+  comments: sampleComments2,
 };
 
 export const fakePlayLists: PlaylistType[] = [
