@@ -1,9 +1,9 @@
 "use client";
 
 import React, { Dispatch, RefObject, SetStateAction } from "react";
-import { PlayerProps, PlayerState } from "@/types/common/playerTypes";
 import { secondsFormatter } from "@/utils/client/formatter";
 import ReactPlayer from "react-player";
+import { PlayerProps, PlayerState } from "@/types/common/playlistType";
 
 const Player = ({
   playerState,

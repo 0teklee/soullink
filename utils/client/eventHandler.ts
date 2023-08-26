@@ -1,5 +1,5 @@
 import React, { Dispatch, RefObject, SetStateAction } from "react";
-import { PlayerProps, PlayerState } from "@/types/common/playerTypes";
+import { PlayerProps, PlayerState } from "@/types/common/playlistType";
 
 export const handleKeyPress = (
   e: React.KeyboardEvent | KeyboardEvent,

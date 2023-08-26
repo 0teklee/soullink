@@ -1,14 +1,13 @@
 import React, { Dispatch, RefObject, useEffect, useState } from "react";
 import Image from "next/image";
 
+import VolumeDropdown from "@/components/player/module/VolumeDropdown";
+import ListMenuContainer from "@/components/player/module/ListMenuContainer";
 import {
   PlayerListItem,
   PlayerProps,
   PlayerState,
-} from "@/types/common/playerTypes";
-import VolumeDropdown from "@/components/player/module/VolumeDropdown";
-import ListMenuContainer from "@/components/player/module/ListMenuContainer";
-import { handleKeyPress } from "@/utils/client/eventHandler";
+} from "@/types/common/playlistType";
 
 const PlayerController = ({
   playerState,
@@ -75,15 +74,8 @@ const PlayerController = ({
 
   return (
     <div
-      className={`absolute bottom-0 w-screen px-5 py-3 bg-white border-t-[1px] border-gray-200 xs:py-3 xs:px-2`}
+      className={`w-screen px-5 py-3 bg-white border-t-[1px] border-gray-200 xs:py-3 xs:px-2`}
     >
-      <input
-        type={`text`}
-        className={`fixed hidden`}
-        onKeyDown={(e) => {
-          handleKeyPress(e, playerRef, setPlayerState);
-        }}
-      />
       <div className={`flex items-center justify-between gap-6 px-5 xs:px-0`}>
         <div
           className={`flex items-center max-w-5xl gap-2 xs:flex-0 xs:w-sm xs:gap-4`}
