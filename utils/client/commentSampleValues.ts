@@ -1,6 +1,5 @@
 import { CommentType } from "@/types/common/userType";
 import { sampleUser } from "@/utils/client/userSampleValues";
-import { fakeFirstPlaylistData } from "@/utils/client/commonValues";
 
 export const sampleComments1: CommentType[] = [
   {
