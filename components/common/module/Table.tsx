@@ -1,5 +1,5 @@
 import React from "react";
-import { SongType } from "@/types/common/PlaylistType";
+import { SongType } from "@/types/common/playlistType";
 import Image from "next/image";
 
 const Table = ({ songList }: { songList: SongType[] }) => {

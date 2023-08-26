@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { PlayerState } from "@/types/common/playerTypes";
+import { PlayerState } from "@/types/common/playlistType";
 
 const VolumeDropdown = ({
   playerState,

@@ -10,7 +10,7 @@ generator client {
 model User {
   id               String                 @id @default(uuid())
   email            String                 @unique
-  name             String
+  nickname         String
   bio              String                 @db.Char(30)
   profilePic       String
   isBlocked        Boolean
@@ -41,11 +41,12 @@ model Playlist {
   coverImage  String
   description String
   contentLink String // 이 필드는 무엇일까요?
-  author      User                   @relation(fields: [creatorId], references: [id])
+  author      User                   @relation(fields: [authorId], references: [id])
   authorId    String
   songs       Song[]
   comments    Comment[]
-  LikedBy     PlaylistLikedByUsers[]
+  likedBy     PlaylistLikedByUsers[]
+  playCount   Int                    @default(0)
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
 }
@@ -60,13 +61,13 @@ model PlaylistLikedByUsers {
 }
 
 model Song {
-  id         String             @id @default(uuid())
-  title      String
-  artist     String
-  playlist   Playlist           @relation(fields: [playlistId], references: [id])
-  playlistId String
-  likedUsers SongLikedByUsers[]
-  playCount  Int                @default(0)
+  id          String             @id @default(uuid())
+  title       String
+  artist      String
+  playlist    Playlist           @relation(fields: [playlistId], references: [id])
+  playlistId  String
+  likedUsers  SongLikedByUsers[]
+  playedCount Int                @default(0)
 }
 
 model SongLikedByUsers {

@@ -1,7 +1,7 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
 import PlayListSlider from "@/components/main/module/PlayListSlider";
-import { PlaylistType } from "@/types/common/PlaylistType";
+import { PlaylistType } from "@/types/common/playlistType";
 
 const MainTrending = ({ playLists }: { playLists: PlaylistType[] }) => {
   return (

@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
-import { PlayerListItem } from "@/types/common/playerTypes";
 import ListMenuItem from "@/components/player/module/ListMenuItem";
+import { PlayerListItem } from "@/types/common/playlistType";
 
 const ListMenuContainer = ({
   curIndex,

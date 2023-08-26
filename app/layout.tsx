@@ -17,7 +17,7 @@ export default function RootLayout({
       <body>
         <Header />
         <main
-          className={`xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px]`}
+          className={`xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] bg-white `}
         >
           {children}
         </main>

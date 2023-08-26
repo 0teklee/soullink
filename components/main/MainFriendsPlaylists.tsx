@@ -1,5 +1,5 @@
 import React from "react";
-import { PlaylistType } from "@/types/common/PlaylistType";
+import { PlaylistType } from "@/types/common/playlistType";
 import Title from "@/components/common/module/Title";
 import Link from "next/link";
 import Image from "next/image";

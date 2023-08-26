@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { PlaylistType } from "@/types/common/PlaylistType";
+import { PlaylistType } from "@/types/common/playlistType";
 import Title from "@/components/common/module/Title";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
@@ -35,7 +35,7 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
         >
           <div className={`flex flex-col justify-center items-center gap-0`}>
             <h2 className={`text-2xl font-bold`}>{title}</h2>
-            <h2 className={`text-base font-semibold`}>by {author}</h2>
+            <h2 className={`text-base font-semibold`}>by {author.nickname}</h2>
           </div>
           <ul className={`z-2 `}>
             {songs.map((song, index) => {
