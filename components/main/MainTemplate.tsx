@@ -1,12 +1,12 @@
 import React from "react";
-import {
-  fakeFirstPlaylistData,
-  fakePlayLists,
-} from "@/utils/client/commonValues";
 import MainTrending from "@/components/main/MainTrending";
 import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
 import MainHotTracks from "@/components/main/MainHotTracks";
 import MainMyHistory from "@/components/main/MainMyHistory";
+import {
+  fakeFirstPlaylistData,
+  fakePlayLists,
+} from "@/utils/client/commonStaticApiData";
 
 const MainTemplate = () => {
   return (
