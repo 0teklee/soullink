@@ -18,6 +18,7 @@ export interface UserType {
   likedPlaylists: PlaylistType[];
   myComments: CommentType[];
   profileComments: CommentType[];
+  playedCount: number;
 }
 
 export interface CommentType {
