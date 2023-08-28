@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
 import { handleKeyPress } from "@/utils/client/eventHandler";
-import { fakePlaylistSongsData } from "@/utils/client/commonValues";
 import { PlayerProps } from "@/types/common/playlistType";
+import { fakePlaylistSongsData } from "@/utils/client/commonStaticApiData";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
