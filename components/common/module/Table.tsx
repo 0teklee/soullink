@@ -2,7 +2,14 @@ import React from "react";
 import { SongType } from "@/types/common/playlistType";
 import Image from "next/image";
 
-const Table = ({ songList }: { songList: SongType[] }) => {
+const Table = ({
+  songList,
+  isCreate,
+}: {
+  songList: SongType[];
+  isCreate?: boolean;
+}) => {
+  const isNotCreate = !isCreate;
   return (
     <div className={`self-stretch px-5 xs:px-0`}>
       <table className={`w-full px-12 table-auto`}>
@@ -11,9 +18,13 @@ const Table = ({ songList }: { songList: SongType[] }) => {
             <th className={`text-start opacity-0 xs:hidden`}>no.</th>
             <th className={`text-start font-light xs:hidden`}>TITLE</th>
             <th className={`text-start font-light xs:hidden`}>Artist</th>
-            <th className={`text-start opacity-0 xs:hidden`}>Like & Add</th>
-            <th className={`text-start font-light xs:hidden`}>PLAYED</th>
-            <th className={`text-start opacity-0 xs:hidden`}>PLAY</th>
+            {isNotCreate && (
+              <>
+                <th className={`text-start opacity-0 xs:hidden`}>Like & Add</th>
+                <th className={`text-start font-light xs:hidden`}>PLAYED</th>
+                <th className={`text-start opacity-0 xs:hidden`}>PLAY</th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -27,38 +38,44 @@ const Table = ({ songList }: { songList: SongType[] }) => {
                 <td className={`py-2`}>
                   <div className={`flex flex-col gap-0.5`}>
                     <p>{item.title}</p>
-                    <p className={`text-xs`}>{item.likedCount} likes</p>
+                    {isNotCreate && (
+                      <p className={`text-xs`}>{item.likedCount} likes</p>
+                    )}
                   </div>
                 </td>
                 <td className={`py-2`}>{item.artist}</td>
-                <td className={`py-2`}>
-                  <div className={`flex items-center gap-3`}>
-                    <button className={`relative w-6 h-6`}>
-                      <Image
-                        fill={true}
-                        src="/image/player/song_like.svg"
-                        alt="like"
-                      />
-                    </button>
-                    <button className={`relative w-6 h-6`}>
-                      <Image
-                        fill={true}
-                        src="/image/common/plus.svg"
-                        alt="add"
-                      />
-                    </button>
-                  </div>
-                </td>
-                <td className={`py-2 xs:hidden`}>{item.playedCount}</td>
-                <td className={`py-2 xs:hidden`}>
-                  <button className={`relative w-6 h-6`}>
-                    <Image
-                      fill={true}
-                      src="/image/player/play.svg"
-                      alt="like"
-                    />
-                  </button>
-                </td>
+                {isNotCreate && (
+                  <>
+                    <td className={`py-2`}>
+                      <div className={`flex items-center gap-3`}>
+                        <button className={`relative w-6 h-6`}>
+                          <Image
+                            fill={true}
+                            src="/image/player/song_like.svg"
+                            alt="like"
+                          />
+                        </button>
+                        <button className={`relative w-6 h-6`}>
+                          <Image
+                            fill={true}
+                            src="/image/common/plus.svg"
+                            alt="add"
+                          />
+                        </button>
+                      </div>
+                    </td>
+                    <td className={`py-2 xs:hidden`}>{item.playedCount}</td>
+                    <td className={`py-2 xs:hidden`}>
+                      <button className={`relative w-6 h-6`}>
+                        <Image
+                          fill={true}
+                          src="/image/player/play.svg"
+                          alt="like"
+                        />
+                      </button>
+                    </td>
+                  </>
+                )}
               </tr>
             );
           })}
