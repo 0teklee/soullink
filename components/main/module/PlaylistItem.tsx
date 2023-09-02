@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { PlaylistType } from "@/types/common/playlistType";
+import { PlaylistType } from "@/types/common/Song&PlaylistType";
 import Title from "@/components/common/module/Title";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {

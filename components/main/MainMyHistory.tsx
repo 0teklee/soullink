@@ -1,7 +1,7 @@
 import React from "react";
 
 import Title from "@/components/common/module/Title";
-import { PlaylistType } from "@/types/common/playlistType";
+import { PlaylistType } from "@/types/common/Song&PlaylistType";
 import PlayListSlider from "@/components/main/module/PlayListSlider";
 
 const MainMyHistory = ({ playLists }: { playLists: PlaylistType[] }) => {

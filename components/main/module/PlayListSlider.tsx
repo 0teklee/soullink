@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import PlaylistItem from "@/components/main/module/PlaylistItem";
 
 import "swiper/css";
-import { PlaylistType } from "@/types/common/playlistType";
+import { PlaylistType } from "@/types/common/Song&PlaylistType";
 
 const PlayListSlider = ({ playLists }: { playLists: PlaylistType[] }) => {
   return (

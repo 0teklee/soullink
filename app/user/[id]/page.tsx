@@ -1,7 +1,7 @@
 import React from "react";
 import UserTemplate from "@/components/user/UserTemplate";
 
-import { sampleUser } from "@/utils/client/commonStaticApiData";
+import { sampleUser } from "@/libs/utils/client/commonStaticApiData";
 
 const Page = () => {
   return <UserTemplate userProps={sampleUser} />;

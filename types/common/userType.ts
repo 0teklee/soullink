@@ -1,4 +1,4 @@
-import { PlaylistType, SongType } from "@/types/common/playlistType";
+import { PlaylistType, SongType } from "@/types/common/Song&PlaylistType";
 
 export interface UserType {
   id: string;

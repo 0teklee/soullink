@@ -6,7 +6,7 @@ import MainMyHistory from "@/components/main/MainMyHistory";
 import {
   fakeFirstPlaylistData,
   fakePlayLists,
-} from "@/utils/client/commonStaticApiData";
+} from "@/libs/utils/client/commonStaticApiData";
 
 const MainTemplate = () => {
   return (
