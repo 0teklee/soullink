@@ -6,8 +6,23 @@ export interface SongType {
   artist: string;
   title: string;
   url: string;
+  thumbnail?: string;
   playedCount: number;
   likedCount: number;
+}
+
+type SongUrlType = "youtube" | "" | "custom";
+
+export interface CreateSongType
+  extends Omit<SongType, "playedCount" | "likedCount" | "id"> {
+  type: SongUrlType;
+}
+
+export interface CreatePlaylistType {
+  title: string;
+  description: string;
+  coverImage?: string;
+  songs: CreateSongType[];
 }
 
 export interface PlaylistType {
