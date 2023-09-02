@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import Table from "@/components/common/module/Table";
