@@ -86,10 +86,6 @@ const PlaylistModal = ({
 
   const isUrlValid = isCustomValid(songValue.url, availCustomUrl);
 
-  const handleCoverImageUpload = () => {
-    // imageUploader.image().
-  };
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     startTransition(() => setSearchWord(e.target.value));
@@ -107,7 +103,7 @@ const PlaylistModal = ({
   return (
     <>
       <div
-        onClick={(e) => {
+        onClick={() => {
           setModalOpen(false);
         }}
         className={`fixed top-0 left-0 flex items-center justify-center w-screen h-screen bg-black bg-opacity-30 text-gray-900`}
