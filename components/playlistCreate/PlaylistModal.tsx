@@ -1,7 +1,6 @@
 import React, {
   Dispatch,
   SetStateAction,
-  useEffect,
   useState,
   useTransition,
 } from "react";
@@ -15,14 +14,6 @@ import Image from "next/image";
 import { CreateSongType } from "@/types/common/Song&PlaylistType";
 
 type TUrlType = "youtube" | "custom" | "";
-
-interface ISongValue {
-  url: string;
-  type: TUrlType;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
 
 const PlaylistModal = ({
   setModalOpen,

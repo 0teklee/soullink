@@ -16,7 +16,6 @@ const queryClient = new QueryClient();
 
 const PlaylistCreateTemplate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isImageUpload, setIsImageUpload] = useState<boolean>(false);
   const [songList, setSongList] = useState<CreateSongType[]>([]);
   const [payload, setPayload] = useState<CreatePlaylistType>({
     title: "",
