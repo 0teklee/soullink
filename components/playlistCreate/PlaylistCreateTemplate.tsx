@@ -31,10 +31,6 @@ const PlaylistCreateTemplate = () => {
     }));
   };
 
-  useEffect(() => {
-    console.log("payload", payload);
-  }, [payload]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <section
