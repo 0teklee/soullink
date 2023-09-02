@@ -72,8 +72,16 @@ const PlaylistModal = ({
   ];
 
   const isCustomValid = (customUrl: string, availDomain: string[]) => {
+    const urlRegex =
+      /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z0-9-]+)(\/[a-zA-Z0-9-]+)?$/;
     const splitUrl = customUrl.split(".");
-    return splitUrl.map((url) => availDomain.includes(url)).length > 0;
+    const isAvailDomain =
+      splitUrl.filter(
+        (url) =>
+          availDomain.filter((availItem) => url.includes(availItem)).length > 0,
+      ).length > 0;
+
+    return isAvailDomain && urlRegex.test(customUrl);
   };
 
   const isUrlValid = isCustomValid(songValue.url, availCustomUrl);
@@ -243,6 +251,12 @@ const PlaylistModal = ({
                     setIsAvailableCustomUrl(false);
                     return;
                   }
+
+                  if (songValue.title === "" || songValue.artist === "") {
+                    alert("Please fill the title and artist");
+                    return;
+                  }
+
                   setSongList((prev) => [...prev, songValue]);
                   setSongValue({
                     url: "",
