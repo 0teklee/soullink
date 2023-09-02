@@ -72,15 +72,19 @@ const PlaylistModal = ({
   ];
 
   const isCustomValid = (customUrl: string, availDomain: string[]) => {
+    const urlRegex =
+      /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z0-9-]+)(\/[a-zA-Z0-9-]+)?$/;
     const splitUrl = customUrl.split(".");
-    return splitUrl.map((url) => availDomain.includes(url)).length > 0;
+    const isAvailDomain =
+      splitUrl.filter(
+        (url) =>
+          availDomain.filter((availItem) => url.includes(availItem)).length > 0,
+      ).length > 0;
+
+    return isAvailDomain && urlRegex.test(customUrl);
   };
 
   const isUrlValid = isCustomValid(songValue.url, availCustomUrl);
-
-  const handleCoverImageUpload = () => {
-    // imageUploader.image().
-  };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
@@ -99,7 +103,7 @@ const PlaylistModal = ({
   return (
     <>
       <div
-        onClick={(e) => {
+        onClick={() => {
           setModalOpen(false);
         }}
         className={`fixed top-0 left-0 flex items-center justify-center w-screen h-screen bg-black bg-opacity-30 text-gray-900`}
@@ -243,6 +247,12 @@ const PlaylistModal = ({
                     setIsAvailableCustomUrl(false);
                     return;
                   }
+
+                  if (songValue.title === "" || songValue.artist === "") {
+                    alert("Please fill the title and artist");
+                    return;
+                  }
+
                   setSongList((prev) => [...prev, songValue]);
                   setSongValue({
                     url: "",
@@ -272,6 +282,13 @@ const PlaylistModal = ({
               <div
                 className={`flex flex-col items-start gap-2 max-h-[300px] overflow-y-scroll`}
               >
+                {isPending && (
+                  <div className={`flex items-center justify-center w-full`}>
+                    <p className={`text-base text-gray-500 font-semibold`}>
+                      Loading
+                    </p>
+                  </div>
+                )}
                 {songValue.type === "youtube" &&
                   youtubeData &&
                   youtubeData.length > 0 &&
@@ -280,13 +297,13 @@ const PlaylistModal = ({
                       key={index}
                       className={`flex items-center justify-start gap-2 w-full p-2 bg-white hover:bg-primary hover:text-white rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
                       onClick={() => {
-                        setSongValue((prev) => ({
+                        setSongValue({
                           url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
                           title: item.snippet.title,
                           artist: item.snippet.channelTitle.replace("VEVO", ""),
                           thumbnail: item.snippet.thumbnails.default.url,
                           type: "youtube",
-                        }));
+                        });
                         setPage("submit");
                       }}
                     >
