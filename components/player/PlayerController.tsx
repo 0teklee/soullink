@@ -7,7 +7,7 @@ import {
   PlayerListItem,
   PlayerProps,
   PlayerState,
-} from "@/types/common/playlistType";
+} from "@/types/common/Song&PlaylistType";
 
 const PlayerController = ({
   playerState,

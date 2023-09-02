@@ -1,5 +1,5 @@
 import { CommentType, UserType } from "@/types/common/userType";
-import { PlayerListItem, PlaylistType } from "@/types/common/playlistType";
+import { PlayerListItem, PlaylistType } from "@/types/common/Song&PlaylistType";
 
 export const sampleUser: UserType = {
   id: "admin",
@@ -254,6 +254,14 @@ export const fakePlaylistSongsData: PlayerListItem[] = [
     artist: "Utata Hikaru",
     title: "In My Room",
     url: "https://soundcloud.com/gum_mp3/in-my-room-utada-hikaru-db-garage-mix?si=7329048ff1f8437cb3f775d34b745e38&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+    playedCount: 10,
+    likedCount: 2,
+  },
+  {
+    id: "first_list_2",
+    artist: "Delano Smith (Bandcamp test)",
+    title: "Midnight Hours (Reconstructed by Carl Craig)\n",
+    url: "https://delanosmithdetroit.bandcamp.com/track/midnight-hours-reconstructed-by-carl-craig",
     playedCount: 10,
     likedCount: 2,
   },

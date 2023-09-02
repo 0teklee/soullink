@@ -1,7 +1,7 @@
 import React from "react";
 import DetailTemplate from "@/components/detail/DetailTemplate";
 
-import { fakeFirstPlaylistData } from "@/utils/client/commonStaticApiData";
+import { fakeFirstPlaylistData } from "@/libs/utils/client/commonStaticApiData";
 
 const Page = ({ params: { id } }: { params: { id: string } }) => {
   return <DetailTemplate playlistData={fakeFirstPlaylistData} />;

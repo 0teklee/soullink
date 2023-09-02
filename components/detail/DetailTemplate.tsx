@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PlaylistType } from "@/types/common/playlistType";
+import { PlaylistType } from "@/types/common/Song&PlaylistType";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";

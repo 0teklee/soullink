@@ -3,9 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
-import { handleKeyPress } from "@/utils/client/eventHandler";
-import { PlayerProps } from "@/types/common/playlistType";
-import { fakePlaylistSongsData } from "@/utils/client/commonStaticApiData";
+import { handleKeyPress } from "@/libs/utils/client/eventHandler";
+import { PlayerProps } from "@/types/common/Song&PlaylistType";
+import { fakePlaylistSongsData } from "@/libs/utils/client/commonStaticApiData";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
@@ -41,20 +41,24 @@ const PlayerContainer = () => {
 
   return (
     <div className={`fixed bottom-0 z-50`}>
-      <Player
-        playerState={playerState}
-        setPlayerState={setPlayerState}
-        playerRef={playerRef}
-        song={fakePlaylistSongsData[songListIndex].url}
-      />
-      <PlayerController
-        playerState={playerState}
-        setPlayerState={setPlayerState}
-        playerRef={playerRef}
-        songList={fakePlaylistSongsData}
-        setSongListIndex={setSongListIndex}
-        songListIndex={songListIndex}
-      />
+      {!!playerState && (
+        <>
+          <Player
+            playerState={playerState}
+            setPlayerState={setPlayerState}
+            playerRef={playerRef}
+            song={fakePlaylistSongsData[songListIndex].url}
+          />
+          <PlayerController
+            playerState={playerState}
+            setPlayerState={setPlayerState}
+            playerRef={playerRef}
+            songList={fakePlaylistSongsData}
+            setSongListIndex={setSongListIndex}
+            songListIndex={songListIndex}
+          />
+        </>
+      )}
     </div>
   );
 };

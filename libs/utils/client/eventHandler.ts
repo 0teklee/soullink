@@ -1,12 +1,22 @@
 import React, { Dispatch, RefObject, SetStateAction } from "react";
-import { PlayerProps, PlayerState } from "@/types/common/playlistType";
+import { PlayerProps, PlayerState } from "@/types/common/Song&PlaylistType";
 
 export const handleKeyPress = (
-  e: React.KeyboardEvent | KeyboardEvent,
+  e: React.KeyboardEvent<Document> | KeyboardEvent,
   targetRef: RefObject<PlayerProps>,
-  setState: Dispatch<SetStateAction<PlayerState>>,
+  setState?: Dispatch<SetStateAction<PlayerState>>,
 ) => {
-  console.log(e.key);
+  if (!setState) {
+    return;
+  }
+
+  if (
+    e.target instanceof Element &&
+    (e?.target?.tagName === "INPUT" || e?.target?.tagName === "TEXTAREA")
+  ) {
+    return;
+  }
+
   switch (e.key) {
     case " ":
       e.preventDefault();
