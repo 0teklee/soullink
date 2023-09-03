@@ -20,6 +20,7 @@ const PlaylistCreateSubmit = ({
       },
       body: JSON.stringify({
         ...payload,
+        // TODO : userId 는 세션에서 가져오도록 수정
         userId: "966cd2cd-3cad-4e95-8ff1-451bad286fdf",
       }),
     });
