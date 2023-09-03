@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
-// Get 요청 예시
+// Trending Get 요청 예시
 
 export async function GET(req: Request) {
   try {
