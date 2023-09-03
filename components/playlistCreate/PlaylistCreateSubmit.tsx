@@ -10,8 +10,6 @@ const PlaylistCreateSubmit = ({
   payload: CreatePlaylistType;
   isPayloadValid: boolean;
 }) => {
-  const { title, description, songs } = payload;
-
   const router = useRouter();
 
   const fetcherCreatePlaylist = async () => {
@@ -39,7 +37,7 @@ const PlaylistCreateSubmit = ({
     <div>
       <button
         className={`px-5 py-2 rounded-xl text-white text-lg font-medium bg-primary disabled:bg-gray-300`}
-        disabled={isPayloadValid ? false : true}
+        disabled={!isPayloadValid}
         onClick={() => {
           mutate();
         }}

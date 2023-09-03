@@ -349,10 +349,10 @@ const PlaylistSongModal = ({
                         className={`flex flex-col items-start justify-center gap-1`}
                       >
                         <div className={`text-sm font-bold`}>
-                          {item.snippet.title}
+                          `${item.snippet.title}`
                         </div>
                         <div className={`text-xs`}>
-                          {item.snippet.channelTitle.replace("VEVO", "")}
+                          `${item.snippet.channelTitle.replace("VEVO", "")}`
                         </div>
                       </div>
                     </button>
