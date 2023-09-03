@@ -1,6 +1,7 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 generator client {
@@ -10,9 +11,9 @@ generator client {
 model User {
   id               String                 @id @default(uuid())
   email            String                 @unique
-  nickname         String
-  bio              String                 @db.Char(30)
-  profilePic       String
+  nickname         String                 @unique @db.Char(20)
+  bio              String                 @db.Char(120)
+  profilePic       String?
   isBlocked        Boolean
   blockReason      String                 @default("NULL")
   followers        Follow[]               @relation("following")
@@ -37,10 +38,9 @@ model Follow {
 
 model Playlist {
   id          String                 @id @default(uuid())
-  title       String                 @db.VarChar(255)
-  coverImage  String
-  description String
-  contentLink String // 이 필드는 무엇일까요?
+  title       String                 @db.VarChar(40)
+  coverImage  String?
+  description String                 @db.VarChar(300)
   author      User                   @relation(fields: [authorId], references: [id])
   authorId    String
   songs       Song[]
@@ -64,10 +64,12 @@ model Song {
   id          String             @id @default(uuid())
   title       String
   artist      String
+  url         String             @unique
   playlist    Playlist           @relation(fields: [playlistId], references: [id])
   playlistId  String
   likedUsers  SongLikedByUsers[]
-  playedCount Int                @default(0)
+  playedCount Int?               @default(0)
+  thumbnail   String?
 }
 
 model SongLikedByUsers {
