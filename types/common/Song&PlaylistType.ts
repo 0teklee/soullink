@@ -25,6 +25,12 @@ export interface CreatePlaylistType {
   songs: CreateSongType[];
 }
 
+export interface PlaylistCreateRequestType
+  extends Omit<CreatePlaylistType, "songs"> {
+  songs: SongType[];
+  userId: string;
+}
+
 export interface PlaylistType {
   id: string;
   title: string;

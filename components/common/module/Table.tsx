@@ -1,13 +1,16 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { CreateSongType, SongType } from "@/types/common/Song&PlaylistType";
 import Image from "next/image";
+import { MinusCircleIcon } from "@heroicons/react/24/outline";
 
 const Table = ({
   songList,
   isCreate,
+  setSongList,
 }: {
   songList: SongType[] | CreateSongType[];
   isCreate?: boolean;
+  setSongList?: Dispatch<SetStateAction<CreateSongType[]>>;
 }) => {
   const isNotCreate = !isCreate;
   return (
@@ -37,6 +40,7 @@ const Table = ({
                 <th className={`text-start opacity-0 xs:hidden`}>PLAY</th>
               </>
             )}
+            {isCreate && <th className={`w-0 opacity-0 xs:hidden`}>Delete</th>}
           </tr>
         </thead>
         <tbody>
@@ -87,6 +91,24 @@ const Table = ({
                       </button>
                     </td>
                   </>
+                )}
+                {isCreate && setSongList && (
+                  <td className={`flex items-center py-2 xs:hidden`}>
+                    <button
+                      className={`relative top-0.5 text-gray-500 text-sm font-medium`}
+                      onClick={() => {
+                        setSongList((prev) =>
+                          prev.filter((_, idx) => idx !== index),
+                        );
+                      }}
+                    >
+                      <MinusCircleIcon
+                        className={` hover:text-gray-100`}
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                  </td>
                 )}
               </tr>
             );

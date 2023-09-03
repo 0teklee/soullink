@@ -11,16 +11,21 @@ import {
   YoutubeSearchResponse,
 } from "@/types/apiData/client/searchTypes";
 import Image from "next/image";
-import { CreateSongType } from "@/types/common/Song&PlaylistType";
+import {
+  CreatePlaylistType,
+  CreateSongType,
+} from "@/types/common/Song&PlaylistType";
 
 type TUrlType = "youtube" | "custom" | "";
 
-const PlaylistModal = ({
+const PlaylistSongModal = ({
   setModalOpen,
   setSongList,
+  setPayload,
 }: {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   setSongList: Dispatch<SetStateAction<CreateSongType[]>>;
+  setPayload: Dispatch<SetStateAction<CreatePlaylistType>>;
 }) => {
   const [page, setPage] = useState("submit");
 
@@ -100,20 +105,51 @@ const PlaylistModal = ({
     setIsFetching(false);
   };
 
+  const handleAddSong = () => {
+    if (songValue.type === "custom" && isUrlValid) {
+      setIsAvailableCustomUrl(false);
+      return;
+    }
+
+    if (songValue.title === "" || songValue.artist === "") {
+      alert("Please fill the title and artist");
+      return;
+    }
+
+    setSongList((prev) => [...prev, songValue]);
+    setPayload((prev) => ({
+      ...prev,
+      songs: [...prev.songs, songValue],
+    }));
+    setSongValue({
+      url: "",
+      title: "",
+      artist: "",
+      type: "",
+      thumbnail: "",
+    });
+    setModalOpen(false);
+  };
+
   return (
     <>
       <div
-        onClick={() => {
-          setModalOpen(false);
-        }}
         className={`fixed top-0 left-0 flex items-center justify-center w-screen h-screen bg-black bg-opacity-30 text-gray-900`}
       >
         <div
           onClick={(e) => {
             e.stopPropagation();
           }}
-          className={`flex flex-col items-center justify-center gap-4 p-5 xs:p-2 bg-white rounded border border-gray-300`}
+          className={`relative flex flex-col items-center justify-center gap-4 p-5 xs:p-2 bg-white rounded border border-gray-300`}
         >
+          <button
+            onClick={() => {
+              setModalOpen(false);
+            }}
+            className={`absolute top-1 right-3 text-gray-400 text-base`}
+          >
+            x
+          </button>
           {page === "submit" && (
             <>
               <Title size={`h2`} text={`Add Song`} />
@@ -242,27 +278,7 @@ const PlaylistModal = ({
                 </div>
               </div>
               <button
-                onClick={() => {
-                  if (!isUrlValid) {
-                    setIsAvailableCustomUrl(false);
-                    return;
-                  }
-
-                  if (songValue.title === "" || songValue.artist === "") {
-                    alert("Please fill the title and artist");
-                    return;
-                  }
-
-                  setSongList((prev) => [...prev, songValue]);
-                  setSongValue({
-                    url: "",
-                    title: "",
-                    artist: "",
-                    type: "",
-                    thumbnail: "",
-                  });
-                  setModalOpen(false);
-                }}
+                onClick={handleAddSong}
                 className={`mt-4 px-3 py-2 text-primary border-2 border-primary rounded`}
               >
                 Add to playlist
@@ -297,10 +313,23 @@ const PlaylistModal = ({
                       key={index}
                       className={`flex items-center justify-start gap-2 w-full p-2 bg-white hover:bg-primary hover:text-white rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
                       onClick={() => {
+                        const formattedArtist =
+                          item.snippet.channelTitle.replace("VEVO", "");
+                        const titleRegex = new RegExp(
+                          /(VEVO|Official|Official Video|Official Audio|Video|video| -|- )|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*\))|(\(\s*19\d{2}\s*\))|(\(\s*20\d{2}\s*\))/gi,
+                        );
+                        const emptyRegex = new RegExp(/\(\s*\)/g);
+                        // regex for no 4 digit year strings
+
                         setSongValue({
                           url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-                          title: item.snippet.title,
-                          artist: item.snippet.channelTitle.replace("VEVO", ""),
+                          title: item.snippet.title
+                            .replace(formattedArtist, "")
+                            .replace(titleRegex, "")
+                            .replace(emptyRegex, "")
+                            .replace(" - ", " ")
+                            .trim(),
+                          artist: formattedArtist,
                           thumbnail: item.snippet.thumbnails.default.url,
                           type: "youtube",
                         });
@@ -320,10 +349,10 @@ const PlaylistModal = ({
                         className={`flex flex-col items-start justify-center gap-1`}
                       >
                         <div className={`text-sm font-bold`}>
-                          {item.snippet.title}
+                          `${item.snippet.title}`
                         </div>
                         <div className={`text-xs`}>
-                          {item.snippet.channelTitle.replace("VEVO", "")}
+                          `${item.snippet.channelTitle.replace("VEVO", "")}`
                         </div>
                       </div>
                     </button>
@@ -351,4 +380,4 @@ const PlaylistModal = ({
   );
 };
 
-export default PlaylistModal;
+export default PlaylistSongModal;
