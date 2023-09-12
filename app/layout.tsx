@@ -2,7 +2,6 @@ import "./globals.css";
 import Footer from "@/components/common/Footer";
 import NextAuthSessionProvider from "@/components/common/module/NextAuthSessionProvider";
 import Header from "@/components/common/header/Header";
-import { getToken } from "next-auth/jwt";
 
 export const metadata = {
   title: "soullink",

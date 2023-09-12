@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import HeaderUser from "@/components/common/header/HeaderUser";
 import Link from "next/link";
 
-const Header = ({ userToken }: { userToken?: string }) => {
+const Header = () => {
   return (
     <div
       className={`fixed flex items-center justify-between w-screen px-8 py-1.5 bg-gray-400 z-50 xs:py-0.5 xs:px-2 `}
