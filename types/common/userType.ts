@@ -1,4 +1,5 @@
 import { PlaylistType, SongType } from "@/types/common/Song&PlaylistType";
+import { Session } from "next-auth";
 
 export interface UserType {
   id: string;
@@ -34,4 +35,22 @@ export interface CommentType {
   playlistId?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UserSessionType extends Session {
+  userId?: string;
+  userNickname?: string;
+  userImage?: string;
+}
+
+export interface SignupPayload {
+  profilePic: string;
+  nickname: string;
+  bio: string;
+  email: string;
+  socialLinks: {
+    website: string;
+    instagram: string;
+    twitter: string;
+  };
 }
