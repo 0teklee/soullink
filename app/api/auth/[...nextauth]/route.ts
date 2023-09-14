@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       const userId = await prisma.user.findUnique({
         where: {
           email: session.user?.email as string,

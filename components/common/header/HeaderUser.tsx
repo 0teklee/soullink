@@ -50,7 +50,7 @@ const HeaderUser = () => {
             </button>
           </>
         )}
-        {!isLoading && !!isLogin && (
+        {!isLoading && isLogin && (
           <div className={`relative flex items-center`}>
             <button
               className={`flex items-center`}
