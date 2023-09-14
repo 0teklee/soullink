@@ -42,3 +42,15 @@ export interface UserSessionType extends Session {
   userNickname?: string;
   userImage?: string;
 }
+
+export interface SignupPayload {
+  profilePic: string;
+  nickname: string;
+  bio: string;
+  email: string;
+  socialLinks: {
+    website: string;
+    instagram: string;
+    twitter: string;
+  };
+}
