@@ -11,7 +11,7 @@ const providers = [
 
 export const authOptions: AuthOptions = {
   providers,
-  secret: process.env.NEXT_PUBLIC_SECRET as string,
+  secret: process.env.SESSION_SECRET as string,
   debug: true,
   callbacks: {
     async jwt({ token, account }) {
@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       const userId = await prisma.user.findUnique({
         where: {
           email: session.user?.email as string,
@@ -31,6 +31,10 @@ export const authOptions: AuthOptions = {
           profilePic: true,
         },
       });
+
+      if (!userId || !userId?.id) {
+        return session;
+      }
 
       const newSession: Session = {
         ...session,
@@ -49,23 +53,6 @@ export const authOptions: AuthOptions = {
         userImage: userId?.profilePic,
         token,
       };
-    },
-    async signIn({ user }) {
-      const userDB = await prisma.user.findUnique({
-        where: {
-          email: user.email as string,
-        },
-        select: {
-          id: true,
-        },
-      });
-      const isAllowedToSignIn = userDB && userDB?.id;
-
-      if (isAllowedToSignIn) {
-        return true;
-      } else {
-        return "/signup";
-      }
     },
   },
 };
