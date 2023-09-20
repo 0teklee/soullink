@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session }) {
       const userId = await prisma.user.findUnique({
         where: {
           email: session.user?.email as string,
@@ -51,9 +51,28 @@ export const authOptions: AuthOptions = {
         userId: userId?.id,
         userNickname: userId?.nickname,
         userImage: userId?.profilePic,
-        token,
       };
     },
+    async signIn({ user, account, profile, email, credentials }) {
+      const userId = await prisma.user.findUnique({
+        where: {
+          email: user?.email as string,
+        },
+        select: {
+          id: true,
+          nickname: true,
+          profilePic: true,
+        },
+      });
+
+      if (!userId || !userId?.id) {
+        return "/signup";
+      }
+      return true;
+    },
+  },
+  pages: {
+    newUser: "/signup",
   },
 };
 
