@@ -16,11 +16,7 @@ const HeaderUser = () => {
   const [isListClicked, setIsListClicked] = useState(false);
 
   const login = async () => {
-    if (!isLogin) {
-      router.push(`/signup`);
-      return;
-    }
-    await signIn("google");
+    await signIn("google", { redirect: true, callbackUrl: `/` });
   };
 
   const logout = async () => {
