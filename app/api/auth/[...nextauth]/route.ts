@@ -53,7 +53,7 @@ export const authOptions: AuthOptions = {
         userImage: userId?.profilePic,
       };
     },
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
       const userId = await prisma.user.findUnique({
         where: {
           email: user?.email as string,

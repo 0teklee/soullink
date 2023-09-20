@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Dispatch, ReactNode, SetStateAction } from "react";
-import { createPortal } from "react-dom";
 
 const ModalContainer = ({
   children,
