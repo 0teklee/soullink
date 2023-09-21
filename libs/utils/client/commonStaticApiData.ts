@@ -279,7 +279,7 @@ export const fakeFirstPlaylistData: PlaylistType = {
   createdAt: "2021-08-01T00:00:00.000Z",
   updatedAt: "2021-08-01T00:00:00.000Z",
   playCount: 10,
-  likedBy: [sampleUser, sampleUser2],
+  likedBy: [],
   comments: sampleComments1,
 };
 
@@ -295,7 +295,7 @@ export const fakeSecondPlaylistData: PlaylistType = {
   createdAt: "2021-08-01T00:00:00.000Z",
   updatedAt: "2021-08-01T00:00:00.000Z",
   playCount: 10,
-  likedBy: [sampleUser2],
+  likedBy: [],
   comments: sampleComments2,
 };
 
