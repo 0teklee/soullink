@@ -5,13 +5,18 @@ import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
 import { handleKeyPress } from "@/libs/utils/client/eventHandler";
 import { PlayerProps } from "@/types/common/Song&PlaylistType";
-import { fakePlaylistSongsData } from "@/libs/utils/client/commonStaticApiData";
+import { useRecoilValue } from "recoil";
+import { playlistState } from "@/libs/recoil/playerAtom";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
 });
 
 const PlayerContainer = () => {
+  const selectedPlayList = useRecoilValue(playlistState);
+  const selectedSongList = selectedPlayList?.songs || [];
+  const isSongListEmpty = selectedSongList.length === 0;
+
   const [playerState, setPlayerState] = useState({
     playing: false,
     played: "00:00",
@@ -21,7 +26,7 @@ const PlayerContainer = () => {
     volume: 0.8,
     muted: false,
     seeking: false,
-    isLoading: true,
+    isLoading: isSongListEmpty ? false : true,
   });
 
   const [songListIndex, setSongListIndex] = useState(0);
@@ -47,13 +52,17 @@ const PlayerContainer = () => {
             playerState={playerState}
             setPlayerState={setPlayerState}
             playerRef={playerRef}
-            song={fakePlaylistSongsData[songListIndex].url}
+            song={
+              selectedSongList.length > 0
+                ? selectedSongList[songListIndex].url
+                : ""
+            }
           />
           <PlayerController
             playerState={playerState}
             setPlayerState={setPlayerState}
             playerRef={playerRef}
-            songList={fakePlaylistSongsData}
+            songList={selectedSongList}
             setSongListIndex={setSongListIndex}
             songListIndex={songListIndex}
           />
