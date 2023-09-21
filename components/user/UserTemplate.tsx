@@ -4,7 +4,7 @@ import React from "react";
 import { UserType } from "@/types/common/userType";
 import UserHeader from "@/components/user/UserHeader";
 import Title from "@/components/common/module/Title";
-import PlayListSlider from "@/components/main/module/PlayListSlider";
+import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 
 const UserTemplate = ({ userProps }: { userProps: UserType }) => {
