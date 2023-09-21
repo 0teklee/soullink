@@ -3,7 +3,7 @@
 import React from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import PlaylistItem from "@/components/main/module/PlaylistItem";
+import PlaylistItem from "@/components/common/playlist/PlaylistItem";
 
 import "swiper/css";
 import { PlaylistType } from "@/types/common/Song&PlaylistType";

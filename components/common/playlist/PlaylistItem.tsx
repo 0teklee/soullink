@@ -1,10 +1,16 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { PlaylistType } from "@/types/common/Song&PlaylistType";
 import Title from "@/components/common/module/Title";
+import { useSetRecoilState } from "recoil";
+import { playlistState } from "@/libs/recoil/playerAtom";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
   const { coverImage, songs, title, author } = playlistItem;
+  const setCurrentPlayList = useSetRecoilState(playlistState);
+
   return (
     <div>
       <div
@@ -22,6 +28,9 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
         </div>
       </div>
       <div
+        onClick={() => {
+          setCurrentPlayList(playlistItem);
+        }}
         className={`relative xs:w-[300px] xs:h-[300px] 2xl:w-[400px] 2xl:h-[400px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
       >
         <Image

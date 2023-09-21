@@ -1,14 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { PlaylistType } from "@/types/common/Song&PlaylistType";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
 import Table from "@/components/common/module/Table";
 import CommentContainer from "@/components/common/comments/CommentContainer";
+import process from "process";
+import { useMutation } from "react-query";
+import { postPlaylistLike } from "@/libs/utils/client/fetchers";
+import { playlistDefault } from "@/libs/utils/client/commonValues";
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/types/common/userType";
+import CommonLoginModal from "@/components/common/modal/CommonLoginModal";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 
 const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const router = useRouter();
+  const { data: session } = useSession() as { data: UserSessionType };
+  const userId = session?.userId;
+
   const {
     title,
     description,
@@ -23,7 +39,26 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
     playCount,
   } = playlistData;
 
-  const { profilePic, nickname: authorName } = author;
+  const { profilePic, nickname: authorName } = author || playlistDefault.author;
+  const isUserLikedPlaylist =
+    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
+
+  const { mutate } = useMutation({
+    mutationFn: () =>
+      postPlaylistLike({ playlistId: id, userId: userId || "" }),
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
+  const handleLikePlaylist = async () => {
+    if (!userId) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    mutate();
+  };
 
   return (
     <section
@@ -52,7 +87,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           <p className={`font-normal text-black`}>by {authorName}</p>
           <Image
             className={`rounded-full`}
-            src={profilePic}
+            src={profilePic || "/image/common/default_profile.svg"}
             alt={`user_profile`}
             width={30}
             height={30}
@@ -67,50 +102,76 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
         >
           <Image
             className={`z-[2]`}
-            src={coverImage}
+            src={
+              coverImage ??
+              `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`
+            }
             alt={`cover_image`}
             fill={true}
           />
         </div>
-        <div className={`absolute bottom-0 right-0 w-full h-full  blur-sm`}>
-          <Image
-            className={`object-cover z-1`}
-            src={coverImage}
-            alt={`bg`}
-            fill={true}
-          />
+        <div className={`absolute bottom-0 right-0 w-full h-full blur-sm`}>
+          {!!coverImage ?? (
+            <Image
+              className={`object-cover z-1`}
+              src={coverImage}
+              alt={`bg`}
+              fill={true}
+            />
+          )}
         </div>
       </div>
       <div className={`flex flex-col items-center justify-center gap-3`}>
         <div className={`flex items-center justify-center  gap-3`}>
-          <button className={`relative w-8 h-8`}>
-            <Image
-              src={`/image/player/song_like.svg`}
-              alt={`like`}
-              fill={true}
-            />
+          <button
+            onClick={handleLikePlaylist}
+            className={`flex items-center gap-3`}
+          >
+            <div className={`relative w-8 h-8`}>
+              {isUserLikedPlaylist ? (
+                <HeartIconSolid
+                  className={`text-primary`}
+                  width={32}
+                  height={32}
+                />
+              ) : (
+                <HeartIcon className={`text-gray-300`} width={32} height={32} />
+              )}
+            </div>
+            <p
+              className={`text-gray-900 text-xl font-normal`}
+            >{`LIKE THIS PLAYLIST`}</p>
           </button>
-          <p
-            className={`text-gray-900 text-xl font-normal`}
-          >{`LIKE THIS PLAYLIST`}</p>
         </div>
         <div
           className={`flex items-center text-sm text-gray-900 font-medium  gap-8`}
         >
-          <p>{`${playCount} played`}</p>
-          <p>{`${likedBy.length} likes`}</p>
-          <p>{`${comments.length} comments`}</p>
+          <p>{`${playCount || 0} played`}</p>
+          <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
+          <p>{`${!!comments ? comments?.length : 0} comments`}</p>
         </div>
       </div>
-      <Table key={`table_${id}`} songList={songs} />
-      <div className={`flex flex-col items-start w-full gap-6`}>
+      <Table key={`table_${id}`} songList={songs} propsUserId={userId} />
+      <div
+        className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
+      >
         <Title size={`h2`} text={`Description`} />
-        <p className={`text-base font-normal text-gray-900`}>{description}</p>
+        {description ? (
+          <p className={` text-gray-900`}>{description}</p>
+        ) : (
+          <p className={`text-gray-300`}>No description :/</p>
+        )}
       </div>
       <div className={`flex flex-col items-start w-full gap-6`}>
         <Title size={`h2`} text={`Comments`} />
         <CommentContainer commentList={comments} />
       </div>
+      {isModalOpen && (
+        <CommonLoginModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </section>
   );
 };

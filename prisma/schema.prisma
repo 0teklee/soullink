@@ -41,7 +41,7 @@ model Follow {
 
 model Playlist {
   id          String                 @id @default(uuid())
-  title       String                 @db.VarChar(40)
+  title       String                 @unique @db.VarChar(40)
   coverImage  String?
   description String                 @db.VarChar(300)
   author      User                   @relation(fields: [authorId], references: [id])

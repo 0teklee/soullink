@@ -9,6 +9,7 @@ export interface SongType {
   thumbnail?: string;
   playedCount: number;
   likedCount: number;
+  likedUsers?: { userId: string; songId: string }[];
 }
 
 type SongUrlType = "youtube" | "" | "custom";
@@ -18,11 +19,21 @@ export interface CreateSongType
   type: SongUrlType;
 }
 
+export interface SongLikeType {
+  songId: string;
+  userId: string;
+}
+
 export interface CreatePlaylistType {
   title: string;
   description: string;
   coverImage?: string;
   songs: CreateSongType[];
+}
+
+export interface PlaylistLikeType {
+  playlistId: string;
+  userId: string;
 }
 
 export interface PlaylistCreateRequestType
@@ -41,7 +52,7 @@ export interface PlaylistType {
   authorId: string;
   songs: SongType[];
   comments: CommentType[];
-  likedBy: UserType[];
+  likedBy: { userId: string; playlistId: string }[];
   playCount: number;
   createdAt: string;
   updatedAt: string;

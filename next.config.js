@@ -13,6 +13,7 @@ const nextConfig = {
     NEXT_IMAGE_API_SECRET: process.env.NEXT_IMAGE_API_SECRET,
     NEXT_GOOGLE_CLIENT_ID: process.env.NEXT_GOOGLE_CLIENT_ID,
     NEXT_GOOGLE_CLIENT_SECRET: process.env.NEXT_GOOGLE_CLIENT_SECRET,
+    NEXT_APP_BASE_URL: process.env.NEXT_APP_BASE_URL,
   },
 };
 
