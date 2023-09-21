@@ -224,10 +224,10 @@ const PlayerController = ({
             className={`whitespace-nowrap xs:order-1 xs:flex-1 xs:text-center`}
           >
             <p className={`text-xs text-gray-900 font-medium`}>
-              {songList[songListIndex].title}
+              {songList[songListIndex]?.title}
             </p>
             <p className={`text-xs text-gray-600 font-normal xs:hidden`}>
-              {songList[songListIndex].artist}
+              {songList[songListIndex]?.artist}
             </p>
           </div>
           <div className={`flex items-center gap-2 xs:order-2 xs:flex-2`}>
