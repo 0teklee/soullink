@@ -8,7 +8,6 @@ import process from "process";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const playlistData = await getSinglePlaylist(id);
-
   return <DetailTemplate playlistData={playlistData} />;
 };
 
