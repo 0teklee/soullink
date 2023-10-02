@@ -4,6 +4,7 @@ import NextAuthSessionProvider from "@/components/common/module/NextAuthSessionP
 import Header from "@/components/common/header/Header";
 import ReactQueryClientProvider from "@/components/common/module/ReactQueryClientProvider";
 import RecoilRootProvider from "@/components/common/module/RecoilRootProvider";
+import CommonModalProvider from "@/components/common/module/CommonModalProvider";
 
 export const metadata = {
   title: "soullink",
@@ -28,6 +29,7 @@ export default function RootLayout({
                 {children}
               </main>
               <Footer />
+              <CommonModalProvider />
             </ReactQueryClientProvider>
           </NextAuthSessionProvider>
         </RecoilRootProvider>
