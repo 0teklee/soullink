@@ -11,6 +11,18 @@ export async function GET() {
       orderBy: {
         playedCount: "desc",
       },
+      select: {
+        id: true,
+        title: true,
+        artist: true,
+        thumbnail: true,
+        playedCount: true,
+        likedUsers: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
     return new NextResponse(
       JSON.stringify({ message: "success", trendingData: songs }),

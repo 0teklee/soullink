@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const trendingPlaylist = await prisma.playlist.findMany({
       take: 20,
@@ -24,6 +24,11 @@ export async function GET(req: Request) {
         authorId: true,
         playCount: true,
         songs: true,
+        likedBy: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
     return new NextResponse(

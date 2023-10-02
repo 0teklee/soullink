@@ -36,8 +36,7 @@ const PlayerController = ({
   playlist: PlaylistType | null;
 }) => {
   const playerCur = playerRef?.current;
-  const { data: session } = useSession();
-  const userSession = session as UserSessionType;
+  const { data: userSession } = useSession() as { data: UserSessionType };
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
   const { userId } = userSession || "";
   const {
@@ -276,7 +275,9 @@ const PlayerController = ({
         <div
           className={`flex items-center justify-evenly gap-2 xs:justify-start xs:flex-1 xs:gap-3`}
         >
-          <div className={`album_cover w-8 h-8 bg-gray-300  xs:hidden`}>
+          <div
+            className={`album_cover w-8 h-8 bg-gray-300 overflow-hidden  xs:hidden`}
+          >
             <Image
               className={`rounded`}
               src={

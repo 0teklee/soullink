@@ -4,7 +4,8 @@ import { prisma } from "@/prisma/client";
 export async function GET(req: Request) {
   try {
     const pathname = new URL(req.url).pathname.split("/");
-    const title = decodeURI(pathname[pathname.length - 1]);
+    const title = decodeURIComponent(pathname[pathname.length - 1]);
+
     const playlist = await prisma.playlist.findUnique({
       where: {
         title,
@@ -22,7 +23,11 @@ export async function GET(req: Request) {
             artist: true,
             thumbnail: true,
             playedCount: true,
-            likedUsers: true,
+            likedUsers: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
         likedBy: true,

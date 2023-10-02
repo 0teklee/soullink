@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   CreateSongType,
   SongType,
@@ -17,16 +17,16 @@ const Table = ({
   songList,
   isCreate,
   setSongList,
-  propsUserId,
+  userId,
 }: {
   songList: SongType[] | CreateSongType[];
   isCreate?: boolean;
   setSongList?: Dispatch<SetStateAction<CreateSongType[]>>;
-  propsUserId?: string;
+  userId?: string;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isNotCreate = !isCreate;
-  const isLogin = !!propsUserId;
+  const isLogin = !!userId;
   const router = useRouter();
 
   const { mutate } = useMutation({
@@ -49,6 +49,10 @@ const Table = ({
       },
     );
   };
+
+  useEffect(() => {
+    router.refresh();
+  }, [userId]);
 
   return (
     <>
@@ -94,7 +98,7 @@ const Table = ({
               const isUserLikedSong =
                 item?.likedUsers &&
                 item?.likedUsers?.filter(
-                  (likedItem) => likedItem.userId === propsUserId,
+                  (likedItem) => likedItem.userId === userId,
                 ).length > 0;
               return (
                 <tr
@@ -120,14 +124,14 @@ const Table = ({
                               <HeartIconSolid
                                 className={`w-full h-full text-primary`}
                                 onClick={() => {
-                                  handleLikeSong(item.id, propsUserId);
+                                  handleLikeSong(item.id, userId);
                                 }}
                               />
                             ) : (
                               <HeartIcon
                                 className={`w-full h-full text-gray-500`}
                                 onClick={() => {
-                                  handleLikeSong(item.id, propsUserId);
+                                  handleLikeSong(item.id, userId);
                                 }}
                               />
                             )}

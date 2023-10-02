@@ -4,7 +4,7 @@ import { prisma } from "@/prisma/client";
 export async function GET(req: Request) {
   try {
     const pathname = new URL(req.url).pathname.split("/");
-    const nickname = decodeURI(pathname[pathname.length - 1]);
+    const nickname = decodeURIComponent(pathname[pathname.length - 1]);
 
     const user = await prisma.user.findUnique({
       where: {

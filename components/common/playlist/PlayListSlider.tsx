@@ -15,15 +15,24 @@ const PlayListSlider = ({ playLists }: { playLists: PlaylistType[] }) => {
         <Swiper
           className={`overflow-fadeout`}
           wrapperClass={`w-full`}
-          setWrapperSize={false}
+          speed={1500}
+          initialSlide={0}
+          fadeEffect={{
+            crossFade: false,
+          }}
           breakpoints={{
             "400": { slidesPerView: 1, spaceBetween: 0, width: 320 },
             "768": { slidesPerView: 3, spaceBetween: 50 },
             "1300": {
-              slidesPerView: 3,
-              spaceBetween: 300,
+              slidesPerView: 1,
+              spaceBetween: 10,
+              width: 400,
             },
-            "1500": { slidesPerView: 2, spaceBetween: 200 },
+            "1920": {
+              slidesPerView: 4,
+              spaceBetween: 180,
+              width: 800,
+            },
           }}
         >
           {playLists.map((item, index) => {

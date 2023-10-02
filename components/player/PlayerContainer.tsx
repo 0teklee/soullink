@@ -34,6 +34,19 @@ const PlayerContainer = () => {
   const playerRef = useRef<PlayerProps>(null);
 
   useEffect(() => {
+    if (isSongListEmpty) {
+      setPlayerState((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }
+    setPlayerState((prev) => ({
+      ...prev,
+      playing: true,
+    }));
+  }, [selectedPlayList]);
+
+  useEffect(() => {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
       handleKeyPress(e, playerRef, setPlayerState);
     });
@@ -52,6 +65,9 @@ const PlayerContainer = () => {
             playerState={playerState}
             setPlayerState={setPlayerState}
             playerRef={playerRef}
+            setSongListIndex={setSongListIndex}
+            songListIndex={songListIndex}
+            songList={selectedSongList}
             song={
               selectedSongList.length > 0
                 ? selectedSongList[songListIndex].url
