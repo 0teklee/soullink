@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
 import { handleKeyPress } from "@/libs/utils/client/eventHandler";
-import { PlayerProps } from "@/types/common/Song&PlaylistType";
+import { PlayerProps } from "@/libs/types/common/Song&PlaylistType";
 import { useRecoilValue } from "recoil";
 import { playlistState } from "@/libs/recoil/playerAtom";
 
@@ -62,9 +62,9 @@ const PlayerContainer = () => {
             playerState={playerState}
             setPlayerState={setPlayerState}
             playerRef={playerRef}
-            songList={selectedSongList}
             setSongListIndex={setSongListIndex}
             songListIndex={songListIndex}
+            playlist={selectedPlayList}
           />
         </>
       )}
