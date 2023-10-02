@@ -10,7 +10,7 @@ const Header = () => {
     >
       <div className={`flex items-center w-full h-full gap-6 xs:flex-1`}>
         <Link
-          className={`flex items-center justify-center w-9 h-9 text-gray-100 hover:text-gray-50 xs:hidden`}
+          className={`flex items-center justify-center w-9 h-9 text-gray-100 hover:text-gray-50 `}
           href={`/`}
         >
           <Image src={`/soullink_logo.png`} alt="logo" width={36} height={36} />
@@ -18,26 +18,24 @@ const Header = () => {
         <div
           className={`flex items-center justify-start gap-4 text-gray-200  whitespace-nowrap font-normal xs:hidden`}
         >
-          <button
+          <Link
+            href={`/discover`}
+            className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+          >
+            Discover
+          </Link>
+          <Link
+            href={`/discover`}
             className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
           >
             Trending
-          </button>
-          <button
+          </Link>
+          <Link
             className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
-          >
-            Friends list
-          </button>
-          <button
-            className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
-          >
-            My list
-          </button>
-          <button
-            className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            href={`/playlist/create`}
           >
             Create list
-          </button>
+          </Link>
         </div>
       </div>
       <HeaderUser />
