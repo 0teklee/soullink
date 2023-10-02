@@ -45,7 +45,6 @@ const BgColorExtract = ({ imageUrl }: { imageUrl: string }) => {
       }
 
       setColors(colorCode);
-      console.log("colorCode", colorCode);
     };
   }, [imageUrl]);
 
