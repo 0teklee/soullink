@@ -9,6 +9,28 @@ export async function GET(req: Request) {
         likedCount: "desc",
         playCount: "desc",
       },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        coverImage: true,
+        createdAt: true,
+        likedCount: true,
+        author: {
+          select: {
+            id: true,
+            nickname: true,
+          },
+        },
+        authorId: true,
+        playCount: true,
+        songs: true,
+        likedBy: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
     return new NextResponse(
       JSON.stringify({

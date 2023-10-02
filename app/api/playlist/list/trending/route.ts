@@ -24,6 +24,11 @@ export async function GET(req: Request) {
         authorId: true,
         playCount: true,
         songs: true,
+        likedBy: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
     return new NextResponse(
