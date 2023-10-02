@@ -6,18 +6,25 @@ import ReactPlayer from "react-player";
 import {
   PlayerProps,
   PlayerState,
+  SongType,
 } from "@/libs/types/common/Song&PlaylistType";
 
 const Player = ({
+  song,
+  songList,
   playerState,
   setPlayerState,
+  songListIndex,
+  setSongListIndex,
   playerRef,
-  song,
 }: {
   playerState: PlayerState;
   setPlayerState: Dispatch<SetStateAction<PlayerState>>;
-  playerRef: RefObject<PlayerProps>;
   song: string;
+  songList: SongType[];
+  setSongListIndex: Dispatch<SetStateAction<number>>;
+  songListIndex: number;
+  playerRef: RefObject<PlayerProps>;
 }) => {
   const { playing, played, duration, seeking, volume, muted } = playerState;
 
@@ -63,6 +70,14 @@ const Player = ({
             played: secondsFormatter(state.playedSeconds) || "00:00",
             playedSec: state.playedSeconds,
           });
+        }}
+        onEnded={() => {
+          if (songListIndex + 1 < songList.length) {
+            setSongListIndex(songListIndex + 1);
+            setPlayerState((prev) => {
+              return { ...prev, playing: true, played: "00:00", playedSec: 0 };
+            });
+          }
         }}
         controls={true}
       />
