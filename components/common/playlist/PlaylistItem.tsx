@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import Title from "@/components/common/module/Title";
@@ -8,16 +8,55 @@ import { useSetRecoilState } from "recoil";
 import { playlistState } from "@/libs/recoil/playerAtom";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
+import { useMutation } from "react-query";
+import { postPlaylistLike } from "@/libs/utils/client/fetchers";
+import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/libs/types/common/userType";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
-  const { coverImage, songs, title, author } = playlistItem;
+  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
   const setCurrentPlayList = useSetRecoilState(playlistState);
+
+  const { data: userSession } = useSession() as { data: UserSessionType };
+  const userId = userSession?.userId;
   const router = useRouter();
 
+  const [isOnHover, setIsOnHover] = useState(false);
+
+  const {
+    coverImage,
+    songs,
+    title,
+    author,
+    id: playlistId,
+    likedBy,
+  } = playlistItem;
+
+  const isUserLikedPlaylist =
+    likedBy &&
+    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
+
+  const { mutate } = useMutation({
+    mutationFn: () => postPlaylistLike({ playlistId, userId: userId || "" }),
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
+  const handleLikePlaylist = async () => {
+    if (!userId) {
+      setLoginModalOpen(true);
+      return;
+    }
+
+    mutate();
+  };
+
   return (
-    <div>
+    <div className={`overflow-y-visible`}>
       <div
-        className={`flex justify-between items-center w-[400px] mb-2 xs:w-[300px] desktop:w-[800px] cursor-pointer`}
+        className={`flex justify-between items-center w-[400px] mb-2 lg:w-[300px] cursor-pointer`}
       >
         <div
           onClick={() => {
@@ -26,21 +65,43 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
         >
           <Title text={title} size={`h4`} />
         </div>
-        <div className={`flex items-center gap-1 text-gray-900`}>
-          <Image
-            className={`cursor-pointer`}
-            src={`/image/common/playlist_like.svg`}
-            alt={`mobile_header`}
-            width={24}
-            height={24}
-          />
+
+        <div
+          onMouseEnter={() => {
+            setIsOnHover(true);
+          }}
+          onMouseLeave={() => {
+            setIsOnHover(false);
+          }}
+          className={`relative flex items-center gap-1 text-gray-900`}
+        >
+          {isOnHover && (
+            <div className={`bg-white text-xs text-gray-700 whitespace-nowrap`}>
+              {isUserLikedPlaylist
+                ? `unlike this playlist`
+                : `like this playlist`}
+            </div>
+          )}
+          <button onClick={handleLikePlaylist}>
+            <Image
+              className={`cursor-pointer`}
+              src={
+                isUserLikedPlaylist
+                  ? `/image/common/playlist_liked.svg`
+                  : `/image/common/playlist_like.svg`
+              }
+              alt={`like this playlist`}
+              width={24}
+              height={24}
+            />
+          </button>
         </div>
       </div>
       <div
         onClick={() => {
           setCurrentPlayList(playlistItem);
         }}
-        className={`relative xs:w-[300px] xs:h-[300px] 2xl:w-[400px] 2xl:h-[400px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
+        className={`relative xs:w-[300px]  xs:h-[300px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
       >
         <Image
           className={`absolute object-cover hover:blur-md -z-10`}
