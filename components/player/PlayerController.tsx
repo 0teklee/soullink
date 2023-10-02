@@ -1,30 +1,54 @@
+"use client";
+
 import React, { Dispatch, RefObject, useEffect, useState } from "react";
 import Image from "next/image";
 
 import VolumeDropdown from "@/components/player/module/VolumeDropdown";
 import ListMenuContainer from "@/components/player/module/ListMenuContainer";
 import {
-  PlayerListItem,
   PlayerProps,
   PlayerState,
-} from "@/types/common/Song&PlaylistType";
+  PlaylistType,
+} from "@/libs/types/common/Song&PlaylistType";
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/libs/types/common/userType";
+import { useSetRecoilState } from "recoil";
+import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { useMutation } from "react-query";
+import { postPlaylistLike, postSongLike } from "@/libs/utils/client/fetchers";
+import { useRouter } from "next/navigation";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 
 const PlayerController = ({
   playerState,
   setPlayerState,
   playerRef,
   setSongListIndex,
-  songList,
   songListIndex,
+  playlist,
 }: {
   playerState: PlayerState;
   setPlayerState: Dispatch<React.SetStateAction<PlayerState>>;
   playerRef: RefObject<PlayerProps>;
   songListIndex: number;
   setSongListIndex: Dispatch<React.SetStateAction<number>>;
-  songList: PlayerListItem[];
+  playlist: PlaylistType | null;
 }) => {
   const playerCur = playerRef?.current;
+  const { data: session } = useSession();
+  const userSession = session as UserSessionType;
+  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { userId } = userSession || "";
+  const {
+    songs: songList,
+    likedBy,
+    id: playlistId,
+  } = playlist || {
+    songs: [],
+    likedBy: [],
+    id: "",
+  };
 
   const {
     playing,
@@ -38,9 +62,22 @@ const PlayerController = ({
 
   const [isVolumeDropdownOpen, setIsVolumeDropdownOpen] = useState(false);
   const [isListDropdownOpen, setIsListDropdownOpen] = useState(false);
+  const router = useRouter();
+
+  const listDropdownRef = React.useRef<HTMLDivElement>(null);
 
   const isListFirst = songListIndex === 0;
   const isListLast = songListIndex === songList.length - 1;
+  const isUserLikedPlaylist =
+    likedBy &&
+    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
+
+  const currentSong = songList[songListIndex];
+  const isSongLiked =
+    currentSong &&
+    currentSong?.likedUsers &&
+    currentSong?.likedUsers?.filter((likeItem) => likeItem.userId === userId)
+      .length > 0;
 
   const handlePrev = () => {
     playerCur?.seekTo(playerCur?.getCurrentTime() - 3);
@@ -63,6 +100,49 @@ const PlayerController = ({
     }
     setSongListIndex((prev) => prev + 1);
   };
+
+  const { mutate: playlistLikeMutate } = useMutation({
+    mutationFn: () =>
+      postPlaylistLike({ playlistId: playlistId || "", userId: userId || "" }),
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
+  const { mutate: songLikeMutate } = useMutation({
+    mutationFn: () =>
+      postSongLike({ songId: currentSong?.id || "", userId: userId || "" }),
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
+  const handleLikePlaylist = async () => {
+    if (!userId) {
+      setLoginModalOpen(true);
+      return;
+    }
+
+    if (!playlistId) {
+      return;
+    }
+
+    playlistLikeMutate();
+  };
+
+  const handleLikeSong = async () => {
+    if (!userId) {
+      setLoginModalOpen(true);
+      return;
+    }
+    songLikeMutate();
+  };
+
+  const handleListDropdownOutside = () => {
+    setIsListDropdownOpen(false);
+  };
+
+  useClickOutside({ ref: listDropdownRef, handler: handleListDropdownOutside });
 
   useEffect(() => {
     if (songListIndex === songList.length - 1 || songListIndex === 0) {
@@ -124,7 +204,6 @@ const PlayerController = ({
               />
             )}
           </button>
-
           <button className={`xs:hidden`} onClick={handleNext}>
             <Image
               src={`/image/player/next.svg`}
@@ -197,11 +276,24 @@ const PlayerController = ({
         <div
           className={`flex items-center justify-evenly gap-2 xs:justify-start xs:flex-1 xs:gap-3`}
         >
-          <div className={`album_cover w-6 h-6 bg-gray-300 xs:hidden`} />
+          <div className={`album_cover w-8 h-8 bg-gray-300  xs:hidden`}>
+            <Image
+              className={`rounded`}
+              src={
+                playlist?.coverImage || `/image/common/default_cover_image.svg`
+              }
+              width={32}
+              height={32}
+              alt={`album_cover`}
+            />
+          </div>
           <div className={`relative flex items-center`}>
             <button
               className={`xs:order-2 xs:flex-2`}
               onClick={() => {
+                if (!songList.length) {
+                  return;
+                }
                 setIsListDropdownOpen(!isListDropdownOpen);
               }}
             >
@@ -213,11 +305,14 @@ const PlayerController = ({
               />
             </button>
             {isListDropdownOpen && (
-              <ListMenuContainer
-                curIndex={songListIndex}
-                songList={songList}
-                setCurIndex={setSongListIndex}
-              />
+              <div ref={listDropdownRef}>
+                <ListMenuContainer
+                  curIndex={songListIndex}
+                  songList={songList}
+                  setCurIndex={setSongListIndex}
+                  playlist={playlist}
+                />
+              </div>
             )}
           </div>
           <div
@@ -231,21 +326,37 @@ const PlayerController = ({
             </p>
           </div>
           <div className={`flex items-center gap-2 xs:order-2 xs:flex-2`}>
-            <button className={`xs:hidden`}>
-              <Image
-                src={`/image/player/list_like.svg`}
-                alt={`playlists_like`}
-                width={24}
-                height={24}
-              />
+            <button className={`xs:hidden`} onClick={handleLikePlaylist}>
+              {isUserLikedPlaylist ? (
+                <Image
+                  src={`/image/common/playlist_liked.svg`}
+                  alt={`playlist_liked`}
+                  width={24}
+                  height={24}
+                />
+              ) : (
+                <Image
+                  src={`/image/common/playlist_like.svg`}
+                  alt={`playlist_like`}
+                  width={24}
+                  height={24}
+                />
+              )}
             </button>
-            <button>
-              <Image
-                src={`/image/player/song_like.svg`}
-                alt={`like`}
-                width={24}
-                height={24}
-              />
+            <button onClick={handleLikeSong}>
+              {isSongLiked ? (
+                <HeartIcon
+                  className={`text-primary bg-primary`}
+                  width={24}
+                  height={24}
+                />
+              ) : (
+                <HeartIcon
+                  className={`text-gray-400 bg-white`}
+                  width={24}
+                  height={24}
+                />
+              )}
             </button>
           </div>
         </div>
