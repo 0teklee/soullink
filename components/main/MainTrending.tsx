@@ -6,7 +6,7 @@ import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 const MainTrending = ({ playLists }: { playLists: PlaylistType[] }) => {
   return (
     <section className={`flex flex-col items-start w-full gap-4`}>
-      <Title text={`Trending PlayList`} size={`h1`} />
+      <Title text={`Trending PlayLists`} size={`h1`} />
       <PlayListSlider playLists={playLists} />
     </section>
   );
