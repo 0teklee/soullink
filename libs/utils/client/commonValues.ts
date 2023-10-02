@@ -1,4 +1,4 @@
-import { PlaylistType } from "@/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 
 export const breakpoints = {
   mobile: 400,

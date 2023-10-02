@@ -2,25 +2,34 @@
 
 import React from "react";
 import Image from "next/image";
-import { PlaylistType } from "@/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import Title from "@/components/common/module/Title";
 import { useSetRecoilState } from "recoil";
 import { playlistState } from "@/libs/recoil/playerAtom";
+import { useRouter } from "next/navigation";
+import { formatPathName } from "@/libs/utils/client/formatter";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
   const { coverImage, songs, title, author } = playlistItem;
   const setCurrentPlayList = useSetRecoilState(playlistState);
+  const router = useRouter();
 
   return (
     <div>
       <div
-        className={`flex justify-between items-center w-[400px] xs:w-[300px] desktop:w-[800px]`}
+        className={`flex justify-between items-center w-[400px] mb-2 xs:w-[300px] desktop:w-[800px] cursor-pointer`}
       >
-        <Title text={title} size={`h4`} />
+        <div
+          onClick={() => {
+            router.push(`/playlist/${formatPathName(playlistItem.title)}`);
+          }}
+        >
+          <Title text={title} size={`h4`} />
+        </div>
         <div className={`flex items-center gap-1 text-gray-900`}>
           <Image
             className={`cursor-pointer`}
-            src={`/image/player/list_like.svg`}
+            src={`/image/common/playlist_like.svg`}
             alt={`mobile_header`}
             width={24}
             height={24}
@@ -35,7 +44,7 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
       >
         <Image
           className={`absolute object-cover hover:blur-md -z-10`}
-          src={coverImage}
+          src={coverImage || `/image/common/default_cover_image.svg`}
           fill={true}
           alt={`playlist`}
         />
@@ -44,10 +53,10 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
         >
           <div className={`flex flex-col justify-center items-center gap-0`}>
             <h2 className={`text-2xl font-bold`}>{title}</h2>
-            <h2 className={`text-base font-semibold`}>by {author.nickname}</h2>
+            <h2 className={`text-base font-semibold`}>by {author?.nickname}</h2>
           </div>
           <ul className={`z-2 `}>
-            {songs.map((song, index) => {
+            {songs?.map((song, index) => {
               return (
                 <li
                   className={`flex items-center justify-center gap-3 font-bold`}

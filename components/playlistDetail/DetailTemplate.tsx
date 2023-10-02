@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { PlaylistType } from "@/types/common/Song&PlaylistType";
+import React, { useEffect } from "react";
+import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
@@ -12,18 +12,19 @@ import { useMutation } from "react-query";
 import { postPlaylistLike } from "@/libs/utils/client/fetchers";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/types/common/userType";
-import CommonLoginModal from "@/components/common/modal/CommonLoginModal";
+import { UserSessionType } from "@/libs/types/common/userType";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import { useSetRecoilState } from "recoil";
+import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
 
 const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const router = useRouter();
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
+
+  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
   const {
     title,
@@ -31,10 +32,8 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
     coverImage,
     createdAt,
     author,
-    authorId,
     songs,
-    id,
-    comments,
+    id: playlistId,
     likedBy,
     playCount,
   } = playlistData;
@@ -44,8 +43,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
     likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
 
   const { mutate } = useMutation({
-    mutationFn: () =>
-      postPlaylistLike({ playlistId: id, userId: userId || "" }),
+    mutationFn: () => postPlaylistLike({ playlistId, userId: userId || "" }),
     onSuccess: () => {
       router.refresh();
     },
@@ -53,12 +51,16 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
 
   const handleLikePlaylist = async () => {
     if (!userId) {
-      setIsModalOpen(true);
+      setLoginModalOpen(true);
       return;
     }
 
     mutate();
   };
+
+  useEffect(() => {
+    router.refresh();
+  }, [session]);
 
   return (
     <section
@@ -148,10 +150,13 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
         >
           <p>{`${playCount || 0} played`}</p>
           <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
-          <p>{`${!!comments ? comments?.length : 0} comments`}</p>
         </div>
       </div>
-      <Table key={`table_${id}`} songList={songs} propsUserId={userId} />
+      <Table
+        key={`table_${playlistId}`}
+        songList={songs}
+        propsUserId={userId}
+      />
       <div
         className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
       >
@@ -164,14 +169,12 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
       </div>
       <div className={`flex flex-col items-start w-full gap-6`}>
         <Title size={`h2`} text={`Comments`} />
-        <CommentContainer commentList={comments} />
-      </div>
-      {isModalOpen && (
-        <CommonLoginModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
+        <CommentContainer
+          postId={playlistId}
+          userId={userId || ""}
+          isProfile={false}
         />
-      )}
+      </div>
     </section>
   );
 };

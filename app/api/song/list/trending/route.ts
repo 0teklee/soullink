@@ -3,7 +3,7 @@ import { prisma } from "@/prisma/client";
 
 // Trending Get 요청 예시
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     // for example to get songs
     const songs = await prisma.song.findMany({

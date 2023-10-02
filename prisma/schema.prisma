@@ -9,25 +9,26 @@ generator client {
 }
 
 model User {
-  id               String                 @id @default(uuid())
-  email            String                 @unique
-  nickname         String                 @unique @db.Char(20)
-  bio              String                 @db.Char(120)
-  profilePic       String?
-  isBlocked        Boolean
-  blockReason      String                 @default("NULL")
-  followers        Follow[]               @relation("following")
-  following        Follow[]               @relation("follower")
-  createdPlaylists Playlist[]
-  likedPlayLists   PlaylistLikedByUsers[]
-  likedSong        SongLikedByUsers[]
-  myComments       Comment[]              @relation("author")
-  profileComments  Comment[]              @relation("profile")
-  createdAt        DateTime               @default(now())
-  updatedAt        DateTime               @updatedAt
-  twitter          String?
-  instagram        String?
-  website          String?
+  id                  String                 @id @unique @default(uuid())
+  email               String                 @unique
+  nickname            String                 @unique @db.Char(20)
+  bio                 String                 @db.Char(120)
+  profilePic          String?
+  isBlocked           Boolean
+  blockReason         String                 @default("NULL")
+  followers           Follow[]               @relation("following")
+  following           Follow[]               @relation("follower")
+  createdPlaylists    Playlist[]
+  likedPlayLists      PlaylistLikedByUsers[]
+  likedSong           SongLikedByUsers[]
+  myComments          Comment[]              @relation("author")
+  profileComments     Comment[]              @relation("profile")
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  twitter             String?
+  instagram           String?
+  website             String?
+  CommentLikedByUsers CommentLikedByUsers[]
 }
 
 model Follow {
@@ -40,7 +41,7 @@ model Follow {
 }
 
 model Playlist {
-  id          String                 @id @default(uuid())
+  id          String                 @id @unique @default(uuid())
   title       String                 @unique @db.VarChar(40)
   coverImage  String?
   description String                 @db.VarChar(300)
@@ -49,6 +50,7 @@ model Playlist {
   songs       Song[]
   comments    Comment[]
   likedBy     PlaylistLikedByUsers[]
+  likedCount  Int                    @default(0)
   playCount   Int                    @default(0)
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
@@ -71,6 +73,7 @@ model Song {
   playlist    Playlist           @relation(fields: [playlistId], references: [id])
   playlistId  String
   likedUsers  SongLikedByUsers[]
+  likedCount  Int                @default(0)
   playedCount Int?               @default(0)
   thumbnail   String?
 }
@@ -85,18 +88,29 @@ model SongLikedByUsers {
 }
 
 model Comment {
-  id         String      @id @default(uuid())
+  id         String                @id @default(uuid())
   comment    String
   type       CommentType
   isPrivate  Boolean
-  author     User        @relation("author", fields: [authorId], references: [id])
+  isDeleted  Boolean               @default(false)
+  author     User                  @relation("author", fields: [authorId], references: [id])
   authorId   String
-  profile    User?       @relation("profile", fields: [profileId], references: [id])
-  profileId  String
-  playlist   Playlist?   @relation(fields: [playlistId], references: [id])
-  playlistId String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  profile    User?                 @relation("profile", fields: [profileId], references: [id])
+  profileId  String?
+  playlist   Playlist?             @relation(fields: [playlistId], references: [id])
+  playlistId String?
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  likedBy    CommentLikedByUsers[]
+}
+
+model CommentLikedByUsers {
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId String
+
+  @@id([userId, commentId])
 }
 
 enum CommentType {

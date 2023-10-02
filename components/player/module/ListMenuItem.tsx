@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 
-import { PlayerListItem } from "@/types/common/Song&PlaylistType";
+import { PlayerListItem } from "@/libs/types/common/Song&PlaylistType";
 
 interface IListMenuItem extends PlayerListItem {
   curIndex: number;

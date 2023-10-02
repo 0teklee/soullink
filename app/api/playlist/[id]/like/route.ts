@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PlaylistLikeType } from "@/types/common/Song&PlaylistType";
+import { PlaylistLikeType } from "@/libs/types/common/Song&PlaylistType";
 import { prisma } from "@/prisma/client";
 
 export async function POST(req: Request) {
@@ -15,6 +15,16 @@ export async function POST(req: Request) {
       await prisma.playlistLikedByUsers.delete({
         where: { userId_playlistId: { userId, playlistId } },
       });
+
+      await prisma.playlist.update({
+        where: { id: playlistId },
+        data: {
+          likedCount: {
+            decrement: 1,
+          },
+        },
+      });
+
       return new NextResponse(
         JSON.stringify({
           message: "unlike success",
@@ -27,6 +37,14 @@ export async function POST(req: Request) {
       data: {
         userId,
         playlistId,
+      },
+    });
+    await prisma.playlist.update({
+      where: { id: playlistId },
+      data: {
+        likedCount: {
+          increment: 1,
+        },
       },
     });
 

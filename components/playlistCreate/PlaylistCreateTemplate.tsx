@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import {
   CreatePlaylistType,
   CreateSongType,
-} from "@/types/common/Song&PlaylistType";
+} from "@/libs/types/common/Song&PlaylistType";
 import { handleImageUpload } from "@/libs/utils/client/ImageUpload";
 import PlaylistCreateSubmit from "@/components/playlistCreate/PlaylistCreateSubmit";
 

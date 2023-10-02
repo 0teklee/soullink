@@ -1,5 +1,5 @@
 import { ReactPlayerProps } from "react-player";
-import { CommentType, UserType } from "@/types/common/userType";
+import { CommentType, UserType } from "@/libs/types/common/userType";
 
 export interface SongType {
   id: string;

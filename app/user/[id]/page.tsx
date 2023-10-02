@@ -1,14 +1,49 @@
 import React from "react";
 import UserTemplate from "@/components/user/UserTemplate";
+import {
+  getSingleUserProfile,
+  getUsersPaths,
+} from "@/libs/utils/client/fetchers";
 
-import { sampleUser } from "@/libs/utils/client/commonStaticApiData";
-
-const Page = () => {
-  return <UserTemplate userProps={sampleUser} />;
+const Page = async ({ params: { id } }: { params: { id: string } }) => {
+  const userData = await getSingleUserProfile(id);
+  return <UserTemplate userProps={userData} />;
 };
 
 export default Page;
 
 export const generateStaticParams = async () => {
-  return [1, 2, 3, 4];
+  const paths = await getUsersPaths();
+
+  return paths;
 };
+
+export async function generateMetadata({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
+  if (!id) {
+    return {};
+  }
+
+  const data = await getSingleUserProfile(id);
+
+  if (!data) {
+    return {};
+  }
+
+  const ImageSrc =
+    data?.profilePic ??
+    `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`;
+
+  return {
+    title: `${data?.nickname || ""} on soullink`,
+    description: data?.bio || "",
+    openGraph: {
+      title: `${data?.nickname || ""} on soullink`,
+      description: data?.bio || "",
+      images: ImageSrc,
+    },
+  };
+}
