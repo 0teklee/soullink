@@ -5,7 +5,7 @@ import { formatPrivate } from "@/libs/utils/server/formatter";
 export async function GET(req: Request) {
   try {
     const pathname = new URL(req.url).pathname.split("/");
-    const id = decodeURI(pathname[pathname.length - 1]);
+    const id = decodeURIComponent(pathname[pathname.length - 1]);
     const userId = new URL(req.url).searchParams.get("userId");
     const isProfile = new URL(req.url).searchParams.get("isProfile") === "true";
 
