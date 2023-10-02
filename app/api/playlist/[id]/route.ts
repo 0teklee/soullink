@@ -4,7 +4,7 @@ import { prisma } from "@/prisma/client";
 export async function GET(req: Request) {
   try {
     const pathname = new URL(req.url).pathname.split("/");
-    const title = pathname[pathname.length - 1].replace("-", " ");
+    const title = decodeURI(pathname[pathname.length - 1]);
     const playlist = await prisma.playlist.findUnique({
       where: {
         title,
@@ -40,7 +40,7 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("post detail error: ", err);
+    console.log("post playlistDetail error: ", err);
     return new NextResponse(
       JSON.stringify({ message: "fail", errorCode: 404 }),
       {
