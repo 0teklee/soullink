@@ -1,7 +1,7 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
 import Table from "@/components/common/module/Table";
-import { SongType } from "@/types/common/Song&PlaylistType";
+import { SongType } from "@/libs/types/common/Song&PlaylistType";
 
 const MainHotTracks = ({ songList }: { songList: SongType[] }) => {
   return (

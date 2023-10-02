@@ -1,5 +1,5 @@
 import React from "react";
-import DetailTemplate from "@/components/detail/DetailTemplate";
+import DetailTemplate from "@/components/playlistDetail/DetailTemplate";
 import {
   getPlaylistsPaths,
   getSinglePlaylist,

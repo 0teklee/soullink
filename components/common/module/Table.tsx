@@ -1,7 +1,10 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { CreateSongType, SongType } from "@/types/common/Song&PlaylistType";
+import {
+  CreateSongType,
+  SongType,
+} from "@/libs/types/common/Song&PlaylistType";
 import Image from "next/image";
 import { HeartIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";

@@ -1,5 +1,5 @@
 import React from "react";
-import { CreatePlaylistType } from "@/types/common/Song&PlaylistType";
+import { CreatePlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 

@@ -9,12 +9,12 @@ import { useQuery } from "react-query";
 import {
   YoutubeItem,
   YoutubeSearchResponse,
-} from "@/types/apiData/client/searchTypes";
+} from "@/libs/types/apiData/client/searchTypes";
 import Image from "next/image";
 import {
   CreatePlaylistType,
   CreateSongType,
-} from "@/types/common/Song&PlaylistType";
+} from "@/libs/types/common/Song&PlaylistType";
 
 type TUrlType = "youtube" | "custom" | "";
 

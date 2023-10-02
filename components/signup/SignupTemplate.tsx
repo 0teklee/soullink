@@ -5,7 +5,7 @@ import Title from "@/components/common/module/Title";
 import { handleImageUpload } from "@/libs/utils/client/ImageUpload";
 import Image from "next/image";
 import { useMutation } from "react-query";
-import { SignupPayload } from "@/types/common/userType";
+import { SignupPayload } from "@/libs/types/common/userType";
 import { useSession } from "next-auth/react";
 import { router } from "next/client";
 
@@ -57,14 +57,11 @@ const SignupTemplate = () => {
     }));
   };
 
-  console.log(`session`, session);
-
   useEffect(() => {
     setPayload((prev) => ({
       ...prev,
       email: userEmail || "",
     }));
-    console.log("session", session);
   }, [session]);
 
   return (
