@@ -38,7 +38,6 @@ export async function generateMetadata({
   const ImageSrc =
     data?.coverImage ??
     `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`;
-  const SEOImage = ImageSrc?.substring(1, ImageSrc.length);
 
   return {
     title: `${data?.title || ""} on soullink`,

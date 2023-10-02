@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const userNicknamePaths = await prisma.user.findMany({
       select: {

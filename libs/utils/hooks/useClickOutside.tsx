@@ -1,5 +1,5 @@
 "use client";
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect } from "react";
 
 export const useClickOutside = ({
   ref,

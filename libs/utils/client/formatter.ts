@@ -1,4 +1,4 @@
-import { CommentAuthorInterface, UserType } from "@/libs/types/common/userType";
+import { CommentAuthorInterface } from "@/libs/types/common/userType";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 

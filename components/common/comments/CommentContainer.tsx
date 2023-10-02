@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { CommentType, UserSessionType } from "@/libs/types/common/userType";
+import { CommentType } from "@/libs/types/common/userType";
 import CommentItem from "@/components/common/comments/CommentItem";
 import CommentInput from "@/components/common/comments/CommentInput";
 import { getComments } from "@/libs/utils/client/fetchers";

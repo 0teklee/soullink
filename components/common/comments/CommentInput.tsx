@@ -8,7 +8,6 @@ import {
 } from "@/libs/types/common/userType";
 import { useMutation } from "react-query";
 import { postComment } from "@/libs/utils/client/fetchers";
-import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
 
@@ -21,7 +20,6 @@ const CommentInput = ({
   refetch: () => void;
   isProfile?: boolean;
 }) => {
-  const router = useRouter();
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
   const { data: session } = useSession() as { data: UserSessionType };

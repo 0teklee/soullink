@@ -5,7 +5,6 @@ export async function GET(req: Request) {
   try {
     const pathname = new URL(req.url).pathname.split("/");
     const nickname = decodeURI(pathname[pathname.length - 1]);
-    const headerUserId = req.headers.get("userId");
 
     const user = await prisma.user.findUnique({
       where: {

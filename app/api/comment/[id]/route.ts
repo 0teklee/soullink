@@ -172,14 +172,6 @@ export async function GET(req: Request) {
         statusText: "OK",
       },
     );
-
-    return NextResponse.json(
-      {},
-      {
-        status: 200,
-        statusText: "OK",
-      },
-    );
   } catch (err) {
     console.log("post playlistDetail error: ", err);
     return new NextResponse(

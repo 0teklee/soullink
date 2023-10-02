@@ -32,7 +32,6 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
     coverImage,
     createdAt,
     author,
-    authorId,
     songs,
     id: playlistId,
     likedBy,

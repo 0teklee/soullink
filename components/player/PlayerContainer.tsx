@@ -26,7 +26,7 @@ const PlayerContainer = () => {
     volume: 0.8,
     muted: false,
     seeking: false,
-    isLoading: isSongListEmpty ? false : true,
+    isLoading: !isSongListEmpty,
   });
 
   const [songListIndex, setSongListIndex] = useState(0);
