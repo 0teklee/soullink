@@ -152,11 +152,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
         </div>
       </div>
-      <Table
-        key={`table_${playlistId}`}
-        songList={songs}
-        propsUserId={userId}
-      />
+      <Table key={`table_${playlistId}`} songList={songs} userId={userId} />
       <div
         className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
       >
