@@ -10,7 +10,7 @@ export async function GET(req: Request) {
           title: true,
         },
       })
-      .then((res) => res.map((item) => item.title.replace(" ", "-")));
+      .then((res) => res.map((item) => encodeURIComponent(item.title)));
 
     return NextResponse.json(
       {
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("post detail error: ", err);
+    console.log("post playlistDetail error: ", err);
     return new NextResponse(
       JSON.stringify({ message: "fail", errorCode: 404 }),
       {
