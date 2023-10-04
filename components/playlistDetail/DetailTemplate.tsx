@@ -14,17 +14,22 @@ import { playlistDefault } from "@/libs/utils/client/commonValues";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import {
+  HeartIcon as HeartIconSolid,
+  PlayIcon,
+} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { playlistState } from "@/libs/recoil/playerAtom";
 
 const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
-  const router = useRouter();
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
+  const router = useRouter();
 
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const setSelectedPlaylist = useSetRecoilState(playlistState);
 
   const {
     title,
@@ -111,9 +116,17 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
             alt={`cover_image`}
             fill={true}
           />
+          <div
+            onClick={() => {
+              setSelectedPlaylist(playlistData);
+            }}
+            className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-[3] cursor-pointer opacity-0 hover:opacity-100`}
+          >
+            <PlayIcon className={`w-16 h-16 text-white`} />
+          </div>
         </div>
         <div className={`absolute bottom-0 right-0 w-full h-full blur-sm`}>
-          {!!coverImage ?? (
+          {coverImage && (
             <Image
               className={`object-cover z-1`}
               src={coverImage}
