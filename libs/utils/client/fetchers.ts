@@ -19,6 +19,7 @@ import {
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${id}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const resData: Promise<PlaylistType> = await res
     .json()
@@ -38,6 +39,7 @@ export const getPlaylistsPaths = async (): Promise<string[]> => {
 export const getTrendingPlaylists = async (): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.trendingPlayLists;
@@ -67,6 +69,7 @@ export const postPlaylistLike = async (request: PlaylistLikeType) => {
 export const getTrendingSongs = async (): Promise<SongType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/song/list/trending`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.trendingData;
