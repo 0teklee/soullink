@@ -4,6 +4,7 @@ import {
   getTrendingPlaylists,
   getTrendingSongs,
 } from "@/libs/utils/client/fetchers";
+import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,9 +19,13 @@ const Home = async () => {
     hotTracks: getHotTracks,
     myHistory: getMainData,
   };
+  const propsData = [...getMainData, ...getMainData, ...getMainData];
+
   return (
     <section className={`py-6`}>
-      <MainTemplate propsData={tempProps} />
+      <PlaylistUpdateProvider propsData={propsData}>
+        <MainTemplate propsData={tempProps} />
+      </PlaylistUpdateProvider>
     </section>
   );
 };
