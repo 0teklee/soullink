@@ -136,13 +136,6 @@ const Table = ({
                               />
                             )}
                           </button>
-                          <button className={`relative w-6 h-6`}>
-                            <Image
-                              fill={true}
-                              src="/image/common/plus.svg"
-                              alt="add"
-                            />
-                          </button>
                         </div>
                       </td>
                       <td className={`py-2 xs:hidden`}>{item.playedCount}</td>
