@@ -23,7 +23,20 @@ export async function GET() {
         },
         authorId: true,
         playCount: true,
-        songs: true,
+        songs: {
+          select: {
+            id: true,
+            title: true,
+            artist: true,
+            url: true,
+            likedCount: true,
+            likedUsers: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+        },
         likedBy: {
           select: {
             userId: true,
