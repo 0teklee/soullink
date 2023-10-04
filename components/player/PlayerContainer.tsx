@@ -35,10 +35,7 @@ const PlayerContainer = () => {
 
   useEffect(() => {
     if (isSongListEmpty) {
-      setPlayerState((prev) => ({
-        ...prev,
-        isLoading: true,
-      }));
+      return;
     }
     setPlayerState((prev) => ({
       ...prev,
