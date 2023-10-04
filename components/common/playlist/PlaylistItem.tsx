@@ -5,7 +5,7 @@ import Image from "next/image";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import Title from "@/components/common/module/Title";
 import { useSetRecoilState } from "recoil";
-import { playlistState } from "@/libs/recoil/playerAtom";
+import { playlistState } from "@/libs/recoil/playlistAtom";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { useMutation } from "react-query";

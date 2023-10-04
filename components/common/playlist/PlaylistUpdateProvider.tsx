@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import { playlistState } from "@/libs/recoil/playerAtom";
+import { playlistState } from "@/libs/recoil/playlistAtom";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 
 const PlaylistUpdateProvider = <T,>({

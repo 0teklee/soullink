@@ -6,7 +6,7 @@ import PlayerController from "@/components/player/PlayerController";
 import { handleKeyPress } from "@/libs/utils/client/eventHandler";
 import { PlayerProps } from "@/libs/types/common/Song&PlaylistType";
 import { useRecoilValue } from "recoil";
-import { playlistState } from "@/libs/recoil/playerAtom";
+import { playlistState } from "@/libs/recoil/playlistAtom";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,

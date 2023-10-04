@@ -21,7 +21,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
-import { playlistState } from "@/libs/recoil/playerAtom";
+import { playlistState } from "@/libs/recoil/playlistAtom";
 
 const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
   const { data: session } = useSession() as { data: UserSessionType };
