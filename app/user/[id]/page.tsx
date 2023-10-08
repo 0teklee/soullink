@@ -4,10 +4,16 @@ import {
   getSingleUserProfile,
   getUsersPaths,
 } from "@/libs/utils/client/fetchers";
+import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const userData = await getSingleUserProfile(id);
-  return <UserTemplate userProps={userData} />;
+
+  return (
+    <PlaylistUpdateProvider propsData={userData.createdPlaylists}>
+      <UserTemplate userProps={userData} />
+    </PlaylistUpdateProvider>
+  );
 };
 
 export default Page;
