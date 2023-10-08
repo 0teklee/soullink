@@ -12,20 +12,15 @@ export interface UserType {
   bio: string;
   isBlocked: boolean;
   blockReason?: string;
-  followers: {
-    followerId: string;
-    follower: { id: string; nickname: string; profilePic: string | null };
-  }[];
-  following: {
-    followingId: string;
-    following: {
-      id: string;
-      nickname: string;
-      profilePic: string | null;
-    };
-  }[];
+  followers: FollowerUserResponseType[] | null;
+  following: FollowingUserResponseType[] | null;
   createdPlaylists: PlaylistType[];
-  likedSongs: SongType[];
+  likedSong: {
+    id: string;
+    title: string;
+    author: { id: string; nickname: string };
+    songs: SongType[];
+  };
   likedPlaylists: PlaylistType[];
   myComments: CommentType[];
   profileComments: CommentType[];
@@ -69,26 +64,28 @@ export interface CommentPayloadType {
   isProfile?: boolean;
 }
 
+export interface FollowUserResponseType {
+  id: string;
+  nickname: string;
+  profilePic: string | null;
+}
+
+export interface FollowerUserResponseType {
+  followerId?: string;
+  follower: FollowUserResponseType;
+}
+
+export interface FollowingUserResponseType {
+  followingId?: string;
+  following: FollowUserResponseType;
+}
+
 export interface CommentAuthorInterface {
   id: string;
   nickname: string;
   profilePic: string | null;
-  followers:
-    | {
-        followerId: string;
-        follower: {
-          id: string;
-          nickname: string;
-          profilePic: string | null;
-        };
-      }[]
-    | null;
-  following:
-    | {
-        followingId: string;
-        following: { id: string; nickname: string; profilePic: string | null };
-      }[]
-    | null;
+  followers: FollowerUserResponseType[] | null;
+  following: FollowingUserResponseType[] | null;
 }
 
 export interface UserSessionType extends Session {
