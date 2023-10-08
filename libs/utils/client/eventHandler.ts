@@ -1,13 +1,12 @@
-import React, { Dispatch, RefObject, SetStateAction } from "react";
-import {
-  PlayerProps,
-  PlayerState,
-} from "@/libs/types/common/Song&PlaylistType";
+import React, { RefObject } from "react";
+import { PlayerProps } from "@/libs/types/common/Song&PlaylistType";
+import { SetterOrUpdater } from "recoil";
+import { PlayerType } from "@/libs/types/common/playerType";
 
 export const handleKeyPress = (
   e: React.KeyboardEvent<Document> | KeyboardEvent,
   targetRef: RefObject<PlayerProps>,
-  setState?: Dispatch<SetStateAction<PlayerState>>,
+  setState?: SetterOrUpdater<PlayerType>,
 ) => {
   if (!setState) {
     return;
