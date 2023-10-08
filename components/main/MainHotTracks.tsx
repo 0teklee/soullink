@@ -1,18 +1,25 @@
-"use client";
-
 import React from "react";
 import Title from "@/components/common/module/Title";
-import Table from "@/components/common/module/Table";
-import { SongType } from "@/libs/types/common/Song&PlaylistType";
-import { UserSessionType } from "@/libs/types/common/userType";
-import { useSession } from "next-auth/react";
+import Table from "@/components/common/songTable/Table";
+import {
+  PlaylistType,
+  SongType,
+  TrendingSongPlaylistType,
+} from "@/libs/types/common/Song&PlaylistType";
 
-const MainHotTracks = ({ songList }: { songList: SongType[] }) => {
-  const { data: session } = useSession() as { data: UserSessionType };
+const MainHotTracks = ({
+  trendingsongList,
+}: {
+  trendingsongList: TrendingSongPlaylistType;
+}) => {
   return (
     <section className={`flex flex-col items-start w-full gap-4`}>
       <Title size={`h1`} text={`Popular Tracks`} />
-      <Table songList={songList} userId={session?.userId} />
+      <Table
+        songList={trendingsongList.songs as SongType[]}
+        playlist={trendingsongList as PlaylistType}
+        isCreate={false}
+      />
     </section>
   );
 };
