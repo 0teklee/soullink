@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
-import Table from "@/components/common/module/Table";
+import Table from "@/components/common/songTable/Table";
 import PlaylistSongModal from "@/components/playlistCreate/PlaylistSongModal";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
