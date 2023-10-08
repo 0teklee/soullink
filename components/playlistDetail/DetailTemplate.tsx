@@ -92,7 +92,14 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
       <div className={`flex flex-col items-center justify-center gap-2`}>
         <Title size={`h1`} text={title} />
         <div className={`flex items-center gap-3`}>
-          <p className={`font-normal text-black`}>by {authorName}</p>
+          <button
+            className={`font-normal text-black hover:underline`}
+            onClick={() => {
+              router.push(`/user/${encodeURIComponent(author.nickname)}`);
+            }}
+          >
+            by {authorName}
+          </button>
           <Image
             className={`rounded-full`}
             src={profilePic || "/image/common/default_profile.svg"}
