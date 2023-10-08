@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import {
-  PlaylistType,
-  TrendingSongPlaylistType,
-} from "@/libs/types/common/Song&PlaylistType";
-
-// Trending Get 요청 예시
+import { TrendingSongPlaylistType } from "@/libs/types/common/Song&PlaylistType";
 
 export async function GET() {
   try {

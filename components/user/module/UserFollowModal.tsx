@@ -4,7 +4,6 @@ import React from "react";
 import {
   FollowerUserResponseType,
   FollowingUserResponseType,
-  UserType,
 } from "@/libs/types/common/userType";
 import Title from "@/components/common/module/Title";
 
