@@ -16,12 +16,22 @@ export async function GET(req: Request) {
         updatedAt: true,
         title: true,
         description: true,
+        coverImage: true,
+        likedCount: true,
+        author: {
+          select: {
+            id: true,
+            nickname: true,
+            profilePic: true,
+          },
+        },
         songs: {
           select: {
             id: true,
             title: true,
             artist: true,
             thumbnail: true,
+            url: true,
             playedCount: true,
             likedUsers: {
               select: {

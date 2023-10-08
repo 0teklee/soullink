@@ -9,7 +9,7 @@ export interface SongType {
   thumbnail?: string;
   playedCount: number;
   likedCount: number;
-  likedUsers?: { userId: string; songId: string }[];
+  likedUsers?: { userId: string; songId?: string }[];
 }
 
 type SongUrlType = "youtube" | "" | "custom";
@@ -56,18 +56,34 @@ export interface PlaylistType {
   playCount: number;
   createdAt: string;
   updatedAt: string;
+  isSongTable?: boolean;
 }
 
-export interface PlayerState {
-  playing: boolean;
-  played: string;
-  duration: string;
-  playedSec: number;
-  durationSec: number;
-  volume: number;
-  muted: boolean;
-  seeking: boolean;
-  isLoading: boolean;
+export interface TrendingSongType
+  extends Omit<SongType, "thumbnail" | "playedCount"> {
+  thumbnail?: string | null;
+}
+
+export interface TrendingSongPlaylistType
+  extends Omit<
+    PlaylistType,
+    | "author"
+    | "createdAt"
+    | "playCount"
+    | "updatedAt"
+    | "coverImage"
+    | "songs"
+    | "comments"
+    | "likedBy"
+  > {
+  id: string;
+  title: string;
+  description: string;
+  author: {
+    id: string;
+    nickname: string;
+  };
+  songs: TrendingSongType[];
 }
 
 export interface PlayerListItem extends SongType {}

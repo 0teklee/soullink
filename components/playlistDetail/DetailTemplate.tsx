@@ -5,7 +5,7 @@ import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
-import Table from "@/components/common/module/Table";
+import Table from "@/components/common/songTable/Table";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 import process from "process";
 import { useMutation } from "react-query";
@@ -13,18 +13,24 @@ import { postPlaylistLike } from "@/libs/utils/client/fetchers";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { playlistState } from "@/libs/recoil/playlistAtom";
+import { playerGlobalState } from "@/libs/recoil/playerAtom";
 
 const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
-  const router = useRouter();
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
+  const router = useRouter();
 
+  const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
+
+  const { playing } = playerState;
 
   const {
     title,
@@ -86,7 +92,14 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
       <div className={`flex flex-col items-center justify-center gap-2`}>
         <Title size={`h1`} text={title} />
         <div className={`flex items-center gap-3`}>
-          <p className={`font-normal text-black`}>by {authorName}</p>
+          <button
+            className={`font-normal text-black hover:underline`}
+            onClick={() => {
+              router.push(`/user/${encodeURIComponent(author.nickname)}`);
+            }}
+          >
+            by {authorName}
+          </button>
           <Image
             className={`rounded-full`}
             src={profilePic || "/image/common/default_profile.svg"}
@@ -111,9 +124,34 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
             alt={`cover_image`}
             fill={true}
           />
+          <div
+            onClick={() => {
+              if (playing) {
+                setPlayerState({ ...playerState, playing: false });
+                return;
+              }
+              if (
+                selectedPlaylist &&
+                selectedPlaylist.id === playlistData.id &&
+                !playing
+              ) {
+                setPlayerState({ ...playerState, playing: false });
+                return;
+              }
+
+              setSelectedPlaylist(playlistData);
+            }}
+            className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-[3] cursor-pointer opacity-0 hover:opacity-100`}
+          >
+            {playing ? (
+              <PauseIcon className={`w-16 h-16 text-white`} />
+            ) : (
+              <PlayIcon className={`w-16 h-16 text-white`} />
+            )}
+          </div>
         </div>
         <div className={`absolute bottom-0 right-0 w-full h-full blur-sm`}>
-          {!!coverImage ?? (
+          {coverImage && (
             <Image
               className={`object-cover z-1`}
               src={coverImage}
@@ -152,7 +190,12 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
         </div>
       </div>
-      <Table key={`table_${playlistId}`} songList={songs} userId={userId} />
+      <Table
+        key={`table_${playlistId}`}
+        songList={songs}
+        playlist={playlistData}
+        isCreate={false}
+      />
       <div
         className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
       >

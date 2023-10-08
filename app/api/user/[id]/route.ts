@@ -6,7 +6,7 @@ export async function GET(req: Request) {
     const pathname = new URL(req.url).pathname.split("/");
     const nickname = decodeURIComponent(pathname[pathname.length - 1]);
 
-    const user = await prisma.user.findUnique({
+    const userDb = await prisma.user.findUnique({
       where: {
         nickname,
       },
@@ -20,10 +20,48 @@ export async function GET(req: Request) {
         instagram: true,
         twitter: true,
         website: true,
-        followers: true,
-        following: true,
+        followers: {
+          select: {
+            follower: {
+              select: {
+                id: true,
+                nickname: true,
+                profilePic: true,
+              },
+            },
+          },
+        },
+        following: {
+          select: {
+            following: {
+              select: {
+                id: true,
+                nickname: true,
+                profilePic: true,
+              },
+            },
+          },
+        },
         likedPlayLists: true,
-        likedSong: true,
+        likedSong: {
+          select: {
+            song: {
+              select: {
+                id: true,
+                title: true,
+                artist: true,
+                thumbnail: true,
+                url: true,
+                playedCount: true,
+                likedUsers: {
+                  select: {
+                    userId: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         createdPlaylists: {
           select: {
             id: true,
@@ -37,6 +75,11 @@ export async function GET(req: Request) {
             description: true,
             coverImage: true,
             createdAt: true,
+            likedBy: {
+              select: {
+                userId: true,
+              },
+            },
             songs: {
               select: {
                 id: true,
@@ -51,6 +94,21 @@ export async function GET(req: Request) {
         },
       },
     });
+
+    const user = {
+      ...userDb,
+      likedSong: {
+        title: `Liked Songs`,
+        id: `${userDb?.nickname} liked songs`,
+        author: {
+          id: userDb?.id,
+          nickname: userDb?.nickname,
+        },
+        coverImage: userDb?.profilePic,
+        songs: userDb?.likedSong.map((song) => song.song),
+        isSongTable: true,
+      },
+    };
 
     return NextResponse.json(
       {

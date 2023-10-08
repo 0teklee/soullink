@@ -1,13 +1,11 @@
 "use client";
 
-import React, { Dispatch, RefObject, SetStateAction } from "react";
+import React, { RefObject } from "react";
 import { secondsFormatter } from "@/libs/utils/client/formatter";
 import ReactPlayer from "react-player";
-import {
-  PlayerProps,
-  PlayerState,
-  SongType,
-} from "@/libs/types/common/Song&PlaylistType";
+import { PlayerProps, SongType } from "@/libs/types/common/Song&PlaylistType";
+import { PlayerType } from "@/libs/types/common/playerType";
+import { SetterOrUpdater } from "recoil";
 
 const Player = ({
   song,
@@ -15,14 +13,12 @@ const Player = ({
   playerState,
   setPlayerState,
   songListIndex,
-  setSongListIndex,
   playerRef,
 }: {
-  playerState: PlayerState;
-  setPlayerState: Dispatch<SetStateAction<PlayerState>>;
+  playerState: PlayerType;
+  setPlayerState: SetterOrUpdater<PlayerType>;
   song: string;
   songList: SongType[];
-  setSongListIndex: Dispatch<SetStateAction<number>>;
   songListIndex: number;
   playerRef: RefObject<PlayerProps>;
 }) => {
@@ -73,9 +69,14 @@ const Player = ({
         }}
         onEnded={() => {
           if (songListIndex + 1 < songList.length) {
-            setSongListIndex(songListIndex + 1);
             setPlayerState((prev) => {
-              return { ...prev, playing: true, played: "00:00", playedSec: 0 };
+              return {
+                ...prev,
+                playing: true,
+                played: "00:00",
+                playedSec: 0,
+                currentSongListIndex: songListIndex + 1,
+              };
             });
           }
         }}

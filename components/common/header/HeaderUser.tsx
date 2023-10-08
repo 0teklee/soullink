@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 
 const HeaderUser = () => {
   const { data: session, status } = useSession();
   const userSession = session as UserSessionType;
   const isLogin = !!userSession?.userId;
   const router = useRouter();
+  const listRef = useRef<HTMLDivElement>(null);
   const isLoading = status === "loading";
 
   const [isListClicked, setIsListClicked] = useState(false);
@@ -23,9 +25,21 @@ const HeaderUser = () => {
     await signOut({ redirect: true, callbackUrl: `/` });
   };
 
+  const handleClickOutside = () => {
+    setIsListClicked(false);
+  };
+
+  useClickOutside({
+    ref: listRef,
+    handler: handleClickOutside,
+  });
+
   return (
     <>
-      <div className={`flex items-center font-medium gap-6 xs:hidden`}>
+      <div
+        ref={listRef}
+        className={`flex items-center font-medium gap-6 xs:hidden`}
+      >
         {!isLoading && !isLogin && (
           <>
             <button
@@ -66,27 +80,35 @@ const HeaderUser = () => {
             </button>
             {isListClicked && (
               <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
                 className={`absolute flex flex-col gap-3 top-12 -right-3 p-2 text-gray-900 text-xs whitespace-nowrap bg-white border border-gray-300 rounded `}
               >
                 <button
                   className={`hover:text-primary`}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     router.push(`/`);
+                    setIsListClicked(false);
                   }}
                 >
                   Home
                 </button>
                 <button
                   className={`hover:text-primary`}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     router.push(`/user/${userSession?.userNickname}`);
+                    setIsListClicked(false);
                   }}
                 >
                   My Page
                 </button>
                 <button
                   className={`hover:text-primary`}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     router.push(`/playlist/create`);
                   }}
                 >
@@ -94,7 +116,8 @@ const HeaderUser = () => {
                 </button>
                 <button
                   className={`text-gray-900 hover:text-pink-500`}
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     await logout();
                   }}
                 >
@@ -132,6 +155,8 @@ const HeaderUser = () => {
               className={`hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 router.push(`/user/${userSession?.userNickname}`);
+
+                setIsListClicked(false);
               }}
             >
               My Page
@@ -140,6 +165,7 @@ const HeaderUser = () => {
               className={`hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 router.push(`/playlist/create`);
+                setIsListClicked(false);
               }}
             >
               Create Playlist
@@ -154,6 +180,8 @@ const HeaderUser = () => {
               className={`text-primary hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 router.push(`/signup`);
+
+                setIsListClicked(false);
               }}
             >
               Sign up
@@ -168,7 +196,7 @@ const HeaderUser = () => {
             </button>
           </div>
         )}
-      </div>{" "}
+      </div>
     </>
   );
 };

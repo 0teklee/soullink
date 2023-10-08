@@ -2,7 +2,7 @@ import {
   PlaylistLikeType,
   PlaylistType,
   SongLikeType,
-  SongType,
+  TrendingSongPlaylistType,
 } from "@/libs/types/common/Song&PlaylistType";
 import {
   CommentPayloadType,
@@ -19,6 +19,7 @@ import {
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${id}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const resData: Promise<PlaylistType> = await res
     .json()
@@ -38,6 +39,7 @@ export const getPlaylistsPaths = async (): Promise<string[]> => {
 export const getTrendingPlaylists = async (): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.trendingPlayLists;
@@ -64,9 +66,10 @@ export const postPlaylistLike = async (request: PlaylistLikeType) => {
 /* Song Fetchers */
 /* GET */
 
-export const getTrendingSongs = async (): Promise<SongType[]> => {
+export const getTrendingSongs = async (): Promise<TrendingSongPlaylistType> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/song/list/trending`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending-songs`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.trendingData;
@@ -101,9 +104,11 @@ export const getUsersPaths = async (): Promise<string[]> => {
 };
 
 export const getSingleUserProfile = async (id: string): Promise<UserType> => {
-  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/${id}`);
-  const resData: Promise<UserType> = await res.json().then((data) => data.user);
-  return resData;
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/${id}`, {
+    next: { tags: ["playlist"], revalidate: 0 },
+  });
+  const resData = await res.json();
+  return resData.user;
 };
 
 export const getComments = async (

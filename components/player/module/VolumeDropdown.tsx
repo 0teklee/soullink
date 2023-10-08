@@ -1,13 +1,14 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { PlayerState } from "@/libs/types/common/Song&PlaylistType";
+import { SetterOrUpdater } from "recoil";
+import { PlayerType } from "@/libs/types/common/playerType";
 
 const VolumeDropdown = ({
   playerState,
   setPlayerState,
   setIsVolumeDropdownOpen,
 }: {
-  playerState: PlayerState;
-  setPlayerState: Dispatch<React.SetStateAction<PlayerState>>;
+  playerState: PlayerType;
+  setPlayerState: SetterOrUpdater<PlayerType>;
   setIsVolumeDropdownOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { volume, muted } = playerState;
@@ -28,11 +29,11 @@ const VolumeDropdown = ({
         min={0}
         max={100}
         onChange={(e) => {
-          setPlayerState({
-            ...playerState,
+          setPlayerState((prev) => ({
+            ...prev,
             muted: false,
             volume: Number(e.target.value) / 100,
-          });
+          }));
         }}
       />
     </div>

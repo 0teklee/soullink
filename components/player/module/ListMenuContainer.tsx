@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch } from "react";
+import React from "react";
 import ListMenuItem from "@/components/player/module/ListMenuItem";
 import {
   PlayerListItem,
@@ -8,22 +8,28 @@ import {
 } from "@/libs/types/common/Song&PlaylistType";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
+import { SetterOrUpdater } from "recoil";
+import { PlayerType } from "@/libs/types/common/playerType";
 
 const ListMenuContainer = ({
   curIndex,
-  setCurIndex,
+  setPlayerState,
   songList,
   playlist,
 }: {
   curIndex: number;
-  setCurIndex: Dispatch<React.SetStateAction<number>>;
+  setPlayerState: SetterOrUpdater<PlayerType>;
   songList: PlayerListItem[];
   playlist: PlaylistType | null;
 }) => {
   const router = useRouter();
   const { title, author } = playlist || { title: "", author: { nickname: "" } };
   return (
-    <div className={`absolute bottom-12 -left-3`}>
+    <div
+      className={`absolute bottom-12 ${
+        playlist?.isSongTable ? "-left-12" : "-left-3"
+      }`}
+    >
       <div
         className={`flex flex-col items-start w-[200px] p-3 bg-gray-50 border border-gray-300 rounded `}
       >
@@ -32,24 +38,26 @@ const ListMenuContainer = ({
             onClick={() => {
               router.push(`/playlist/${formatPathName(title)}`);
             }}
-            className={`mb-1 text-lg text-gray-900 font-semibold  hover:underline`}
+            className={`mb-1 text-base text-gray-900 font-semibold overflow-ellipsis  hover:underline`}
           >
             {title}
           </button>
-          <button
-            onClick={() => {
-              router.push(`/user/${author.nickname}`);
-            }}
-            className={`text-sm text-gray-500 font-normal whitespace-nowrap hover:text-primary hover:underline`}
-          >
-            by {`@${author.nickname}`}
-          </button>
+          {author.nickname && (
+            <button
+              onClick={() => {
+                router.push(`/user/${decodeURIComponent(author.nickname)}`);
+              }}
+              className={`text-sm text-gray-500 font-normal whitespace-nowrap hover:text-primary hover:underline`}
+            >
+              by {`@${author.nickname}`}
+            </button>
+          )}
         </div>
         {songList.map((song, index) => (
           <ListMenuItem
             key={`${song.id}_${index}`}
             {...song}
-            setCurIndex={setCurIndex}
+            setPlayerState={setPlayerState}
             curIndex={curIndex}
             index={index}
           />

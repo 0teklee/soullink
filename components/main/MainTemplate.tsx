@@ -3,15 +3,15 @@ import MainTrending from "@/components/main/MainTrending";
 import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
 import MainHotTracks from "@/components/main/MainHotTracks";
 import MainMyHistory from "@/components/main/MainMyHistory";
-import { PlaylistType, SongType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 
 const MainTemplate = ({
-  propsData: { trendingPlayLists, friendsPlayLists, hotTracks, myHistory },
+  propsData: { trendingPlayLists, friendsPlayLists, popularTracks, myHistory },
 }: {
   propsData: {
     trendingPlayLists: PlaylistType[];
     friendsPlayLists: PlaylistType[];
-    hotTracks: SongType[];
+    popularTracks: PlaylistType;
     myHistory: PlaylistType[];
   };
 }) => {
@@ -19,7 +19,7 @@ const MainTemplate = ({
     <div className={`flex flex-col items-start gap-y-12 `}>
       <MainTrending playLists={trendingPlayLists} />
       <MainFriendsPlaylists playLists={friendsPlayLists} />
-      <MainHotTracks songList={hotTracks} />
+      <MainHotTracks trendingsongList={popularTracks} />
       <MainMyHistory playLists={myHistory} />
     </div>
   );
