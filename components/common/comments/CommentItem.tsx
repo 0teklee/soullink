@@ -54,6 +54,7 @@ const CommentItem = ({
   const hasLiked = likedBy.filter((user) => user.user.id === userId).length > 0;
   const isMutual = formatIsMutualClient(author, userId, postId);
   const isAuthor = author.id === userId;
+  const isDeletedOrPrivate = nickname === "deleted" || nickname === "anonymous";
   const router = useRouter();
 
   const { mutate: likeCommentMutate } = useMutation({
@@ -124,7 +125,19 @@ const CommentItem = ({
                 fill={true}
               />
             </div>
-            <p className={`text-gray-900 font-medium`}>{nickname}</p>
+            <button
+              className={`text-gray-900 font-medium ${
+                isDeletedOrPrivate ? "cursor-default" : "hover:underline"
+              }`}
+              onClick={() => {
+                if (isDeletedOrPrivate) {
+                  return;
+                }
+                router.push(`/user/${encodeURIComponent(nickname)}`);
+              }}
+            >
+              {nickname}
+            </button>
           </div>
           <p className={`text-gray-500 font-normal`}>{comment}</p>
         </div>
