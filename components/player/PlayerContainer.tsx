@@ -5,31 +5,19 @@ import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
 import { handleKeyPress } from "@/libs/utils/client/eventHandler";
 import { PlayerProps } from "@/libs/types/common/Song&PlaylistType";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistState } from "@/libs/recoil/playlistAtom";
+import { playerGlobalState } from "@/libs/recoil/playerAtom";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
 });
 
 const PlayerContainer = () => {
+  const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
   const selectedPlayList = useRecoilValue(playlistState);
   const selectedSongList = selectedPlayList?.songs || [];
   const isSongListEmpty = selectedSongList.length === 0;
-
-  const [playerState, setPlayerState] = useState({
-    playing: false,
-    played: "00:00",
-    duration: "00:00",
-    playedSec: 0,
-    durationSec: 0,
-    volume: 0.8,
-    muted: false,
-    seeking: false,
-    isLoading: !isSongListEmpty,
-  });
-
-  const [songListIndex, setSongListIndex] = useState(0);
 
   const playerRef = useRef<PlayerProps>(null);
 
@@ -62,12 +50,14 @@ const PlayerContainer = () => {
             playerState={playerState}
             setPlayerState={setPlayerState}
             playerRef={playerRef}
-            setSongListIndex={setSongListIndex}
-            songListIndex={songListIndex}
+            songListIndex={playerState.currentSongListIndex}
             songList={selectedSongList}
             song={
-              selectedSongList.length > 0
-                ? selectedSongList[songListIndex].url
+              playerState &&
+              selectedPlayList &&
+              selectedPlayList?.songs.length > 0 &&
+              selectedPlayList.songs[playerState.currentSongListIndex]?.url
+                ? selectedPlayList.songs[playerState.currentSongListIndex].url
                 : ""
             }
           />
@@ -75,8 +65,7 @@ const PlayerContainer = () => {
             playerState={playerState}
             setPlayerState={setPlayerState}
             playerRef={playerRef}
-            setSongListIndex={setSongListIndex}
-            songListIndex={songListIndex}
+            songListIndex={playerState.currentSongListIndex}
             playlist={selectedPlayList}
           />
         </>
