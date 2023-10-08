@@ -33,7 +33,7 @@ export const useSetPlaylistFromSongTable = (
     });
   };
 
-  const updateCurrentPlaySong = (playlist: PlaylistType) => {
+  const updateCurrentPlaySong = () => {
     if (currentPlayer.playing && isSongPlaying) {
       setCurrentPlayer((prev) => ({ ...prev, playing: false }));
       return;
@@ -51,7 +51,7 @@ export const useSetPlaylistFromSongTable = (
       return updatePlaylist(playlist);
     }
 
-    return updateCurrentPlaySong(playlist);
+    return updateCurrentPlaySong();
   };
 
   return { playSongFromTable, currentPlayer, currentPlaylist, isSongPlaying };
