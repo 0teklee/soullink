@@ -9,7 +9,7 @@ generator client {
 }
 
 model User {
-  id                  String                 @id @unique @default(uuid())
+  id                  String                 @id @default(uuid())
   email               String                 @unique
   nickname            String                 @unique @db.Char(20)
   bio                 String                 @db.Char(120)
@@ -41,7 +41,7 @@ model Follow {
 }
 
 model Playlist {
-  id          String                 @id @unique @default(uuid())
+  id          String                 @id @default(uuid())
   title       String                 @unique @db.VarChar(40)
   coverImage  String?
   description String                 @db.VarChar(300)
