@@ -46,7 +46,7 @@ const TableItem = ({
     song?.likedUsers?.filter((likedItem) => likedItem.userId === userId)
       .length > 0;
 
-  const handlePlaySong = (songId: string) => {
+  const handlePlaySong = () => {
     if (!playSongFromTable || !playlist) {
       return;
     }
@@ -104,7 +104,7 @@ const TableItem = ({
               <button
                 className={`relative w-6 h-6`}
                 onClick={() => {
-                  handlePlaySong(song.id);
+                  handlePlaySong();
                 }}
               >
                 {isSongPlaying ? (
