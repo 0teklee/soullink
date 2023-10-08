@@ -1,10 +1,12 @@
-import React, { Dispatch } from "react";
+import React from "react";
 
 import { PlayerListItem } from "@/libs/types/common/Song&PlaylistType";
+import { SetterOrUpdater } from "recoil";
+import { PlayerType } from "@/libs/types/common/playerType";
 
 interface IListMenuItem extends PlayerListItem {
   curIndex: number;
-  setCurIndex: Dispatch<React.SetStateAction<number>>;
+  setPlayerState: SetterOrUpdater<PlayerType>;
   index: number;
 }
 
@@ -13,14 +15,14 @@ const ListMenuItem = ({
   artist,
   index,
   curIndex,
-  setCurIndex,
+  setPlayerState,
 }: IListMenuItem) => {
   const isSelected = curIndex === index;
   return (
     <div
       className={`flex flex-col w-full p-2 hover:bg-gray-300 cursor-pointer`}
       onClick={() => {
-        setCurIndex(index);
+        setPlayerState((prev) => ({ ...prev, currentSongListIndex: index }));
       }}
     >
       <div className={`flex items-center gap-4`}>
