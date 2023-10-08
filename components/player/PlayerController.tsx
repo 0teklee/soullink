@@ -1,18 +1,17 @@
 "use client";
 
-import React, { Dispatch, RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import Image from "next/image";
 
 import VolumeDropdown from "@/components/player/module/VolumeDropdown";
 import ListMenuContainer from "@/components/player/module/ListMenuContainer";
 import {
   PlayerProps,
-  PlayerState,
   PlaylistType,
 } from "@/libs/types/common/Song&PlaylistType";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
-import { useSetRecoilState } from "recoil";
+import { SetterOrUpdater, useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
 import { useMutation } from "react-query";
 import { postPlaylistLike, postSongLike } from "@/libs/utils/client/fetchers";
@@ -20,20 +19,19 @@ import { useRouter } from "next/navigation";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
+import { PlayerType } from "@/libs/types/common/playerType";
 
 const PlayerController = ({
   playerState,
   setPlayerState,
   playerRef,
-  setSongListIndex,
   songListIndex,
   playlist,
 }: {
-  playerState: PlayerState;
-  setPlayerState: Dispatch<React.SetStateAction<PlayerState>>;
+  playerState: PlayerType;
+  setPlayerState: SetterOrUpdater<PlayerType>;
   playerRef: RefObject<PlayerProps>;
   songListIndex: number;
-  setSongListIndex: Dispatch<React.SetStateAction<number>>;
   playlist: PlaylistType | null;
 }) => {
   const playerCur = playerRef?.current;
@@ -62,6 +60,16 @@ const PlayerController = ({
   } = playerState;
 
   const currentSong = songList[songListIndex];
+
+  const router = useRouter();
+
+  const listDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  const isListFirst = songListIndex === 0;
+  const isListLast = songListIndex === songList.length - 1;
+  const isUserPlaylistLiked =
+    likedBy &&
+    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
   const isUserSongLiked =
     currentSong &&
     currentSong?.likedUsers &&
@@ -70,40 +78,8 @@ const PlayerController = ({
 
   const [isVolumeDropdownOpen, setIsVolumeDropdownOpen] = useState(false);
   const [isListDropdownOpen, setIsListDropdownOpen] = useState(false);
-  const [isPlaylistLiked, setIsPlaylistLiked] = useState(isUserSongLiked);
   const [isSongLiked, setIsSongLiked] = useState(isUserSongLiked);
-
-  const router = useRouter();
-
-  const listDropdownRef = React.useRef<HTMLDivElement>(null);
-
-  const isListFirst = songListIndex === 0;
-  const isListLast = songListIndex === songList.length - 1;
-  const isUserLikedPlaylist =
-    likedBy &&
-    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
-
-  const handlePrev = () => {
-    playerCur?.seekTo(playerCur?.getCurrentTime() - 3);
-  };
-
-  const handleNext = () => {
-    playerCur?.seekTo(playerCur?.getCurrentTime() + 3);
-  };
-
-  const handlePrevList = () => {
-    if (songListIndex === 0) {
-      return;
-    }
-    setSongListIndex((prev) => prev - 1);
-  };
-
-  const handleNextList = () => {
-    if (songListIndex === songList.length - 1) {
-      return;
-    }
-    setSongListIndex((prev) => prev + 1);
-  };
+  const [isPlaylistLiked, setIsPlaylistLiked] = useState(isUserPlaylistLiked);
 
   const { mutate: playlistLikeMutate } = useMutation({
     mutationFn: () =>
@@ -120,6 +96,34 @@ const PlayerController = ({
       router.refresh();
     },
   });
+
+  const handlePrev = () => {
+    playerCur?.seekTo(playerCur?.getCurrentTime() - 3);
+  };
+
+  const handleNext = () => {
+    playerCur?.seekTo(playerCur?.getCurrentTime() + 3);
+  };
+
+  const handlePrevList = () => {
+    if (songListIndex === 0) {
+      return;
+    }
+    setPlayerState((prev) => ({
+      ...prev,
+      currentSongListIndex: prev.currentSongListIndex - 1,
+    }));
+  };
+
+  const handleNextList = () => {
+    if (songListIndex === songList.length - 1) {
+      return;
+    }
+    setPlayerState((prev) => ({
+      ...prev,
+      currentSongListIndex: prev.currentSongListIndex + 1,
+    }));
+  };
 
   const handleLikePlaylist = async () => {
     if (!userId) {
@@ -139,6 +143,7 @@ const PlayerController = ({
       setLoginModalOpen(true);
       return;
     }
+
     songLikeMutate();
   };
 
@@ -149,16 +154,26 @@ const PlayerController = ({
   useClickOutside({ ref: listDropdownRef, handler: handleListDropdownOutside });
 
   useEffect(() => {
-    setIsSongLiked(isUserSongLiked);
-    setIsPlaylistLiked(isUserLikedPlaylist);
-  }, [playlist, isUserSongLiked]);
+    if (isUserSongLiked) {
+      setIsSongLiked(true);
+    }
+    if (isUserPlaylistLiked) {
+      setIsPlaylistLiked(true);
+    }
+
+    if (!isUserSongLiked) {
+      setIsSongLiked(false);
+    }
+    if (!isUserPlaylistLiked) {
+      setIsPlaylistLiked(false);
+    }
+  }, [playlist, router]);
 
   useEffect(() => {
     if (songListIndex === songList.length - 1 || songListIndex === 0) {
       return;
     }
-
-    setPlayerState({ ...playerState, playing: true });
+    setPlayerState((prev) => ({ ...prev, playing: true }));
   }, []);
 
   return (
@@ -194,7 +209,7 @@ const PlayerController = ({
           </button>
           <button
             onClick={() => {
-              setPlayerState({ ...playerState, playing: !playing });
+              setPlayerState((prev) => ({ ...prev, playing: !playing }));
             }}
           >
             {playing ? (
@@ -239,7 +254,7 @@ const PlayerController = ({
           >
             <button
               onClick={() => {
-                setPlayerState({ ...playerState, muted: !muted });
+                setPlayerState((prev) => ({ ...prev, muted: !muted }));
               }}
             >
               <Image
@@ -320,7 +335,7 @@ const PlayerController = ({
                 <ListMenuContainer
                   curIndex={songListIndex}
                   songList={songList}
-                  setCurIndex={setSongListIndex}
+                  setPlayerState={setPlayerState}
                   playlist={playlist}
                 />
               </div>
@@ -338,14 +353,15 @@ const PlayerController = ({
           </div>
           <div className={`flex items-center gap-2 xs:order-2 xs:flex-2`}>
             <button className={`xs:hidden`} onClick={handleLikePlaylist}>
-              {isPlaylistLiked ? (
+              {!playlist?.isSongTable && isPlaylistLiked && (
                 <Image
                   src={`/image/common/playlist_liked.svg`}
                   alt={`playlist_liked`}
                   width={24}
                   height={24}
                 />
-              ) : (
+              )}
+              {!playlist?.isSongTable && !isPlaylistLiked && (
                 <Image
                   src={`/image/common/playlist_like.svg`}
                   alt={`playlist_like`}
