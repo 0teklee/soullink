@@ -5,6 +5,7 @@ import {
   getTrendingSongs,
 } from "@/libs/utils/client/fetchers";
 import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
+import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,7 @@ const Home = async () => {
   const tempProps = {
     trendingPlayLists: getMainData,
     friendsPlayLists: getMainData,
-    hotTracks: getHotTracks,
+    popularTracks: getHotTracks as PlaylistType,
     myHistory: getMainData,
   };
   const propsData = [...getMainData, ...getMainData, ...getMainData];
