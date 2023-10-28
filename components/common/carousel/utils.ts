@@ -1,38 +1,36 @@
-const transition = {
-  duration: 0.5,
-  ease: "easeInOut",
+const getDirection = <T>(index: number, activeIndex: number, arr: T[]) => {
+  console.log(index, activeIndex, arr.length / 2, arr.length / 2 > index);
+  return arr.length / 2 > index ? 1 : -1;
 };
 
-export const centerValue = {
-  x: 0,
-  zIndex: 2,
-  opacity: 1,
-  scale: 1,
-  transition,
+const getIsCenterSide = <T>(index: number, activeIndex: number, arr: T[]) => {
+  return (
+    activeIndex === index + 1 ||
+    activeIndex === index - 1 ||
+    (activeIndex === arr.length - 1 && index === 0) ||
+    (activeIndex === 0 && index === arr.length - 1)
+  );
 };
 
-const getDirection = (index: number) => {
-  return 2 > index ? 1 : -1;
+const getIsSideEnds = <T>(index: number, activeIndex: number, arr: T[]) => {
+  return (
+    activeIndex === index + 2 ||
+    activeIndex === index - 2 ||
+    (activeIndex === arr.length - 1 && index === 1) ||
+    (activeIndex === 0 && index === arr.length - 2)
+  );
 };
 
-const getIsCenterSide = (index: number) => {
-  return index === 1 || index === 3;
-};
-
-const getIsSideEnds = (index: number) => {
-  return index === 0 || index === 4;
-};
-
-const getPositions = (index: number) => {
+const getPositions = <T>(index: number, activeIndex: number, arr: T[]) => {
   return {
-    direction: getDirection(index),
-    isCenterSide: getIsCenterSide(index),
-    isSideEnds: getIsSideEnds(index),
+    direction: getDirection(index, activeIndex, arr),
+    isCenterSide: getIsCenterSide(index, activeIndex, arr),
+    isSideEnds: getIsSideEnds(index, activeIndex, arr),
   };
 };
 
-const setZIndex = (index: number) => {
-  const { isCenterSide, isSideEnds } = getPositions(index);
+const setZIndex = <T>(index: number, activeIndex: number, arr: T[]) => {
+  const { isCenterSide, isSideEnds } = getPositions(index, activeIndex, arr);
 
   if (isCenterSide) {
     return 1;
@@ -41,25 +39,33 @@ const setZIndex = (index: number) => {
     return 0;
   }
 
-  return 2;
+  return -1;
 };
 
-const setOpacity = (index: number) => {
-  const { isCenterSide, isSideEnds } = getPositions(index);
+const setOpacity = <T>(index: number, activeIndex: number, arr: T[]) => {
+  const { isCenterSide, isSideEnds } = getPositions(index, activeIndex, arr);
 
   if (isCenterSide) {
     return 0.7;
   }
 
   if (isSideEnds) {
-    return 0.2;
+    return 0.4;
   }
 
-  return 1;
+  if (index === 0 && activeIndex === arr.length - 1) {
+    return 0.4;
+  }
+
+  return 0;
 };
 
-const setXindex = (index: number) => {
-  const { isCenterSide, isSideEnds, direction } = getPositions(index);
+const setXindex = <T>(index: number, activeIndex: number, arr: T[]) => {
+  const { isCenterSide, isSideEnds, direction } = getPositions(
+    index,
+    activeIndex,
+    arr,
+  );
 
   if (isCenterSide) {
     return 120 * direction;
@@ -72,52 +78,58 @@ const setXindex = (index: number) => {
   return 0;
 };
 
-const setScale = (index: number) => {
-  const { isCenterSide, isSideEnds } = getPositions(index);
+const setScale = <T>(index: number, activeIndex: number, arr: T[]) => {
+  const { isCenterSide, isSideEnds } = getPositions(index, activeIndex, arr);
 
   if (isCenterSide) {
     return 0.9;
   }
 
   if (isSideEnds) {
-    return 0.5;
+    return 0.8;
   }
-  return 0;
 };
 
-const getItemMotionInitial = (index: number) => {
-  const zIndex = setZIndex(index);
-  const xIndex = setXindex(index);
-  const opacity = setOpacity(index);
-  const scale = setScale(index);
+const getItemMotionInitial = <T>(
+  index: number,
+  arr: T[],
+  activeIndex: number,
+) => {
+  const zIndex = setZIndex(index, activeIndex, arr);
+  const xIndex = setXindex(index, activeIndex, arr);
+  const opacity = setOpacity(index, activeIndex, arr);
+  const scale = setScale(index, activeIndex, arr);
 
-  if (index === 2) return centerValue;
+  const transition = {
+    duration: 0.5,
+    ease: "easeInOut",
+  };
+
+  const centerValue = {
+    x: 0,
+    zIndex: 2,
+    opacity: 1,
+    scale: 1,
+    transition,
+  };
 
   return {
-    x: xIndex,
-    zIndex,
-    opacity,
-    scale,
-    transition,
+    center: centerValue,
+    initial: {
+      x: xIndex,
+      zIndex,
+      opacity,
+      scale,
+      transition,
+    },
   };
 };
 
-const getArrAnimateValue = <T>(arr: T[]) => {
-  return arr.map((item, i) => {
-    if (i === 2) {
-      return { ...centerValue };
-    }
-    return {
-      ...getItemMotionInitial(i),
-    };
-  });
-};
-
-const sortArr = <T>(arr: T[], selectedIndex: number) => {
-  const beforeArr = arr.slice(0, selectedIndex);
-  const afterArr = arr.slice(selectedIndex, arr.length);
+const sortArr = <T>(arr: T[], activeIndex: number) => {
+  const beforeArr = arr.slice(0, activeIndex);
+  const afterArr = arr.slice(activeIndex, arr.length);
 
   return afterArr.concat(beforeArr);
 };
 
-export { getItemMotionInitial, setZIndex, sortArr, getArrAnimateValue };
+export { getItemMotionInitial, setZIndex, sortArr };
