@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { PlaylistMoodType } from "@/libs/types/common/Song&PlaylistType";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const { param } = Object.fromEntries(url.searchParams.entries()) as {
+    param: PlaylistMoodType;
+  };
+
   try {
-    const trendingPlaylist = await prisma.playlist.findMany({
-      take: 20,
+    const moodPlayLists = await prisma.playlist.findMany({
+      where: {
+        mood: {
+          name: param,
+        },
+      },
+      take: 10,
       orderBy: {
         likedCount: "desc",
       },
@@ -22,33 +33,23 @@ export async function GET() {
             profilePic: true,
           },
         },
-        authorId: true,
-        playedCount: true,
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-            likedUsers: {
-              select: {
-                userId: true,
-              },
-            },
-          },
-        },
         likedBy: {
           select: {
             userId: true,
           },
         },
+        mood: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
+
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        trendingPlayLists: trendingPlaylist,
+        moodPlayLists,
       }),
       {
         status: 200,

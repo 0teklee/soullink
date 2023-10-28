@@ -100,20 +100,22 @@ const Table = ({
             </tr>
           </thead>
           <tbody>
-            {songList?.map((song, index) => {
-              return (
-                <TableItem
-                  key={`${"id" in song ? song.id : "create_song"}-${index}}`}
-                  song={song}
-                  index={index}
-                  isCreate={isCreate}
-                  userId={userId}
-                  playlist={playlist}
-                  setSongList={setSongList}
-                  handleLikeSong={handleLikeSong}
-                />
-              );
-            })}
+            {!!songList &&
+              songList.length > 0 &&
+              songList?.map((song, index) => {
+                return (
+                  <TableItem
+                    key={`${"id" in song ? song.id : "create_song"}-${index}}`}
+                    song={song}
+                    index={index}
+                    isCreate={isCreate}
+                    userId={userId}
+                    playlist={playlist}
+                    setSongList={setSongList}
+                    handleLikeSong={handleLikeSong}
+                  />
+                );
+              })}
           </tbody>
         </table>
         {(!songList || songList.length === 0) && (

@@ -26,6 +26,22 @@ export async function POST(req: Request) {
             },
           })),
         },
+        mood: {
+          connectOrCreate: {
+            where: { name: request.mood },
+            create: {
+              name: request.mood,
+            },
+          },
+        },
+        category: {
+          connectOrCreate: request.categories?.map((category) => ({
+            where: { name: category },
+            create: {
+              name: category,
+            },
+          })),
+        },
       },
     });
 

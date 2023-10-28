@@ -2,21 +2,22 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
 export async function GET(req: Request) {
-  try {
-    const pathname = new URL(req.url).pathname.split("/");
-    const title = decodeURIComponent(pathname[pathname.length - 1]);
+  const url = new URL(req.url);
+  const { id } = Object.fromEntries(url.searchParams.entries());
+  const idArr = id.split(",");
 
-    const playlist = await prisma.playlist.findUnique({
-      where: {
-        title,
+  try {
+    const trendingPlaylist = await prisma.playlist.findMany({
+      take: 20,
+      orderBy: {
+        likedCount: "desc",
       },
       select: {
         id: true,
-        createdAt: true,
-        updatedAt: true,
         title: true,
         description: true,
         coverImage: true,
+        createdAt: true,
         likedCount: true,
         author: {
           select: {
@@ -25,14 +26,15 @@ export async function GET(req: Request) {
             profilePic: true,
           },
         },
+        authorId: true,
+        playedCount: true,
         songs: {
           select: {
             id: true,
             title: true,
             artist: true,
-            thumbnail: true,
             url: true,
-            playedCount: true,
+            likedCount: true,
             likedUsers: {
               select: {
                 userId: true,
@@ -40,28 +42,28 @@ export async function GET(req: Request) {
             },
           },
         },
-        likedBy: true,
-        playedCount: true,
+        likedBy: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
-
-    return NextResponse.json(
-      {
-        data: playlist,
-      },
+    return new NextResponse(
+      JSON.stringify({
+        message: "success",
+        trendingPlayLists: trendingPlaylist,
+      }),
       {
         status: 200,
         statusText: "OK",
       },
     );
   } catch (err) {
-    console.log("post playlistDetail error: ", err);
-    return new NextResponse(
-      JSON.stringify({ message: "fail", errorCode: 404 }),
-      {
-        status: 500,
-        statusText: "Internal Server Error",
-      },
-    );
+    console.log("write.ts error: ", err);
+    return new NextResponse(JSON.stringify({ message: "fail" }), {
+      status: 500,
+      statusText: "Internal Server Error",
+    });
   }
 }

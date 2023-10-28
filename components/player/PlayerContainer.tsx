@@ -8,6 +8,8 @@ import { PlayerProps } from "@/libs/types/common/Song&PlaylistType";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistState } from "@/libs/recoil/playlistAtom";
 import { playerGlobalState } from "@/libs/recoil/playerAtom";
+import useSongCountUpdater from "@/libs/utils/hooks/useSongCountUpdater";
+import dayjs from "dayjs";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
@@ -17,9 +19,34 @@ const PlayerContainer = () => {
   const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
   const selectedPlayList = useRecoilValue(playlistState);
   const selectedSongList = selectedPlayList?.songs || [];
+  const currentSong =
+    selectedSongList.length > 0 &&
+    selectedSongList[playerState.currentSongListIndex];
   const isSongListEmpty = selectedSongList.length === 0;
+  const songId = currentSong && currentSong?.id;
 
   const playerRef = useRef<PlayerProps>(null);
+  const prevSongId = useRef<string | null>(null);
+  const { handleSongChange } = useSongCountUpdater();
+
+  useEffect(() => {
+    if (!songId) {
+      return;
+    }
+    if (!prevSongId.current) {
+      prevSongId.current = songId;
+    }
+
+    if (playerState?.songStartedAt) {
+      handleSongChange(prevSongId.current);
+      prevSongId.current = songId;
+    }
+
+    setPlayerState({
+      ...playerState,
+      songStartedAt: dayjs(new Date()),
+    });
+  }, [currentSong]);
 
   useEffect(() => {
     if (isSongListEmpty) {

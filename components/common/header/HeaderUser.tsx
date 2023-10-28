@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
+import { formatPathName } from "@/libs/utils/client/formatter";
 
 const HeaderUser = () => {
   const { data: session, status } = useSession();
   const userSession = session as UserSessionType;
-  const isLogin = !!userSession?.userId;
+  const [isLogin, setIsLogin] = useState(!!userSession?.userId);
   const router = useRouter();
   const listRef = useRef<HTMLDivElement>(null);
   const isLoading = status === "loading";
@@ -18,7 +19,10 @@ const HeaderUser = () => {
   const [isListClicked, setIsListClicked] = useState(false);
 
   const login = async () => {
-    await signIn("google", { redirect: true, callbackUrl: `/` });
+    await signIn("google", {
+      redirect: true,
+      callbackUrl: isLogin ? `/` : "signup",
+    });
   };
 
   const logout = async () => {
@@ -34,6 +38,10 @@ const HeaderUser = () => {
     handler: handleClickOutside,
   });
 
+  useEffect(() => {
+    setIsLogin(!!userSession?.userId);
+  }, [session]);
+
   return (
     <>
       <div
@@ -45,7 +53,10 @@ const HeaderUser = () => {
             <button
               className={`text-gray-100`}
               onClick={async () => {
-                await login();
+                await signIn("google", {
+                  redirect: true,
+                  callbackUrl: isLogin ? `/` : "/signup",
+                });
               }}
             >
               login
@@ -53,7 +64,10 @@ const HeaderUser = () => {
             <button
               className={`text-primary whitespace-nowrap`}
               onClick={async () => {
-                login();
+                await signIn("google", {
+                  redirect: true,
+                  callbackUrl: isLogin ? `/` : "/signup",
+                });
               }}
             >
               Sign up
@@ -99,7 +113,11 @@ const HeaderUser = () => {
                   className={`hover:text-primary`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push(`/user/${userSession?.userNickname}`);
+                    if (userSession?.userNickname) {
+                      router.push(
+                        `/user/${formatPathName(userSession.userNickname)}`,
+                      );
+                    }
                     setIsListClicked(false);
                   }}
                 >
@@ -154,8 +172,11 @@ const HeaderUser = () => {
             <button
               className={`hover:bg-gray-200 hover:text-white`}
               onClick={() => {
-                router.push(`/user/${userSession?.userNickname}`);
-
+                if (userSession?.userNickname) {
+                  router.push(
+                    `/user/${formatPathName(userSession.userNickname)}`,
+                  );
+                }
                 setIsListClicked(false);
               }}
             >
@@ -178,10 +199,12 @@ const HeaderUser = () => {
           >
             <button
               className={`text-primary hover:bg-gray-200 hover:text-white`}
-              onClick={() => {
-                router.push(`/signup`);
-
-                setIsListClicked(false);
+              onClick={async () => {
+                await login().then(() => {
+                  if (!userSession?.userId) {
+                    router.push(`/signup`);
+                  }
+                });
               }}
             >
               Sign up
@@ -189,7 +212,11 @@ const HeaderUser = () => {
             <button
               className={`hover:bg-gray-200 hover:text-white`}
               onClick={async () => {
-                await login();
+                await login().then(() => {
+                  if (!!userSession?.userId) {
+                    router.push(`/signup`);
+                  }
+                });
               }}
             >
               Login

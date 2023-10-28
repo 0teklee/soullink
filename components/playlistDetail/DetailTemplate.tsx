@@ -16,21 +16,19 @@ import { UserSessionType } from "@/libs/types/common/userType";
 import { HeartIcon, PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
-import { playlistState } from "@/libs/recoil/playlistAtom";
-import { playerGlobalState } from "@/libs/recoil/playerAtom";
+import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
+import { formatPathName } from "@/libs/utils/client/formatter";
 
 const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
   const router = useRouter();
 
-  const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
-  const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
-
-  const { playing } = playerState;
+  const { playing, handleChangePlaylistState } =
+    useSelectedPlaylistPlay(playlistData);
 
   const {
     title,
@@ -95,7 +93,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           <button
             className={`font-normal text-black hover:underline`}
             onClick={() => {
-              router.push(`/user/${encodeURIComponent(author.nickname)}`);
+              router.push(`/user/${formatPathName(author.nickname)}`);
             }}
           >
             by {authorName}
@@ -126,20 +124,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           />
           <div
             onClick={() => {
-              if (playing) {
-                setPlayerState({ ...playerState, playing: false });
-                return;
-              }
-              if (
-                selectedPlaylist &&
-                selectedPlaylist.id === playlistData.id &&
-                !playing
-              ) {
-                setPlayerState({ ...playerState, playing: false });
-                return;
-              }
-
-              setSelectedPlaylist(playlistData);
+              handleChangePlaylistState(playlistData);
             }}
             className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-[3] cursor-pointer opacity-0 hover:opacity-100`}
           >

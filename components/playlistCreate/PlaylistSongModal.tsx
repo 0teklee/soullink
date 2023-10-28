@@ -15,6 +15,7 @@ import {
   CreatePlaylistType,
   CreateSongType,
 } from "@/libs/types/common/Song&PlaylistType";
+import { formatSongNames } from "@/libs/utils/client/formatter";
 
 type TUrlType = "youtube" | "custom" | "";
 
@@ -41,7 +42,6 @@ const PlaylistSongModal = ({
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [searchWord, setSearchWord] = useState<string>("");
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
-  const [isPending, startTransition] = useTransition();
   const [isAvailableCustomUrl, setIsAvailableCustomUrl] =
     useState<boolean>(true);
   const [isYoutubeError, setIsYoutubeError] = useState<boolean>(false);
@@ -93,7 +93,7 @@ const PlaylistSongModal = ({
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    startTransition(() => setSearchWord(e.target.value));
+    setSearchWord(e.target.value);
     if (searchTimer) {
       clearTimeout(searchTimer);
     }
@@ -298,13 +298,6 @@ const PlaylistSongModal = ({
               <div
                 className={`flex flex-col items-start gap-2 max-h-[300px] overflow-y-scroll`}
               >
-                {isPending && (
-                  <div className={`flex items-center justify-center w-full`}>
-                    <p className={`text-base text-gray-500 font-semibold`}>
-                      Loading
-                    </p>
-                  </div>
-                )}
                 {songValue.type === "youtube" &&
                   youtubeData &&
                   youtubeData.length > 0 &&
@@ -313,23 +306,13 @@ const PlaylistSongModal = ({
                       key={index}
                       className={`flex items-center justify-start gap-2 w-full p-2 bg-white hover:bg-primary hover:text-white rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
                       onClick={() => {
-                        const formattedArtist =
-                          item.snippet.channelTitle.replace("VEVO", "");
-                        const titleRegex = new RegExp(
-                          /(VEVO|Official|Official Video|Official Audio|Video|video| -|- )|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*Lyric\s*\))|(\(\s*Lyrics\s*\))|(\(\s*Live\s*\))|(\(\s*Music\s*\))|(\(\s*Music Video\s*\))|(\(\s*Official Music Video\s*\))|(\(\s*Official Music\s*\))|(\(\s*Official Video\s*\))|(\(\s*Official Audio\s*\))|(\(\s*Official\s*\))|(\(\s*Video\s*\))|(\(\s*Audio\s*\))|(\(\s*\))|(\(\s*19\d{2}\s*\))|(\(\s*20\d{2}\s*\))/gi,
-                        );
-                        const emptyRegex = new RegExp(/\(\s*\)/g);
                         // regex for no 4 digit year strings
 
                         setSongValue({
                           url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-                          title: item.snippet.title
-                            .replace(formattedArtist, "")
-                            .replace(titleRegex, "")
-                            .replace(emptyRegex, "")
-                            .replace(" - ", " ")
-                            .trim(),
-                          artist: formattedArtist,
+                          title: formatSongNames(item.snippet.title),
+
+                          artist: formatSongNames(item.snippet.channelTitle),
                           thumbnail: item.snippet.thumbnails.default.url,
                           type: "youtube",
                         });
@@ -349,10 +332,10 @@ const PlaylistSongModal = ({
                         className={`flex flex-col items-start justify-center gap-1`}
                       >
                         <div className={`text-sm font-bold`}>
-                          `${item.snippet.title}`
+                          {formatSongNames(item.snippet.title)}
                         </div>
                         <div className={`text-xs`}>
-                          `${item.snippet.channelTitle.replace("VEVO", "")}`
+                          {formatSongNames(item.snippet.channelTitle)}
                         </div>
                       </div>
                     </button>

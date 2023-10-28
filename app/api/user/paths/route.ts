@@ -12,7 +12,7 @@ export async function GET() {
     const encodeURIUserNicknamePaths = userNicknamePaths.map((user) => {
       return {
         ...user,
-        nickname: encodeURI(user.nickname),
+        nickname: encodeURIComponent(user.nickname),
       };
     });
 

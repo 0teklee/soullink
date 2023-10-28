@@ -9,6 +9,7 @@ import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import {
   formatDaysAgo,
   formatIsMutualClient,
+  formatPathName,
 } from "@/libs/utils/client/formatter";
 import {
   postDeleteComment,
@@ -133,7 +134,7 @@ const CommentItem = ({
                 if (isDeletedOrPrivate) {
                   return;
                 }
-                router.push(`/user/${encodeURIComponent(nickname)}`);
+                router.push(`/user/${formatPathName(nickname)}`);
               }}
             >
               {nickname}
@@ -208,7 +209,7 @@ const CommentItem = ({
                           </div>
                           <button
                             onClick={() => {
-                              const formattedNickname = encodeURIComponent(
+                              const formattedNickname = formatPathName(
                                 user.user.nickname,
                               );
                               router.push(`/user/${formattedNickname}`);

@@ -2,8 +2,9 @@ import React from "react";
 import MainTrending from "@/components/main/MainTrending";
 import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
 import MainHotTracks from "@/components/main/MainHotTracks";
-import MainMyHistory from "@/components/main/MainMyHistory";
+import MainRecentPlayed from "@/components/main/MainRecentPlayed";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import MainTodayList from "@/components/main/MainTodayList";
 
 const MainTemplate = ({
   propsData: { trendingPlayLists, friendsPlayLists, popularTracks, myHistory },
@@ -16,12 +17,13 @@ const MainTemplate = ({
   };
 }) => {
   return (
-    <div className={`flex flex-col items-start gap-y-12 `}>
+    <section className={`flex flex-col items-start py-6 gap-12 `}>
+      <MainTodayList playlists={trendingPlayLists} />
       <MainTrending playLists={trendingPlayLists} />
       <MainFriendsPlaylists playLists={friendsPlayLists} />
       <MainHotTracks trendingsongList={popularTracks} />
-      <MainMyHistory playLists={myHistory} />
-    </div>
+      <MainRecentPlayed />
+    </section>
   );
 };
 

@@ -7,7 +7,6 @@ export async function GET() {
       take: 20,
       orderBy: {
         likedCount: "desc",
-        playCount: "desc",
       },
       select: {
         id: true,
@@ -23,7 +22,7 @@ export async function GET() {
           },
         },
         authorId: true,
-        playCount: true,
+        playedCount: true,
         songs: true,
         likedBy: {
           select: {

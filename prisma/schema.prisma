@@ -43,17 +43,33 @@ model Follow {
 model Playlist {
   id          String                 @id @default(uuid())
   title       String                 @unique @db.VarChar(40)
-  coverImage  String?
-  description String                 @db.VarChar(300)
+  coverImage  String?                @db.Text()
+  description String                 @db.MediumText
   author      User                   @relation(fields: [authorId], references: [id])
   authorId    String
   songs       Song[]
   comments    Comment[]
   likedBy     PlaylistLikedByUsers[]
   likedCount  Int                    @default(0)
-  playCount   Int                    @default(0)
+  playedCount Int                    @default(0)
+  playedTime  Int                    @default(0)
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
+  category    Category[]
+  mood        Mood                   @relation(fields: [moodId], references: [id])
+  moodId      String
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  name      String     @unique @db.VarChar(30)
+  playlists Playlist[]
+}
+
+model Mood {
+  id       String     @id @default(uuid())
+  name     String     @unique
+  playlist Playlist[]
 }
 
 model PlaylistLikedByUsers {

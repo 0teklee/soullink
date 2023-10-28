@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export interface PlayerType {
   playing: boolean;
   played: string;
@@ -9,4 +11,6 @@ export interface PlayerType {
   seeking: boolean;
   isLoading: boolean;
   currentSongListIndex: number;
+  startedAt: Dayjs | null;
+  songStartedAt: Dayjs | null;
 }
