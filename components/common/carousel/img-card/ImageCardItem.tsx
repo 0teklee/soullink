@@ -7,24 +7,19 @@ import Image from "next/image";
 const ImageCardItem = ({
   playlist,
   index,
-  handleClickCard,
+  setActiveIndex,
 }: {
   playlist: PlaylistType;
   index: number;
-  handleClickCard: (index: number) => void;
+  setActiveIndex: Dispatch<SetStateAction<number>>;
 }) => {
   const { title, id, author, coverImage } = playlist;
   const isDefault = !title;
   return (
     <div
-      onClick={() => handleClickCard(index)}
+        onClick={() => setActiveIndex(index)}
       className={`relative w-96 h-56 rounded-lg overflow-hidden cursor-pointer`}
     >
-      <p
-        className={`text-2xl font-bold text-red-900 absolute top-1 left-2 z-10`}
-      >
-        {title}
-      </p>
       {!isDefault && (
         <Image
           className={`object-cover w-full h-full`}
