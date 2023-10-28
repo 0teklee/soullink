@@ -1,52 +1,39 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import ImageCardItem from "@/components/common/carousel/img-card/ImageCardItem";
 import Title from "@/components/common/module/Title";
 import { fillEmptyPlaylist } from "@/libs/utils/client/commonUtils";
 import {
-  centerValue,
-  getArrAnimateValue,
   getItemMotionInitial,
   sortArr,
 } from "@/components/common/carousel/utils";
 
 const ImageCardContainer = ({ playlists }: { playlists: PlaylistType[] }) => {
-  const [activeIndex, setActiveIndex] = useState(2);
-  const [processedLists, setProcessedLists] = useState(
-    fillEmptyPlaylist(playlists),
-  );
-  const [controls, setControls] = useState(getArrAnimateValue(processedLists));
+  const [activeIndex, setActiveIndex] = useState(0);
+  const processedLists = sortArr(fillEmptyPlaylist(playlists), activeIndex);
 
-  const controlKeys = useCallback(
-    (index: number) =>
-      Object.keys(processedLists).map((item) => Number(item))[index],
-    [processedLists, controls],
-  );
+  const controls = useAnimationControls();
 
-  const handleClickCard = (index: number) => {
-    setProcessedLists((prevLists) => sortArr(prevLists, index));
-  };
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setActiveIndex((prevIndex) => {
+  //       if (prevIndex === processedLists.length - 1) return 0;
+  //       return prevIndex + 1;
+  //     });
+  //   }, 2500);
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
-  const handleNext = () => {
-    setActiveIndex((prevIndex) => {
-      if (prevIndex === processedLists.length - 1) return 0;
-      return prevIndex + 1;
-    });
-    setProcessedLists((prevLists) => sortArr(prevLists, activeIndex));
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((prevIndex) => {
-      if (prevIndex === 0) return processedLists.length - 1;
-      return prevIndex - 1;
-    });
-    setProcessedLists((prevLists) => sortArr(prevLists, activeIndex));
-  };
-
-  useEffect(() => {}, [processedLists]);
+  useEffect(() => {
+    // update motion.div control
+    controls.start("active");
+    console.log("target processLists: ", sortArr(processedLists, activeIndex));
+  }, [activeIndex]);
 
   return (
     <div
@@ -56,21 +43,24 @@ const ImageCardContainer = ({ playlists }: { playlists: PlaylistType[] }) => {
         {!!playlists &&
           playlists.length > 0 &&
           processedLists.map((playlist, itemIndex, arr) => {
-            const initial = getItemMotionInitial(itemIndex);
-            const controlKey = controlKeys(itemIndex);
+            const { initial, center } = getItemMotionInitial(
+              itemIndex,
+              arr,
+              activeIndex,
+            );
 
             return (
               <motion.div
                 className={`absolute playlist_card_${itemIndex}`}
                 key={`${playlist.mood}_${itemIndex}`}
                 initial={initial}
-                animate={controls[controlKey]}
+                animate={activeIndex === itemIndex ? center : initial}
               >
                 <ImageCardItem
                   key={itemIndex}
                   playlist={playlist}
                   index={itemIndex}
-                  handleClickCard={handleClickCard}
+                  setActiveIndex={setActiveIndex}
                 />
               </motion.div>
             );
@@ -78,9 +68,29 @@ const ImageCardContainer = ({ playlists }: { playlists: PlaylistType[] }) => {
         <div
           className={`absolute bottom-2 flex gap-3 items-center justify-center text-gray-900 font-semibold`}
         >
-          <button onClick={handlePrev}>prev</button>
-          <p className={`font-bold text-gray-900`}>{activeIndex}</p>
-          <button onClick={handleNext}>next</button>
+          <button
+            onClick={() => {
+              setActiveIndex((prevIndex) => {
+                if (prevIndex === 0) return processedLists.length - 1;
+                return prevIndex - 1;
+              });
+
+              console.log("prev activeIndex", activeIndex);
+            }}
+          >
+            prev
+          </button>
+          <button
+            onClick={() => {
+              setActiveIndex((prevIndex) => {
+                if (prevIndex === processedLists.length - 1) return 0;
+                return prevIndex + 1;
+              });
+              console.log("next activeIndex", activeIndex);
+            }}
+          >
+            next
+          </button>
         </div>
         {/*{!!playlists ||*/}
         {/*  (playlists.length === 0 && (*/}
