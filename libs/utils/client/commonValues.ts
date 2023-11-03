@@ -36,15 +36,14 @@ export const playlistDefault: IDefaultPlaylist = {
   mood: {
     name: "relaxed",
   },
+  category: [],
 };
 
 export const commonMoods: PlaylistMoodType[] = [
-  "energetic",
   "upbeat",
   "chill",
   "relaxed",
   "melancholic",
-  "dark",
 ];
 
 export const titleRegex = new RegExp(
@@ -54,3 +53,4 @@ export const emptyRegex = new RegExp(/\(\s*\)/g);
 
 export const played5MinsMs = 5 * 60 * 1000;
 export const played5MinSeconds = 30;
+export const interval5Seconds = 5 * 1000;
