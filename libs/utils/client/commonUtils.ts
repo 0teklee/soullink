@@ -42,18 +42,39 @@ export const filterMoodPlaylists = (
   return moodPlaylists.flat();
 };
 
-export const fillEmptyPlaylist = (playlistArr: PlaylistType[]) => {
+export const filterCategoryPlaylist = (
+  category: string,
+  playlistArr?: PlaylistType[],
+) => {
+  console.log("playlistArr: ", playlistArr);
+  if (!playlistArr) {
+    return [];
+  }
+
+  if (category === "all" || category === "") {
+    return playlistArr.filter((playlist) => playlist.category.length > 0);
+  }
+  const categoryPlaylists = playlistArr.filter((playlist) => {
+    return (
+      playlist.category.filter((categoryObj) => {
+        return categoryObj.name === category;
+      }).length > 0
+    );
+  });
+  return categoryPlaylists;
+};
+
+export const fillEmptyPlaylist = (playlistArr?: PlaylistType[]) => {
+  if (!playlistArr) {
+    return Array(5).fill(playlistDefault);
+  }
+
   if (playlistArr.length > 5) {
     return playlistArr;
   }
 
   const emptyPlaylist = Array(5 - playlistArr.length);
-  const defaultPlaylistArr = emptyPlaylist.fill(playlistDefault).map((_, i) => {
-    return {
-      ...playlistDefault,
-      title: `empty${i}`,
-    };
-  });
+  const defaultPlaylistArr = emptyPlaylist.fill(playlistDefault);
 
   return playlistArr.concat(defaultPlaylistArr as PlaylistType[]);
 };
