@@ -9,6 +9,7 @@ import Title from "@/components/common/module/Title";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { formatPathName } from "@/libs/utils/client/formatter";
 
 type FollowerOptionNullable = FollowerUserResponseType[] | null;
 type FollowingOptionNullable = FollowingUserResponseType[] | null;
@@ -50,9 +51,7 @@ const UserFollowModal = ({
                 className={`flex items-center justify-start gap-4 w-full px-2 py-1 rounded-md  text-gray-400 hover:bg-gray-100 hover:text-gray-700 cursor-pointer`}
                 key={`user_${idx}_${formattedUser?.id || formattedUser?.id}`}
                 onClick={() =>
-                  router.push(
-                    `/user/${encodeURIComponent(formattedUser.nickname)}`,
-                  )
+                  router.push(`/user/${formatPathName(formattedUser.nickname)}`)
                 }
               >
                 <div className={`w-7 h-7 rounded-full`}>

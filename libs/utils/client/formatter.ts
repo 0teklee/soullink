@@ -1,6 +1,7 @@
 import { CommentAuthorInterface } from "@/libs/types/common/userType";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import { emptyRegex, titleRegex } from "@/libs/utils/client/commonValues";
 
 dayjs.extend(isBetween);
 
@@ -15,6 +16,15 @@ export const secondsFormatter = (seconds: number): string => {
 
 export const formatPathName = (title: string): string => {
   return encodeURIComponent(title);
+};
+
+export const formatSongNames = (title: string): string => {
+  return decodeURIComponent(title)
+    .replace("VEVO", "")
+    .replace(titleRegex, "")
+    .replace(emptyRegex, "")
+    .replace(" - ", " ")
+    .trim();
 };
 
 export const formatDaysAgo = (date: Date | string) => {

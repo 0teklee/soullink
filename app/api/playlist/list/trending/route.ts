@@ -19,10 +19,11 @@ export async function GET() {
           select: {
             id: true,
             nickname: true,
+            profilePic: true,
           },
         },
         authorId: true,
-        playCount: true,
+        playedCount: true,
         songs: {
           select: {
             id: true,

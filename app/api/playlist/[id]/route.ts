@@ -41,7 +41,7 @@ export async function GET(req: Request) {
           },
         },
         likedBy: true,
-        playCount: true,
+        playedCount: true,
       },
     });
 

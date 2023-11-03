@@ -25,6 +25,7 @@ export interface UserType {
   myComments: CommentType[];
   profileComments: CommentType[];
   playedCount: number;
+  isEditor?: boolean;
 }
 
 export interface CommentType {

@@ -18,6 +18,7 @@ const MainFriendsPlaylists = ({ playLists }: { playLists: PlaylistType[] }) => {
             >
               <Link href={`/playlist/${formatPathName(item.title)}`}>
                 <Image
+                  className={`object-cover`}
                   src={
                     item.coverImage || `/image/common/default_cover_image.svg`
                   }

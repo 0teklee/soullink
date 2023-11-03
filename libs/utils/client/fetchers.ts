@@ -1,5 +1,7 @@
 import {
+  CreatePlaylistType,
   PlaylistLikeType,
+  PlaylistMoodType,
   PlaylistType,
   SongLikeType,
   TrendingSongPlaylistType,
@@ -45,7 +47,98 @@ export const getTrendingPlaylists = async (): Promise<PlaylistType[]> => {
   return data.trendingPlayLists;
 };
 
+export const getRecentPlaylists = async (
+  id: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent?id=${id}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.trendingPlayLists;
+};
+
+export const getMoodPlaylists = async (
+  param: PlaylistMoodType,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood?param=${param}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.moodPlayLists;
+};
+
+export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/editor`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.editorPlayLists;
+};
+
+export const getRecommendedPlaylists = async (
+  userId: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recommend?userId=${userId}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.userRecommendPlaylist;
+};
+
+export const getCategoriesPlaylists = async (
+  userId?: string,
+): Promise<{ categoryPlaylists: PlaylistType[]; categories: string[] }> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/categories/new/?userId=${userId || ""}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data;
+};
+
 /* POST */
+
+export const postCreatePlaylist = async (
+  payload: CreatePlaylistType,
+  userId: string,
+) => {
+  const res = await fetch(`/api/playlist/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...payload,
+      userId: userId || "",
+    }),
+  });
+  const data = await res.json();
+  return data;
+};
+
+export const postPlaylistCount = async (
+  playlistId: string,
+  playedTime: number,
+) => {
+  const res = await fetch(`/api/playlist/count`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      playlistId,
+      playedTime,
+    }),
+  });
+  const data = await res.json();
+  return data;
+};
 
 export const postPlaylistLike = async (request: PlaylistLikeType) => {
   const { playlistId } = request;
@@ -89,6 +182,20 @@ export const postSongLike = async (request: SongLikeType) => {
       },
     },
   );
+  const data = await res.json();
+  return data;
+};
+
+export const postSongCount = async (songId: string) => {
+  const res = await fetch(`/api/song/count`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      songId,
+    }),
+  });
   const data = await res.json();
   return data;
 };

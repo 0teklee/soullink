@@ -6,10 +6,9 @@ import {
 } from "@/libs/utils/client/fetchers";
 import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
-
-// api 함수
 
 const Home = async () => {
   const getMainData = await getTrendingPlaylists();
@@ -23,11 +22,9 @@ const Home = async () => {
   const propsData = [...getMainData, ...getMainData, ...getMainData];
 
   return (
-    <section className={`py-6`}>
-      <PlaylistUpdateProvider propsData={propsData}>
-        <MainTemplate propsData={tempProps} />
-      </PlaylistUpdateProvider>
-    </section>
+    <PlaylistUpdateProvider propsData={propsData}>
+      <MainTemplate propsData={tempProps} />
+    </PlaylistUpdateProvider>
   );
 };
 

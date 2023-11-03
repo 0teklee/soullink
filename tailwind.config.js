@@ -19,6 +19,7 @@ module.exports = {
     colors: {
       ...require("tailwindcss/colors"),
       primary: "#01FF00",
+      dark: "#0e0a18",
     },
     extend: {},
   },

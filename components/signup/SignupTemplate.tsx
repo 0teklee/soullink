@@ -6,12 +6,14 @@ import { handleImageUpload } from "@/libs/utils/client/ImageUpload";
 import Image from "next/image";
 import { useMutation } from "react-query";
 import { SignupPayload } from "@/libs/types/common/userType";
-import { useSession } from "next-auth/react";
-import { router } from "next/client";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const SignupTemplate = () => {
   const { data: session, status } = useSession();
   const userEmail = session?.user?.email;
+  const router = useRouter();
+
   const [payload, setPayload] = useState<SignupPayload>({
     profilePic: "",
     nickname: "",
@@ -24,9 +26,10 @@ const SignupTemplate = () => {
     },
   });
 
-  const isOAuthSignIn = status === "authenticated";
+  const isOAuthSignIn = status === "authenticated" && !!payload.email;
 
-  const isSubmitDisabled = payload.nickname === "" && payload.bio === "";
+  const isSubmitDisabled =
+    !payload.email || payload.nickname === "" || payload.bio === "";
 
   const fetcherSignup = async (reqPayload: SignupPayload) => {
     const data = await fetch(`/api/user/signup`, {
@@ -41,8 +44,7 @@ const SignupTemplate = () => {
 
   const { mutate } = useMutation(fetcherSignup, {
     onSuccess: (data) => {
-      // modal 추가;
-      router.push(`/user/${payload.nickname}`);
+      router.push(`/`);
     },
   });
 
@@ -58,6 +60,9 @@ const SignupTemplate = () => {
   };
 
   useEffect(() => {
+    if (!userEmail) {
+      return;
+    }
     setPayload((prev) => ({
       ...prev,
       email: userEmail || "",
@@ -65,17 +70,17 @@ const SignupTemplate = () => {
   }, [session]);
 
   return (
-    <section
-      className={`flex flex-col items-center gap-12 py-6 xl:px-24 xs:px-3`}
-    >
+    <section className={`flex flex-col items-center gap-12 py-6 xs:px-3`}>
       <Title size={`h1`} text={`Sign up`} />
-      <div className={`flex items-center gap-12 w-full xs:flex-col`}>
-        <div className={`relative flex flex-col items-center gap-1`}>
+      <div className={`flex flex-col items-start gap-12 w-full max-w-lg`}>
+        <div
+          className={`relative flex self-center flex-col items-center gap-1`}
+        >
           <div
             onClick={() => {
               handleImageUpload(handlePayloadImgUpload);
             }}
-            className={`relative flex items-center justify-center w-[100px] h-[100px] bg-gray-100 border border-gray-300 rounded-xl cursor-pointer`}
+            className={`relative flex items-center justify-center w-[200px] h-[200px] bg-gray-100 border border-gray-300 rounded-xl cursor-pointer`}
           >
             {!payload.profilePic && (
               <Image
@@ -100,33 +105,60 @@ const SignupTemplate = () => {
             Add profile picture
           </p>
         </div>
-        <div
-          className={`flex flex-col items-start gap-1 w-full max-w-xs xs:max-w-xl`}
-        >
-          <p
-            className={`text-gray-700 font-medium xs:text-xl xs:font-semibold`}
-          >
-            Username
-          </p>
-          <input
-            type={`text`}
-            className={`w-full p-2 text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
-            maxLength={20}
-            placeholder={`@username`}
-            value={payload.nickname}
-            onChange={(e) => {
-              setPayload((prev) => ({
-                ...prev,
-                nickname: e.target.value,
-              }));
-            }}
-          />
-          <p className={`text-xs text-gray-500`}>
-            {payload.nickname.length} / {20}
-          </p>
+        <div className={`flex flex-col items-start gap-3 w-full xs:max-w-xl`}>
+          <div className={`flex flex-col items-start gap-1 w-full`}>
+            <p
+              className={`text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+            >
+              Email
+            </p>
+            <input
+              type={`text`}
+              className={`w-full p-2 text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              maxLength={20}
+              placeholder={`email`}
+              value={payload.email}
+              disabled={true}
+            />
+            <button
+              onClick={async () => {
+                await signIn("google", {
+                  redirect: true,
+                  callbackUrl: `/signup`,
+                });
+              }}
+              disabled={isOAuthSignIn}
+              className={`self-end px-2 py-1 text-xs text-blue-400 border border-blue-400 hover:text-white hover:bg-blue-500 rounded  disabled:cursor-default disabled:text-white disabled:bg-blue-500`}
+            >
+              {isOAuthSignIn ? "Authenticated" : "Authenticate with Google"}
+            </button>
+          </div>
+          <div className={`flex flex-col items-start gap-1 w-full `}>
+            <p
+              className={`text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+            >
+              Nickname
+            </p>
+            <input
+              type={`text`}
+              className={`w-full p-2 text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              maxLength={20}
+              placeholder={`@nickname`}
+              value={payload.nickname}
+              onChange={(e) => {
+                setPayload((prev) => ({
+                  ...prev,
+                  nickname: e.target.value,
+                }));
+              }}
+            />
+            <p className={`text-xs text-gray-500`}>
+              {payload.nickname.length} / {20}
+            </p>
+          </div>
         </div>
       </div>
-      <div className={`flex flex-col items-start gap-2 w-full`}>
+      <div className={`flex flex-col items-start gap-2 w-full  max-w-lg`}>
         <Title size={`h2`} text={`Bio`} />
         <textarea
           className={`w-full max-w-4xl min-h-[100px] p-2 text-gray-500 bg-white border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
@@ -143,7 +175,7 @@ const SignupTemplate = () => {
           {payload.bio.length} / {120}
         </p>
       </div>
-      <div className={`flex flex-col items-start w-full gap-4`}>
+      <div className={`flex flex-col items-start w-full max-w-lg gap-4`}>
         <div className={`flex items-center gap-2`}>
           <Title size={`h2`} text={`Social Links`} />
           <p className={`text-gray-400 text-sm font-medium`}>(Optional)</p>
@@ -217,7 +249,7 @@ const SignupTemplate = () => {
       </div>
       <button
         disabled={isSubmitDisabled}
-        className={`w-full max-w-[120px] p-2 text-sm text-white font-bold bg-primary rounded-md disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={`w-full max-w-xs my-4 px-2 py-3 text-sm text-white font-bold bg-primary rounded-md disabled:opacity-50 disabled:cursor-not-allowed`}
         onClick={() => {
           if (!isOAuthSignIn || !payload.email) {
             alert(`Please sign in with Google`);

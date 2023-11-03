@@ -50,13 +50,13 @@ const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
 
   return (
     <>
-      <div className={`absolute left-0 w-screen`}>
-        <div className={`relative w-full h-full `}>
+      <div className={`absolute left-0 w-screen `}>
+        <div className={`relative w-full`}>
           <BgColorExtract
             imageUrl={profilePic || "/image/common/default_cover_image.svg"}
           />
           <div
-            className={`relative left-0 flex items-start justify-start w-screen h-full mt-10 xs:my-10 pt-12 pb-4 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] gap-x-[60px] bg-transparent xs:flex-col xs:items-center xs:justify-center`}
+            className={`relative left-0 flex items-start justify-start w-screen mt-10 xs:my-10 pt-12 pb-4 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] gap-x-[60px] bg-transparent xs:flex-col xs:items-center xs:justify-center`}
           >
             <div
               className={`profile-card relative flex flex-col items-center gap-y-3 z-10`}
@@ -69,7 +69,7 @@ const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
                   >
                     <p className={`text-xl`}>Follow</p>
                     <Image
-                      className={`bg-blend-difference z-1`}
+                      className={`z-1`}
                       src={`/image/common/plus.svg`}
                       alt={`plus`}
                       width={24}
@@ -87,19 +87,15 @@ const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
               </div>
               <div className={`flex flex-col items-center gap-1`}>
                 <div className={`flex items-center justify-center`}>
-                  <p className={`text-2xl font-semibold bg-blend-difference`}>
-                    {nickname}
-                  </p>
+                  <p className={`text-2xl font-semibold `}>{nickname}</p>
                 </div>
                 <div className={`bg-transparent`}>
                   <div className={`mb-1`}>
-                    <p
-                      className={`text-center text-sm font-normal bg-blend-difference`}
-                    >
+                    <p className={`text-center text-sm font-normal `}>
                       {playedCount} played
                     </p>
                     <div
-                      className={`flex items-center justify-between max-w-full text-normal font-medium gap-3 bg-blend-difference`}
+                      className={`flex items-center justify-between max-w-full text-normal font-medium gap-3 `}
                     >
                       <button
                         onClick={() => {
@@ -126,14 +122,13 @@ const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
               <div
                 className={`w-full max-w-5xl line-clamp-[12] overflow-ellipsis`}
               >
-                <p className={`text-base bg-blend-difference`}>
-                  {!!bio && bio}
-                </p>
+                <p className={`text-base `}>{!!bio && bio}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       {isModalOpen && (
         <CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
           <UserFollowModal

@@ -1,33 +1,76 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import Table from "@/components/common/songTable/Table";
 import PlaylistSongModal from "@/components/playlistCreate/PlaylistSongModal";
-import { QueryClient, QueryClientProvider } from "react-query";
 import {
   CreatePlaylistType,
   CreateSongType,
 } from "@/libs/types/common/Song&PlaylistType";
 import { handleImageUpload } from "@/libs/utils/client/ImageUpload";
 import PlaylistCreateSubmit from "@/components/playlistCreate/PlaylistCreateSubmit";
-
-const queryClient = new QueryClient();
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/libs/types/common/userType";
+import { useRouter } from "next/navigation";
+import { useSetRecoilState } from "recoil";
+import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { getSingleUserProfile } from "@/libs/utils/client/fetchers";
+import { useQuery } from "react-query";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { formatMoodBgColor } from "@/components/playlistCreate/utils";
+import { commonMoods } from "@/libs/utils/client/commonValues";
 
 const PlaylistCreateTemplate = () => {
+  const { data: session } = useSession() as { data: UserSessionType };
+  const userId = session?.userId;
+
+  const router = useRouter();
+  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+
   const [songList, setSongList] = useState<CreateSongType[]>([]);
   const [payload, setPayload] = useState<CreatePlaylistType>({
     title: "",
     description: "",
     coverImage: "",
     songs: songList,
+    mood: "",
+    categories: [],
   });
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMaxSongList, setIsMaxSongList] = useState(false);
+  const [isMoodDropdownOpen, setIsMoodDropdownOpen] = useState(false);
+  const [categoryInput, setCategoryInput] = useState("");
 
-  const { title, description, songs } = payload;
+  const { title, description, songs, mood: currentMood, categories } = payload;
+
+  const { data: userData } = useQuery(
+    ["user", userId],
+    () => {
+      if (!userId) {
+        return;
+      }
+      getSingleUserProfile(userId);
+    },
+    { enabled: !!userId },
+  );
+
+  const { likedSong } = userData || { likedSong: [] };
+
+  const isPayloadValid =
+    !!title &&
+    title.length <= 40 &&
+    !!description &&
+    description.length < 100 &&
+    !!songs &&
+    songs.length > 0 &&
+    songs.length <= 20 &&
+    !!userId;
 
   const handlePayloadImgUpload = (imgUrl: string) => {
     setPayload((prev) => ({
@@ -36,15 +79,98 @@ const PlaylistCreateTemplate = () => {
     }));
   };
 
+  const handleCategories = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (categories?.length === 3) {
+      return;
+    }
+
+    if (e.key === "Enter") {
+      setPayload((prev) => ({
+        ...prev,
+        categories: prev?.categories
+          ? [...prev.categories, categoryInput]
+          : [categoryInput],
+      }));
+      setCategoryInput("");
+    }
+  };
+
+  const handleClickCategory = () => {
+    if (categories?.length === 3) {
+      return;
+    }
+
+    setPayload((prev) => ({
+      ...prev,
+      categories: prev?.categories
+        ? [...prev.categories, categoryInput]
+        : [categoryInput],
+    }));
+    setCategoryInput("");
+  };
+
+  useEffect(() => {
+    if (session && !userId) {
+      router.push("/");
+      setLoginModalOpen(true);
+    }
+  }, [userId]);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <section
-        className={`flex flex-col items-center justify-center gap-10 xs:py-5 py-12`}
-      >
-        <Title size={`h1`} text={`Create Playlist`} />
+    <section
+      className={`flex flex-col items-center justify-center gap-10 xs:py-5 py-12`}
+    >
+      <Title size={`h1`} text={`Create Playlist`} />
+      <div className={`flex flex-col items-center w-full max-w-lg gap-10 `}>
         <div
           className={`flex flex-col items-center justify-center cursor-pointer`}
         >
+          <div className={`relative w-full max-w-[140px]`}>
+            <div
+              onClick={() => {
+                setIsMoodDropdownOpen((prev) => !prev);
+              }}
+              className={`flex items-center justify-between gap-2 mb-2 px-2 py-1 text-gray-400 border border-gray-300 rounded-lg ${
+                currentMood && `${formatMoodBgColor(currentMood)} text-white`
+              }`}
+            >
+              {isMoodDropdownOpen ? (
+                <ChevronUpIcon className={`w-4 h-4`} />
+              ) : (
+                <ChevronDownIcon className={`w-4 h-4`} />
+              )}
+              <p>{currentMood ? currentMood : `select mood`}</p>
+            </div>
+            {isMoodDropdownOpen && (
+              <div
+                className={`absolute top-full left-0 flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-lg z-10`}
+              >
+                {commonMoods.map((mood) => (
+                  <div
+                    key={mood}
+                    onClick={() => {
+                      setPayload((prev) => ({
+                        ...prev,
+                        mood,
+                      }));
+                      setIsMoodDropdownOpen(false);
+                    }}
+                    className={`flex items-center justify-between w-full px-2 py-1 text-gray-400 text-sm border-b border-gray-300 hover:text-white ${formatMoodBgColor(
+                      mood,
+                      true,
+                    )}`}
+                  >
+                    <div
+                      className={`w-4 h-4 ${formatMoodBgColor(
+                        mood,
+                      )} mr-2 rounded-full`}
+                    />
+                    <p>{mood}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <p className={`mb-3 text-gray-500 text-base font-normal`}>
             add cover
           </p>
@@ -72,30 +198,101 @@ const PlaylistCreateTemplate = () => {
             )}
           </div>
         </div>
-        <Table songList={songList} isCreate={true} setSongList={setSongList} />
-        {isMaxSongList && (
-          <p className={`text-pink-600 text-sm font-medium`}>
+        <div className={`flex flex-col gap-2 items-center w-full max-w-xs`}>
+          <Title size={`h3`} text={`Categories`} />
+          {categories && categories?.length > 0 && (
+            <div className={`flex  gap-2`}>
+              {categories.map((category, idx) => (
+                <div
+                  key={`${idx}_${category}`}
+                  className={`flex items-center justify-center gap-1 w-full px-2 py-1 text-gray-400 text-sm border border-gray-300 rounded-lg`}
+                >
+                  <p>{category}</p>
+                  <button
+                    onClick={() => {
+                      setPayload((prev) => ({
+                        ...prev,
+                        categories: prev?.categories?.filter(
+                          (c) => c !== category,
+                        ),
+                      }));
+                    }}
+                  >
+                    <XMarkIcon className={`w-4 h-4 text-gray-300`} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <p className={`text-gray-300 text-xs font-medium`}>
+            *You can add up to 3 categories
+          </p>
+          <div className={`relative`}>
+            <input
+              className={`w-[300px] mt-3 p-2 text-gray-900 bg-white border border-gray-300 resize-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              type={`text`}
+              placeholder={`press enter to add category`}
+              onKeyDown={handleCategories}
+              value={categoryInput}
+              onChange={(e) => {
+                if (e.currentTarget.value.length > 30) {
+                  return;
+                }
+                setCategoryInput(e.currentTarget.value);
+              }}
+            />
+            <button
+              onClick={handleClickCategory}
+              className={`absolute right-[18px] top-8 -translate-y-1/2 text-gray-300 hover:text-primary`}
+            >
+              add
+            </button>
+          </div>
+        </div>
+        <div
+          className={`flex flex-col items-center justify-center gap-4 w-full`}
+        >
+          <Table
+            songList={songList}
+            isCreate={true}
+            setSongList={setSongList}
+          />
+
+          <p
+            className={`${
+              isMaxSongList ? "text-pink-600" : "text-gray-300"
+            } text-xs font-medium`}
+          >
             *You can add up to 20 songs to the list
           </p>
-        )}
-        <button
-          className={`flex items-center gap-1`}
-          onClick={() => {
-            if (songList.length >= 20) {
-              setIsMaxSongList(true);
-              return;
-            }
-            setIsModalOpen(true);
-          }}
-        >
-          <Image
-            src={`/image/common/plus.svg`}
-            width={24}
-            height={24}
-            alt={`plus`}
+
+          <button
+            className={`flex items-center gap-1`}
+            onClick={() => {
+              if (songList.length >= 20) {
+                setIsMaxSongList(true);
+                return;
+              }
+              setIsModalOpen(true);
+            }}
+          >
+            <Image
+              src={`/image/common/plus.svg`}
+              width={24}
+              height={24}
+              alt={`plus`}
+            />
+            <span className={`text-gray-400`}>add</span>
+          </button>
+        </div>
+        <div className={`w-full`}>
+          <Title size={`h3`} text={`Your Favorite Songs`} />
+          <Table
+            songList={likedSong as CreateSongType[]}
+            isCreate={true}
+            setSongList={setSongList}
           />
-          <span className={`text-gray-400`}>add</span>
-        </button>
+        </div>
         <div
           className={`flex flex-col items-start w-full pr-12 xs:pr-0 xs:w-[300px] xs:items-center xs:justify-center`}
         >
@@ -141,16 +338,9 @@ const PlaylistCreateTemplate = () => {
           </div>
         </div>
         <PlaylistCreateSubmit
-          isPayloadValid={
-            !!title &&
-            title.length < 20 &&
-            !!description &&
-            description.length < 100 &&
-            !!songs &&
-            songs.length > 0 &&
-            songs.length <= 20
-          }
+          isPayloadValid={isPayloadValid}
           payload={payload}
+          userId={userId}
         />
         {isModalOpen && (
           <PlaylistSongModal
@@ -159,8 +349,8 @@ const PlaylistCreateTemplate = () => {
             setPayload={setPayload}
           />
         )}
-      </section>
-    </QueryClientProvider>
+      </div>
+    </section>
   );
 };
 
