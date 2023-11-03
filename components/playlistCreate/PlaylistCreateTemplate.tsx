@@ -23,8 +23,8 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { moodList } from "@/components/playlistCreate/values";
-import { formatMoodColor } from "@/components/playlistCreate/utils";
+import { formatMoodBgColor } from "@/components/playlistCreate/utils";
+import { commonMoods } from "@/libs/utils/client/commonValues";
 
 const PlaylistCreateTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };
@@ -131,7 +131,7 @@ const PlaylistCreateTemplate = () => {
                 setIsMoodDropdownOpen((prev) => !prev);
               }}
               className={`flex items-center justify-between gap-2 mb-2 px-2 py-1 text-gray-400 border border-gray-300 rounded-lg ${
-                currentMood && `${formatMoodColor(currentMood)} text-white`
+                currentMood && `${formatMoodBgColor(currentMood)} text-white`
               }`}
             >
               {isMoodDropdownOpen ? (
@@ -145,23 +145,23 @@ const PlaylistCreateTemplate = () => {
               <div
                 className={`absolute top-full left-0 flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-lg z-10`}
               >
-                {moodList.map((mood) => (
+                {commonMoods.map((mood) => (
                   <div
                     key={mood}
                     onClick={() => {
                       setPayload((prev) => ({
                         ...prev,
-                        mood: mood,
+                        mood,
                       }));
                       setIsMoodDropdownOpen(false);
                     }}
-                    className={`flex items-center justify-between w-full px-2 py-1 text-gray-400 text-sm border-b border-gray-300 hover:text-white ${formatMoodColor(
+                    className={`flex items-center justify-between w-full px-2 py-1 text-gray-400 text-sm border-b border-gray-300 hover:text-white ${formatMoodBgColor(
                       mood,
                       true,
                     )}`}
                   >
                     <div
-                      className={`w-4 h-4 ${formatMoodColor(
+                      className={`w-4 h-4 ${formatMoodBgColor(
                         mood,
                       )} mr-2 rounded-full`}
                     />
