@@ -69,6 +69,39 @@ export const getMoodPlaylists = async (
   return data.moodPlayLists;
 };
 
+export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/editor`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.editorPlayLists;
+};
+
+export const getRecommendedPlaylists = async (
+  userId: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recommend?userId=${userId}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.userRecommendPlaylist;
+};
+
+export const getCategoriesPlaylists = async (
+  userId?: string,
+): Promise<{ categoryPlaylists: PlaylistType[]; categories: string[] }> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/categories/new/?userId=${userId || ""}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data;
+};
+
 /* POST */
 
 export const postCreatePlaylist = async (
