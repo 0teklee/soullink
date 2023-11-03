@@ -1,21 +1,18 @@
 import React from "react";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import { useRouter } from "next/navigation";
-import BgColorExtract from "@/components/common/module/BgColorExtract";
 import Image from "next/image";
-import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 
 const FullImageCardItem = ({
   playlist,
-  isEditor,
 }: {
   playlist: PlaylistType;
   isEditor?: boolean;
 }) => {
   const { title, author, description, coverImage, songs, likedBy } = playlist;
-  const { nickname, profilePic, isEditor: isAuthorEditor } = author;
+  const { nickname, isEditor: isAuthorEditor } = author;
   const likedByEditorUser = likedBy?.filter((user) => user.isEditor);
 
   const cover = coverImage || `/image/common/default_cover_image.svg`;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import PlaylistListItem from "@/components/common/playlist/playlist-list/PlaylistListItem";
 

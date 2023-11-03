@@ -8,7 +8,7 @@ import { formatPathName } from "@/libs/utils/client/formatter";
 
 const PlaylistListItem = ({ playlist }: { playlist: PlaylistType }) => {
   const router = useRouter();
-  const { title, id, author, songs, coverImage, likedCount } = playlist;
+  const { title, author, songs, coverImage, likedCount } = playlist;
   const cover = coverImage || `/image/common/default_cover_image.svg`;
 
   return (
