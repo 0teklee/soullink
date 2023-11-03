@@ -114,7 +114,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           className={`relative xs:w-[300px] xs:h-[300px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] z-1`}
         >
           <Image
-            className={`z-[2]`}
+            className={`object-cover z-[2]`}
             src={
               coverImage ??
               `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`
