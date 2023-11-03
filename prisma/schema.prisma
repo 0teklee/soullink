@@ -15,6 +15,7 @@ model User {
   bio                 String                 @db.Char(120)
   profilePic          String?
   isBlocked           Boolean
+  isEditor            Boolean                @default(false)
   blockReason         String                 @default("NULL")
   followers           Follow[]               @relation("following")
   following           Follow[]               @relation("follower")
@@ -29,6 +30,7 @@ model User {
   instagram           String?
   website             String?
   CommentLikedByUsers CommentLikedByUsers[]
+  recentPlay          RecentPlay[]
 }
 
 model Follow {
@@ -56,6 +58,7 @@ model Playlist {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   category    Category[]
+  recentPlay  RecentPlay[]
   mood        Mood                   @relation(fields: [moodId], references: [id])
   moodId      String
 }
@@ -72,11 +75,19 @@ model Mood {
   playlist Playlist[]
 }
 
+model RecentPlay {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  user      User[]
+  playlist  Playlist[]
+}
+
 model PlaylistLikedByUsers {
   user       User     @relation(fields: [userId], references: [id])
   userId     String
   playlist   Playlist @relation(fields: [playlistId], references: [id])
   playlistId String
+  createdAt  DateTime @default(now())
 
   @@id([userId, playlistId])
 }
