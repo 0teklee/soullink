@@ -14,13 +14,7 @@ export interface SongType {
 
 type SongUrlType = "youtube" | "" | "custom";
 
-export type PlaylistMoodType =
-  | "energetic"
-  | "upbeat"
-  | "chill"
-  | "relaxed"
-  | "melancholic"
-  | "dark";
+export type PlaylistMoodType = "upbeat" | "chill" | "relaxed" | "melancholic";
 
 export interface CreateSongType
   extends Omit<SongType, "playedCount" | "likedCount" | "id"> {
@@ -37,7 +31,7 @@ export interface CreatePlaylistType {
   description: string;
   coverImage?: string;
   songs: CreateSongType[];
-  mood: string;
+  mood: PlaylistMoodType | "";
   categories?: string[];
 }
 
@@ -56,17 +50,19 @@ export interface PlaylistType {
   id: string;
   title: string;
   coverImage: string;
+  category: { name: string }[];
   description: string;
   contentLink?: string;
   author: UserType;
   authorId: string;
   songs: SongType[];
   comments: CommentType[];
-  likedBy: { userId: string; playlistId: string }[];
+  likedBy: { userId: string; playlistId: string; isEditor?: boolean }[];
   playCount: number;
   createdAt: string;
   updatedAt: string;
   isSongTable?: boolean;
+  likedCount?: number;
   mood: { name: PlaylistMoodType };
 }
 
