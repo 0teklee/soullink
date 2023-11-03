@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
@@ -8,13 +8,21 @@ import { useQuery } from "react-query";
 import { getRecentPlaylists } from "@/libs/utils/client/fetchers";
 
 const MainRecentPlayed = () => {
-  const recentPlayedIds = localStorage.getItem("recentPlaylist") || "";
+  const [recentPlayedIds, setRecentPlayedIds] = useState(
+    localStorage.getItem("recentPlaylist") || "",
+  );
 
   const { data: playLists } = useQuery<PlaylistType[]>(
     ["recentPlayed", recentPlayedIds],
     () => getRecentPlaylists(recentPlayedIds),
     { enabled: !!recentPlayedIds },
   );
+
+  useEffect(() => {
+    if (recentPlayedIds) return;
+    const recentPlayed = localStorage.getItem("recentPlaylist");
+    if (recentPlayed) setRecentPlayedIds(recentPlayed);
+  }, [localStorage]);
 
   return (
     <section className={`flex flex-col items-start w-full gap-4`}>
