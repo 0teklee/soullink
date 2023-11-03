@@ -1,31 +1,25 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import { filterMoodPlaylists } from "@/libs/utils/client/commonUtils";
-import { commonMoods } from "@/libs/utils/client/commonValues";
-import ImageCardContainer from "@/components/common/carousel/img-card/ImageCardContainer";
+import DiscoverMoodLists from "@/components/discover/module/DiscoverMoodLists";
+import DiscoverSuggestion from "@/components/discover/module/DiscoverSuggestion";
+import DiscoverEditorSelection from "@/components/discover/module/DiscoverEditorSelection";
+import DiscoverCategories from "@/components/discover/module/DiscoverCategories";
 
 const DiscoverTemplate = ({
   moodPlaylists,
+  editorPlaylists,
 }: {
+  editorPlaylists?: PlaylistType[];
   moodPlaylists?: PlaylistType[][];
 }) => {
-  const [
-    energeticPlaylist,
-    upbeatPlaylist,
-    chillPlaylist,
-    relaxedPlaylist,
-    melancholicPlaylist,
-    darkPlaylist,
-  ] = commonMoods.map((mood) => filterMoodPlaylists(mood, moodPlaylists));
-
   return (
     <section className={`flex flex-col gap-12 py-6`}>
-      <ImageCardContainer playlists={energeticPlaylist} />
-      <ImageCardContainer playlists={upbeatPlaylist} />
-      <ImageCardContainer playlists={chillPlaylist} />
-      {/*<ImageCardContainer playlists={relaxedPlaylist} />*/}
-      {/*<ImageCardContainer playlists={melancholicPlaylist} />*/}
-      {/*<ImageCardContainer playlists={darkPlaylist} />*/}
+      <DiscoverEditorSelection editorPlaylists={editorPlaylists} />
+      <DiscoverMoodLists moodPlaylists={moodPlaylists} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <DiscoverCategories />
+        <DiscoverSuggestion />
+      </Suspense>
     </section>
   );
 };
