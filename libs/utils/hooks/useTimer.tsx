@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const useTimer = (handler: () => void, delay = 100) => {
   const [timer, setTimer] = useState<null | NodeJS.Timeout>(null);
-
-  useEffect(() => {
-    const newTimer = setTimeout(handler, delay);
-    if (!timer) {
-      setTimer(newTimer);
+  const resetTimer = (timerParam: NodeJS.Timeout | null) => {
+    if (timerParam) {
+      clearTimeout(timerParam);
     }
-    clearTimeout(newTimer);
-  }, []);
+    const newTimer = setTimeout(handler, delay);
+    setTimer(newTimer);
+  };
 
-  return { timer };
+  return { timer, resetTimer };
 };
 
 export default useTimer;
