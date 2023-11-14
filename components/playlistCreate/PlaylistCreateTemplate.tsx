@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
-import Table from "@/components/common/songTable/Table";
+import SongTable from "@/components/common/songTable/SongTable";
 import PlaylistSongModal from "@/components/playlistCreate/PlaylistSongModal";
 import {
   CreatePlaylistType,
@@ -252,7 +252,7 @@ const PlaylistCreateTemplate = () => {
         <div
           className={`flex flex-col items-center justify-center gap-4 w-full`}
         >
-          <Table
+          <SongTable
             songList={songList}
             isCreate={true}
             setSongList={setSongList}
@@ -287,7 +287,7 @@ const PlaylistCreateTemplate = () => {
         </div>
         <div className={`w-full`}>
           <Title size={`h3`} text={`Your Favorite Songs`} />
-          <Table
+          <SongTable
             songList={likedSong as CreateSongType[]}
             isCreate={true}
             setSongList={setSongList}
