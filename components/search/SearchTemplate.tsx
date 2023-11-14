@@ -1,7 +1,6 @@
 import React from "react";
 import Search from "@/components/common/search/Search";
 import Title from "@/components/common/module/Title";
-import { useSearchParams } from "next/navigation";
 
 const SearchTemplate = () => {
   return (

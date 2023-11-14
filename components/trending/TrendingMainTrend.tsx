@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   DAYS_FILTER,
   DAYS_FILTER_ARR,
@@ -20,7 +20,7 @@ const TrendingMainTrend = () => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [isSlider, setIsSlider] = useState(false);
 
-  const { data: trendingPlaylistData, refetch: trendingRefetch } = useQuery({
+  const { data: trendingPlaylistData } = useQuery({
     queryKey: ["trendingMain", period],
     queryFn: () => getTrendingMainPlaylists(`${period}`),
     cacheTime: QUERY_CACHE_TIME,

@@ -7,7 +7,7 @@ import {
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const { recent, keyword, orderBy, mood, page } = Object.fromEntries(
+  const { recent, keyword, orderBy, mood } = Object.fromEntries(
     url.searchParams.entries(),
   );
   const recentDate = formatDateFilter(recent);

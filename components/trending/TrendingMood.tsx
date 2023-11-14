@@ -8,7 +8,7 @@ import {
   QUERY_STALE_TIME,
   TRENDING_QUERY_KEYS,
 } from "@/libs/utils/client/commonValues";
-import { QueryClient, useQueries } from "react-query";
+import { useQueries } from "react-query";
 import { getMoodLists, getMoodPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";

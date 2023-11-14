@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import {
   CreateSongType,
   PlaylistType,
@@ -9,7 +9,6 @@ import {
 
 import { useMutation, useQueryClient } from "react-query";
 import { postSongLike } from "@/libs/utils/client/fetchers";
-import CommonLoginModal from "@/components/common/modal/CommonLoginModal";
 import { useRouter } from "next/navigation";
 import TableItem from "@/components/common/songTable/TableItem";
 import { useSession } from "next-auth/react";
@@ -31,8 +30,6 @@ const SongTable = ({
   playlist?: PlaylistType;
 }) => {
   const setIsLoginModalOpen = useSetRecoilState(CommonLoginModalState);
-
-  const queryClient = useQueryClient();
 
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
