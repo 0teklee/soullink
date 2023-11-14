@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "react-query";
 import { getCategoriesPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
-import CategoriesList from "@/components/common/playlist/module/CategoriesList";
+import FiltersList from "@/components/common/playlist/module/FiltersList";
 import { filterCategoryPlaylist } from "@/libs/utils/client/commonUtils";
 
 const DiscoverCategories = () => {
@@ -16,7 +16,7 @@ const DiscoverCategories = () => {
 
   const [selectedCategory, setSelectedCategory] = React.useState<string>("");
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["categoryPlaylists", userId],
     queryFn: () => getCategoriesPlaylists(userId),
   });
@@ -31,12 +31,12 @@ const DiscoverCategories = () => {
   return (
     <div className={`flex flex-col gap-3 items-start`}>
       <Title size={`h1`} text={`Discover Categories`} />
-      <CategoriesList
-        categories={formattedCategories}
+      <FiltersList
+        filters={formattedCategories}
         onClick={(category: string) => {
           setSelectedCategory(category);
         }}
-        selectedCategory={selectedCategory}
+        selectedFilter={selectedCategory}
       />
       {!!categoryPlaylists && categoryPlaylists.length > 0 && (
         <PlaylistListContainer
@@ -45,6 +45,7 @@ const DiscoverCategories = () => {
             selectedCategory,
             categoryPlaylists,
           )}
+          refetch={refetch}
         />
       )}
     </div>
