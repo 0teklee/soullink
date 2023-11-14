@@ -32,7 +32,7 @@ export const playlistDefault: IDefaultPlaylist = {
   id: "",
   comments: [],
   likedBy: [],
-  playCount: 0,
+  playedCount: 0,
   mood: {
     name: "relaxed",
   },
@@ -51,6 +51,40 @@ export const titleRegex = new RegExp(
 );
 export const emptyRegex = new RegExp(/\(\s*\)/g);
 
+export enum DAYS_FILTER {
+  TODAY = 1,
+  THIS_WEEK = 7,
+  THIS_MONTH = 30,
+  ALL_TIME = 0,
+}
+
+export const DAYS_FILTER_ARR = [
+  { label: "Today", value: DAYS_FILTER.TODAY },
+  { label: "This Week", value: DAYS_FILTER.THIS_WEEK },
+  { label: "This Month", value: DAYS_FILTER.THIS_MONTH },
+  { label: "All Time", value: DAYS_FILTER.ALL_TIME },
+];
+
+export const MOOD_TYPE_ARR = ["energetic", "chill", "relaxed", "melancholic"];
+
+export enum MOOD_TYPE {
+  ENERGETIC = "energetic",
+  CHILL = "chill",
+  RELAXED = "relaxed",
+  MELANCHOLIC = "melancholic",
+}
+
 export const played5MinsMs = 5 * 60 * 1000;
 export const played5MinSeconds = 30;
 export const interval5Seconds = 5 * 1000;
+
+export const QUERY_CACHE_TIME = 5 * 60 * 1000;
+export const QUERY_STALE_TIME = QUERY_CACHE_TIME - interval5Seconds;
+
+export const TRENDING_QUERY_KEYS = [
+  "trendingMain",
+  "trendingCategories",
+  "filteredCategories",
+  "trendingMood",
+  "filteredMood",
+];
