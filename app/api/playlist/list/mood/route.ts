@@ -1,19 +1,40 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { PlaylistMoodType } from "@/libs/types/common/Song&PlaylistType";
+import { formatDateFilter } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const { param } = Object.fromEntries(url.searchParams.entries()) as {
-    param: PlaylistMoodType;
+  const { param, recent } = Object.fromEntries(url.searchParams.entries()) as {
+    param: PlaylistMoodType | "null" | "undefined";
+    recent: string;
   };
+
+  const recentDate = formatDateFilter(recent);
+  const isAll = param === "null";
+  const moodSearch = isAll
+    ? {
+        createdAt: {
+          gte: recentDate,
+        },
+      }
+    : [
+        {
+          mood: {
+            name: param,
+          },
+        },
+        {
+          createdAt: {
+            gte: recentDate,
+          },
+        },
+      ];
 
   try {
     const moodPlayLists = await prisma.playlist.findMany({
       where: {
-        mood: {
-          name: param,
-        },
+        AND: moodSearch,
       },
       take: 10,
       orderBy: {
@@ -36,11 +57,30 @@ export async function GET(req: Request) {
         likedBy: {
           select: {
             userId: true,
+            user: {
+              select: {
+                nickname: true,
+                profilePic: true,
+              },
+            },
           },
         },
         mood: {
           select: {
             name: true,
+          },
+        },
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        songs: {
+          select: {
+            id: true,
+            title: true,
+            artist: true,
+            url: true,
           },
         },
       },
