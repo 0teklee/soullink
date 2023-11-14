@@ -5,6 +5,7 @@ import {
 } from "@/libs/utils/client/fetchers";
 import { commonMoods } from "@/libs/utils/client/commonValues";
 import DiscoverTemplate from "@/components/discover/DiscoverTemplate";
+import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
 
 const moodPlaylists = async () => {
   try {
@@ -19,13 +20,18 @@ const moodPlaylists = async () => {
 
 const Page = async () => {
   const allMoodPlaylists = await moodPlaylists();
+  const allMoodPlaylistsFlat = allMoodPlaylists?.flat() || [];
   const editorPlaylists = await getEditorPlaylists();
 
   return (
-    <DiscoverTemplate
-      moodPlaylists={allMoodPlaylists}
-      editorPlaylists={editorPlaylists}
-    />
+    <PlaylistUpdateProvider
+      propsData={[...allMoodPlaylistsFlat, ...editorPlaylists]}
+    >
+      <DiscoverTemplate
+        moodPlaylists={allMoodPlaylists}
+        editorPlaylists={editorPlaylists}
+      />
+    </PlaylistUpdateProvider>
   );
 };
 
