@@ -14,6 +14,7 @@ import {
 import { SearchResultQueriesData } from "@/libs/utils/client/searchType";
 import CategoriesList from "@/components/common/category/list/CategoriesList";
 import UserList from "@/components/common/user/list/UserList";
+import Image from "next/image";
 
 const SearchResult = ({
   data,
@@ -137,6 +138,16 @@ const SearchResult = ({
           <div className={`flex flex-col items-start gap-5`}>
             <Title size={`h2`} text={`No result`} />
           </div>
+        </div>
+      )}
+      {isLoading && (
+        <div className={`flex items-center justify-center w-full h-full`}>
+          <Image
+            src={`/image/common/loading_spinner.svg`}
+            alt={`loading`}
+            width={100}
+            height={100}
+          />
         </div>
       )}
     </div>
