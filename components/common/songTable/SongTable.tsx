@@ -7,8 +7,6 @@ import {
   SongType,
 } from "@/libs/types/common/Song&PlaylistType";
 
-import { useMutation } from "react-query";
-import { postSongLike } from "@/libs/utils/client/fetchers";
 import { useRouter } from "next/navigation";
 import TableItem from "@/components/common/songTable/TableItem";
 import { useSession } from "next-auth/react";
