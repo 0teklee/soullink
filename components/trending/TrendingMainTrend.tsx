@@ -86,10 +86,7 @@ const TrendingMainTrend = () => {
         {isSlider &&
           trendingPlaylistData &&
           trendingPlaylistData.length > 0 && (
-            <PlaylistGallery
-              playlists={trendingPlaylistData}
-              refetchQueryKeys={TRENDING_QUERY_KEYS}
-            />
+            <PlaylistGallery playlists={trendingPlaylistData} />
           )}
       </div>
     </section>

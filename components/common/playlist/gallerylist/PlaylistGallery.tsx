@@ -8,13 +8,7 @@ import { formatPathName } from "@/libs/utils/client/formatter";
 import CommonModal from "@/components/common/modal/CommonModal";
 import CommonSongModal from "@/components/common/modal/CommonSongModal";
 
-const PlaylistGallery = ({
-  playlists,
-  refetchQueryKeys,
-}: {
-  playlists?: PlaylistType[];
-  refetchQueryKeys?: string[];
-}) => {
+const PlaylistGallery = ({ playlists }: { playlists?: PlaylistType[] }) => {
   const router = useRouter();
 
   const [selectedSongs, setSelectedSongs] = useState<SongType[]>([]);
