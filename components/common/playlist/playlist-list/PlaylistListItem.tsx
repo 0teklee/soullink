@@ -59,7 +59,7 @@ const PlaylistListItem = ({
   const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
     likedBy?.filter((user) => user.userId === userId).length > 0,
   );
-  const { invalidateQueries } = useQueriesInvalidate(refetchQueryKeys || []);
+  const { invalidateQueries } = useQueriesInvalidate();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -192,7 +192,6 @@ const PlaylistListItem = ({
                 {isLikedByDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    onClick={(e) => {}}
                     className={`absolute top-5 left-0 px-3 py-2 z-10 bg-white border border-gray-300 rounded`}
                   >
                     {likedBy?.map((user) => (
