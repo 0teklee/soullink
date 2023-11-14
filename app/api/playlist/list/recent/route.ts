@@ -3,8 +3,6 @@ import { prisma } from "@/prisma/client";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const { id } = Object.fromEntries(url.searchParams.entries());
-  const idArr = id.split(",");
 
   try {
     const trendingPlaylist = await prisma.playlist.findMany({
