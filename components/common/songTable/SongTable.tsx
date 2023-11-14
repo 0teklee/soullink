@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import useSongLike from "@/libs/utils/hooks/useSongLike";
 
 const SongTable = ({
   songList,
@@ -38,10 +39,7 @@ const SongTable = ({
 
   const router = useRouter();
 
-  const { mutate } = useMutation({
-    mutationFn: ({ songId, userId }: { songId: string; userId: string }) =>
-      postSongLike({ songId, userId: userId || "" }),
-  });
+  const { mutate } = useSongLike();
 
   const handleLikeSong = async (songId: string, userId?: string) => {
     if (!userId || !isLogin) {
