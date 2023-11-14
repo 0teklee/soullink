@@ -181,9 +181,7 @@ const CommentItem = ({
                 </button>
                 {isLikedByDropdownOpen && (
                   <div
-                    onClick={(e) => {
-                      console.log(e.target);
-                    }}
+                    onClick={(e) => {}}
                     className={`absolute bottom-10 right-0 z-10 bg-white border border-gray-300 rounded`}
                   >
                     {likedBy?.map((user) => (
