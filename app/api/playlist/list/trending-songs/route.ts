@@ -6,9 +6,14 @@ export async function GET() {
   try {
     const songs = await prisma.song.findMany({
       take: 20,
-      orderBy: {
-        playedCount: "desc",
-      },
+      orderBy: [
+        {
+          playedCount: "desc",
+        },
+        {
+          likedCount: "desc",
+        },
+      ],
       select: {
         id: true,
         title: true,
@@ -24,6 +29,7 @@ export async function GET() {
         likedCount: true,
       },
     });
+
     const hotTrackPlaylist: TrendingSongPlaylistType = {
       id: "hotTrack",
       title: "Popular Tracks",
@@ -35,6 +41,8 @@ export async function GET() {
       },
       songs,
       isSongTable: true,
+      category: [{ name: "trending" }],
+      mood: { name: "chill" },
     };
 
     return new NextResponse(
