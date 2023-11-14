@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const { id } = Object.fromEntries(url.searchParams.entries());
-  const idArr = id.split(",");
-
+export async function GET() {
   try {
     const trendingPlaylist = await prisma.playlist.findMany({
       take: 20,

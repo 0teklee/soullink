@@ -46,7 +46,6 @@ export const filterCategoryPlaylist = (
   category: string,
   playlistArr?: PlaylistType[],
 ) => {
-  console.log("playlistArr: ", playlistArr);
   if (!playlistArr) {
     return [];
   }

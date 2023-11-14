@@ -1,6 +1,6 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
-import Table from "@/components/common/songTable/Table";
+import SongTable from "@/components/common/songTable/SongTable";
 import {
   PlaylistType,
   SongType,
@@ -15,7 +15,7 @@ const MainHotTracks = ({
   return (
     <section className={`flex flex-col items-start w-full gap-4`}>
       <Title size={`h1`} text={`Popular Tracks`} />
-      <Table
+      <SongTable
         songList={trendingsongList.songs as SongType[]}
         playlist={trendingsongList as PlaylistType}
         isCreate={false}

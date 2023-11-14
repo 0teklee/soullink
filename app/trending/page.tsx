@@ -1,12 +1,6 @@
 import React from "react";
+import TrendingTemplate from "@/components/trending/TrendingTemplate";
 
-const Page = () => {
-  const sample = null;
-  return (
-    <>
-      <></>
-    </>
-  );
-};
+const Page = () => <TrendingTemplate />;
 
 export default Page;

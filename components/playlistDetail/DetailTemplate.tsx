@@ -5,7 +5,7 @@ import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
-import Table from "@/components/common/songTable/Table";
+import SongTable from "@/components/common/songTable/SongTable";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 import process from "process";
 import { useMutation } from "react-query";
@@ -39,7 +39,7 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
     songs,
     id: playlistId,
     likedBy,
-    playCount,
+    playedCount,
   } = playlistData;
 
   const { profilePic, nickname: authorName } = author || playlistDefault.author;
@@ -171,11 +171,11 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
         <div
           className={`flex items-center text-sm text-gray-900 font-medium  gap-8`}
         >
-          <p>{`${playCount || 0} played`}</p>
+          <p>{`${playedCount || 0} played`}</p>
           <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
         </div>
       </div>
-      <Table
+      <SongTable
         key={`table_${playlistId}`}
         songList={songs}
         playlist={playlistData}

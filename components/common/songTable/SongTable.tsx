@@ -1,46 +1,47 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import {
   CreateSongType,
   PlaylistType,
   SongType,
 } from "@/libs/types/common/Song&PlaylistType";
 
-import { useMutation } from "react-query";
-import { postSongLike } from "@/libs/utils/client/fetchers";
-import CommonLoginModal from "@/components/common/modal/CommonLoginModal";
 import { useRouter } from "next/navigation";
 import TableItem from "@/components/common/songTable/TableItem";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/common/userType";
+import { useSetRecoilState } from "recoil";
+import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import useSongLike from "@/libs/utils/hooks/useSongLike";
 
-const Table = ({
+const SongTable = ({
   songList,
   isCreate,
   setSongList,
   playlist,
+  setIsModalOpen,
 }: {
   songList: SongType[] | CreateSongType[];
+  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
   isCreate?: boolean;
   setSongList?: Dispatch<SetStateAction<CreateSongType[]>>;
   playlist?: PlaylistType;
 }) => {
+  const setIsLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
+
   const router = useRouter();
 
-  const { mutate } = useMutation({
-    mutationFn: ({ songId, userId }: { songId: string; userId: string }) =>
-      postSongLike({ songId, userId: userId || "" }),
-  });
+  const { mutate } = useSongLike();
 
   const handleLikeSong = async (songId: string, userId?: string) => {
     if (!userId || !isLogin) {
-      setIsModalOpen(true);
+      setIsLoginModalOpen(true);
       return;
     }
 
@@ -48,6 +49,9 @@ const Table = ({
       { songId, userId },
       {
         onSuccess: () => {
+          if (setIsModalOpen) {
+            setIsModalOpen(false);
+          }
           router.refresh();
         },
       },
@@ -126,12 +130,8 @@ const Table = ({
           </div>
         )}
       </div>
-      <CommonLoginModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
     </>
   );
 };
 
-export default Table;
+export default SongTable;

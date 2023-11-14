@@ -7,7 +7,7 @@ import Title from "@/components/common/module/Title";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 import { useSession } from "next-auth/react";
-import Table from "@/components/common/songTable/Table";
+import SongTable from "@/components/common/songTable/SongTable";
 import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
 import { useRouter } from "next/navigation";
 
@@ -33,7 +33,7 @@ const UserTemplate = ({ userProps }: { userProps: UserType }) => {
       </div>
       <div className={`flex flex-col gap-3 w-full`}>
         <Title size={`h2`} text={`Liked Songs`} />
-        <Table
+        <SongTable
           songList={userProps.likedSong.songs}
           isCreate={false}
           playlist={userProps.likedSong as PlaylistType}

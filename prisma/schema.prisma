@@ -5,7 +5,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 model User {
@@ -31,6 +32,8 @@ model User {
   website             String?
   CommentLikedByUsers CommentLikedByUsers[]
   recentPlay          RecentPlay[]
+
+  @@fulltext([nickname])
 }
 
 model Follow {
@@ -61,12 +64,16 @@ model Playlist {
   recentPlay  RecentPlay[]
   mood        Mood                   @relation(fields: [moodId], references: [id])
   moodId      String
+
+  @@fulltext([title, description])
 }
 
 model Category {
   id        String     @id @default(uuid())
   name      String     @unique @db.VarChar(30)
   playlists Playlist[]
+
+  @@fulltext([name])
 }
 
 model Mood {
@@ -103,6 +110,8 @@ model Song {
   likedCount  Int                @default(0)
   playedCount Int?               @default(0)
   thumbnail   String?
+
+  @@fulltext([title, artist])
 }
 
 model SongLikedByUsers {

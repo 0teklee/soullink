@@ -5,9 +5,14 @@ export async function GET() {
   try {
     const trendingPlaylist = await prisma.playlist.findMany({
       take: 20,
-      orderBy: {
-        likedCount: "desc",
-      },
+      orderBy: [
+        {
+          likedCount: "desc",
+        },
+        {
+          playedTime: "desc",
+        },
+      ],
       select: {
         id: true,
         title: true,

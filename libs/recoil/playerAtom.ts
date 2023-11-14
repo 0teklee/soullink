@@ -15,5 +15,6 @@ export const playerGlobalState = atom<PlayerType>({
     isLoading: false,
     currentSongListIndex: 0,
     startedAt: null,
+    songStartedAt: null,
   },
 });

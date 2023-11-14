@@ -37,7 +37,7 @@ export interface CreatePlaylistType {
 
 export interface PlaylistLikeType {
   playlistId: string;
-  userId: string;
+  userId?: string;
 }
 
 export interface PlaylistCreateRequestType
@@ -57,8 +57,18 @@ export interface PlaylistType {
   authorId: string;
   songs: SongType[];
   comments: CommentType[];
-  likedBy: { userId: string; playlistId: string; isEditor?: boolean }[];
-  playCount: number;
+  likedBy: {
+    userId: string;
+
+    playlistId: string;
+    isEditor?: boolean;
+    user?: {
+      nickname: string;
+      profilePic?: string;
+    };
+  }[];
+  playedCount: number;
+  playedTime?: number;
   createdAt: string;
   updatedAt: string;
   isSongTable?: boolean;
@@ -76,7 +86,7 @@ export interface TrendingSongPlaylistType
     PlaylistType,
     | "author"
     | "createdAt"
-    | "playCount"
+    | "playedCount"
     | "updatedAt"
     | "coverImage"
     | "songs"

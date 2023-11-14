@@ -31,6 +31,12 @@ const Header = () => {
             Trending
           </Link>
           <Link
+            href={`/search`}
+            className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+          >
+            Search
+          </Link>
+          <Link
             className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             href={`/playlist/create`}
           >

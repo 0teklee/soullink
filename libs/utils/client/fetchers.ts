@@ -18,6 +18,17 @@ import {
 /* Playlist Fetchers */
 /* GET */
 
+export const getMainPageTrendingPlaylists = async (): Promise<
+  PlaylistType[]
+> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.trendingPlayLists;
+};
+
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${id}`,
@@ -38,14 +49,7 @@ export const getPlaylistsPaths = async (): Promise<string[]> => {
   return paths;
 };
 
-export const getTrendingPlaylists = async (): Promise<PlaylistType[]> => {
-  const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
-  );
-  const data = await res.json();
-  return data.trendingPlayLists;
-};
+/* Trending Discover fetchers */
 
 export const getRecentPlaylists = async (
   id: string,
@@ -59,10 +63,11 @@ export const getRecentPlaylists = async (
 };
 
 export const getMoodPlaylists = async (
-  param: PlaylistMoodType,
+  param: PlaylistMoodType | null | undefined,
+  period = "0",
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood?param=${param}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood?param=${param}&recent=${period}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -89,17 +94,78 @@ export const getRecommendedPlaylists = async (
   return data.userRecommendPlaylist;
 };
 
+/* Trending Fetchers */
+
+export const getTrendingMainPlaylists = async (
+  period: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent/trending?recent=${period}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.trendingMainPlaylist;
+};
+
 export const getCategoriesPlaylists = async (
   userId?: string,
 ): Promise<{ categoryPlaylists: PlaylistType[]; categories: string[] }> => {
   const res = await fetch(
-    `${
-      process.env.NEXT_APP_BASE_URL
-    }/api/playlist/list/categories/new/?userId=${userId || ""}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/categories/new?userId=${
+      userId || ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data;
+};
+
+export const getTrendingCategoriesPlaylists = async (
+  period: string,
+): Promise<{
+  recentMostPlayedCategoryPlaylist: PlaylistType[];
+  categories: string[];
+}> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent/category?recent=${period}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return {
+    recentMostPlayedCategoryPlaylist: data.recentMostPlayedCategoryPlaylist,
+    categories: data.categories,
+  };
+};
+
+export const getFilteredCategoriesPlaylists = async (
+  period: string,
+  categories: string[],
+): Promise<{
+  filteredCategoriesList: PlaylistType[];
+}> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/categories/filter?recent=${period}&categories=${JSON.stringify(
+      categories,
+    )}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return {
+    filteredCategoriesList: data.filteredCategoriesList,
+  };
+};
+
+export const getMoodLists = async (
+  period = "0",
+): Promise<{ name: string; count: number }[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/count?recent=${period}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.moodCount;
 };
 
 /* POST */
@@ -141,6 +207,9 @@ export const postPlaylistCount = async (
 };
 
 export const postPlaylistLike = async (request: PlaylistLikeType) => {
+  if (!request.playlistId || !request.userId) {
+    return;
+  }
   const { playlistId } = request;
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${playlistId}/like`,
@@ -287,4 +356,119 @@ export const postUserFollow = async (request: PostFollowType) => {
   });
   const data = await res.json();
   return data;
+};
+
+/* Search Fetcher */
+
+export const getSearchAll = async (
+  keyword: string,
+  recent: number,
+  orderBy?: string,
+): Promise<{
+  result: {
+    playlists: PlaylistType[];
+    users: UserType[];
+    categories: { name: string }[];
+  };
+}> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/all?keyword=${keyword}&recent=${recent}&orderBy=${
+      orderBy ? orderBy : ""
+    }`,
+  );
+
+  const resData: Promise<{
+    result: {
+      playlists: PlaylistType[];
+      users: UserType[];
+      categories: { name: string }[];
+    };
+  }> = await res.json();
+  return resData;
+};
+
+export const getSearchPlaylists = async (
+  keyword: string,
+  recent: number,
+  orderBy?: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/playlist?keyword=${keyword}&recent=${recent}&orderBy=${
+      orderBy ? orderBy : ""
+    }`,
+  );
+
+  const resData: Promise<PlaylistType[]> = await res
+    .json()
+    .then((data) => data.result);
+  return resData;
+};
+
+export const getSearchCategories = async (
+  keyword: string,
+): Promise<string[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/search/category?keyword=${keyword}`,
+  );
+
+  const resData: Promise<string[]> = await res
+    .json()
+    .then((data) => data.result);
+  return resData;
+};
+
+export const getSearchUsers = async (
+  keyword: string,
+): Promise<{ id: string; nickname: string; profilePic?: string }[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/search/user?keyword=${keyword}`,
+  );
+
+  const resData: Promise<
+    { id: string; nickname: string; profilePic?: string }[]
+  > = await res.json().then((data) => data.result);
+  return resData;
+};
+
+export const getSearchMoodPlaylists = async (
+  keyword: string,
+  mood: string,
+  recent: number,
+  orderBy?: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/mood-playlist?keyword=${keyword}&mood=${mood}&recent=${recent}&orderBy=${
+      orderBy ? orderBy : ""
+    }`,
+  );
+
+  const resData: Promise<PlaylistType[]> = await res
+    .json()
+    .then((data) => data.result);
+  return resData;
+};
+
+export const getSearchCategoryPlaylists = async (
+  keyword: string,
+  recent: number,
+  orderBy?: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/category-playlist?keyword=${keyword}&recent=${recent}&orderBy=${
+      orderBy ? orderBy : ""
+    }`,
+  );
+
+  const resData: Promise<PlaylistType[]> = await res
+    .json()
+    .then((data) => data.result);
+  return resData;
 };
