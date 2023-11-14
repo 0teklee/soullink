@@ -1,9 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useState,
-  useTransition,
-} from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Title from "@/components/common/module/Title";
 import { useQuery } from "react-query";
 import {
@@ -16,6 +11,7 @@ import {
   CreateSongType,
 } from "@/libs/types/common/Song&PlaylistType";
 import { formatSongNames } from "@/libs/utils/client/formatter";
+import useTimer from "@/libs/utils/hooks/useTimer";
 
 type TUrlType = "youtube" | "custom" | "";
 
@@ -41,10 +37,13 @@ const PlaylistSongModal = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [searchWord, setSearchWord] = useState<string>("");
-  const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
   const [isAvailableCustomUrl, setIsAvailableCustomUrl] =
     useState<boolean>(true);
   const [isYoutubeError, setIsYoutubeError] = useState<boolean>(false);
+
+  const { timer, resetTimer } = useTimer(() => {
+    setIsFetching(true);
+  }, 500);
 
   const fetcherSearchYoutube = async (
     search: string,
@@ -94,14 +93,7 @@ const PlaylistSongModal = ({
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     setSearchWord(e.target.value);
-    if (searchTimer) {
-      clearTimeout(searchTimer);
-    }
-    setSearchTimer(
-      setTimeout(() => {
-        setIsFetching(true);
-      }, 800),
-    );
+    resetTimer(timer);
     setIsFetching(false);
   };
 
