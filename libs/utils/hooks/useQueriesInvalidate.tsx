@@ -3,7 +3,7 @@
 import React from "react";
 import { useQueryClient } from "react-query";
 
-const UseQueriesInvalidate = (queries: string | string[]) => {
+const UseQueriesInvalidate = () => {
   const queryClient = useQueryClient();
   const invalidateQueries = (queries: string | string[]) => {
     if (typeof queries === "string") {
