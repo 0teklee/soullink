@@ -1,19 +1,18 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   CreateSongType,
   PlaylistType,
   SongType,
-} from "@/libs/types/common/Song&PlaylistType";
+} from "@/libs/types/song&playlistType";
 
-import { useRouter } from "next/navigation";
-import TableItem from "@/components/common/songTable/TableItem";
+import TableItem from "@/components/common/song/table/TableItem";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
 import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
-import useSongLike from "@/libs/utils/hooks/useSongLike";
+import { CommonLoginModalState } from "@/libs/recoil/atoms";
+import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
 
 const SongTable = ({
   songList,
@@ -35,9 +34,7 @@ const SongTable = ({
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
 
-  const router = useRouter();
-
-  const { mutate } = useSongLike();
+  const { songLikeMutate } = useSongLike();
 
   const handleLikeSong = async (songId: string, userId?: string) => {
     if (!userId || !isLogin) {
@@ -45,22 +42,12 @@ const SongTable = ({
       return;
     }
 
-    mutate(
-      { songId, userId },
-      {
-        onSuccess: () => {
-          if (setIsModalOpen) {
-            setIsModalOpen(false);
-          }
-          router.refresh();
-        },
-      },
-    );
-  };
+    songLikeMutate(songId, userId);
 
-  useEffect(() => {
-    router.refresh();
-  }, [session]);
+    if (setIsModalOpen) {
+      setIsModalOpen(false);
+    }
+  };
 
   return (
     <>
