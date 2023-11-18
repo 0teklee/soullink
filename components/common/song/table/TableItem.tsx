@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CreateSongType,
   PlaylistType,
   SongType,
-} from "@/libs/types/common/Song&PlaylistType";
+} from "@/libs/types/song&playlistType";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import {
   HeartIcon,
@@ -41,10 +41,11 @@ const TableItem = ({
   const { playSongFromTable, isSongPlaying } = playSongItemHook || {};
 
   const isNotCreate = !isCreate;
-  const isUserLikedSong =
-    song?.likedUsers &&
-    song?.likedUsers?.filter((likedItem) => likedItem.userId === userId)
-      .length > 0;
+  const [isUserLikedSong, setIsUserLikedSong] = useState(
+    !!song?.likedUsers &&
+      song?.likedUsers?.filter((likedItem) => likedItem.userId === userId)
+        .length > 0,
+  );
 
   const handlePlaySong = () => {
     if (!playSongFromTable || !playlist) {
@@ -53,6 +54,14 @@ const TableItem = ({
     playSongFromTable(playlist);
     router.refresh();
   };
+
+  useEffect(() => {
+    setIsUserLikedSong(
+      !!song?.likedUsers &&
+        song?.likedUsers?.filter((likedItem) => likedItem.userId === userId)
+          .length > 0,
+    );
+  }, [playlist]);
 
   return (
     <tr
