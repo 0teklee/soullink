@@ -5,21 +5,18 @@ import Image from "next/image";
 
 import VolumeDropdown from "@/components/player/module/VolumeDropdown";
 import ListMenuContainer from "@/components/player/module/ListMenuContainer";
-import {
-  PlayerProps,
-  PlaylistType,
-} from "@/libs/types/common/Song&PlaylistType";
+import { PlayerProps, PlaylistType } from "@/libs/types/song&playlistType";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
 import { SetterOrUpdater, useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
-import { useMutation } from "react-query";
-import { postPlaylistLike, postSongLike } from "@/libs/utils/client/fetchers";
+import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
-import { PlayerType } from "@/libs/types/common/playerType";
+import { PlayerType } from "@/libs/types/playerType";
+import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
+import useMutateSongLike from "@/libs/utils/hooks/useMutateSongLike";
 
 const PlayerController = ({
   playerState,
@@ -81,21 +78,9 @@ const PlayerController = ({
   const [isSongLiked, setIsSongLiked] = useState(isUserSongLiked);
   const [isPlaylistLiked, setIsPlaylistLiked] = useState(isUserPlaylistLiked);
 
-  const { mutate: playlistLikeMutate } = useMutation({
-    mutationFn: () =>
-      postPlaylistLike({ playlistId: playlistId || "", userId: userId || "" }),
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { playlistLikeMutate } = useMutatePlaylistLike();
 
-  const { mutate: songLikeMutate } = useMutation({
-    mutationFn: () =>
-      postSongLike({ songId: currentSong?.id || "", userId: userId || "" }),
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { songLikeMutate } = useMutateSongLike();
 
   const handlePrev = () => {
     playerCur?.seekTo(playerCur?.getCurrentTime() - 3);
@@ -126,16 +111,7 @@ const PlayerController = ({
   };
 
   const handleLikePlaylist = async () => {
-    if (!userId) {
-      setLoginModalOpen(true);
-      return;
-    }
-
-    if (!playlistId) {
-      return;
-    }
-
-    playlistLikeMutate();
+    playlistLikeMutate(playlistId, userId);
   };
 
   const handleLikeSong = async () => {
@@ -144,7 +120,7 @@ const PlayerController = ({
       return;
     }
 
-    songLikeMutate();
+    songLikeMutate(currentSong?.id, userId);
   };
 
   const handleListDropdownOutside = () => {
@@ -168,13 +144,6 @@ const PlayerController = ({
       setIsPlaylistLiked(false);
     }
   }, [playlist, router]);
-
-  useEffect(() => {
-    if (songListIndex === songList.length - 1 || songListIndex === 0) {
-      return;
-    }
-    setPlayerState((prev) => ({ ...prev, playing: true }));
-  }, []);
 
   return (
     <div
