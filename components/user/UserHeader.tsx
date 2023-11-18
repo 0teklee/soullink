@@ -1,19 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { UserSessionType, UserType } from "@/libs/types/common/userType";
+import { UserSessionType, UserType } from "@/libs/types/userType";
 import Image from "next/image";
 import BgColorExtract from "@/components/common/module/BgColorExtract";
 import { useMutation } from "react-query";
 import { postUserFollow } from "@/libs/utils/client/fetchers";
 import { useSession } from "next-auth/react";
 import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import CommonModal from "@/components/common/modal/CommonModal";
 import UserFollowModal from "@/components/user/module/UserFollowModal";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
-  const { data: session } = useSession() as { data: UserSessionType | null };
+const UserHeader = ({
+  userProfile,
+  session,
+}: {
+  userProfile: UserType;
+  session?: UserSessionType;
+}) => {
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,6 +36,9 @@ const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
   } = userProfile;
 
   const isProfileOwner = session?.userId === targetId;
+  const isFollowing = followers?.some(
+    (user) => user.follower.id === session?.userId,
+  );
 
   const { mutate: followMutate } = useMutation({
     mutationFn: () =>
@@ -67,14 +76,22 @@ const UserHeader = ({ userProfile }: { userProfile: UserType }) => {
                     onClick={handleFollow}
                     className={`absolute -top-8 flex items-center justify-center gap-2 w-full cursor-pointer xs:h-full xs:top-0 xs:bg-black xs:bg-opacity-50 xs:opacity-0 xs:group-hover:opacity-100 xs:transition-opacity z-20`}
                   >
-                    <p className={`text-xl`}>Follow</p>
-                    <Image
-                      className={`z-1`}
-                      src={`/image/common/plus.svg`}
-                      alt={`plus`}
-                      width={24}
-                      height={24}
-                    />
+                    <p className={`text-xl`}>
+                      {isFollowing ? `Unfollow` : `Follow`}
+                    </p>
+                    {!!isFollowing ? (
+                      <MinusIcon
+                        className={`z-1 text-bg-difference`}
+                        width={24}
+                        height={24}
+                      />
+                    ) : (
+                      <PlusIcon
+                        className={`z-1 text-bg-difference`}
+                        width={24}
+                        height={24}
+                      />
+                    )}
                   </div>
                 )}
                 <div className={`relative w-[250px] h-[250px]`}>
