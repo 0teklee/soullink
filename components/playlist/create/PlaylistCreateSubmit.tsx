@@ -1,11 +1,11 @@
 import React from "react";
-import { CreatePlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { CreatePlaylistType } from "@/libs/types/song&playlistType";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import { postCreatePlaylist } from "@/libs/utils/client/fetchers";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { CommonLoginModalState } from "@/libs/recoil/atoms";
 
 const PlaylistCreateSubmit = ({
   payload,

@@ -10,7 +10,7 @@ import {
 } from "@/libs/utils/client/fetchers";
 import { SEARCH_ORDER_BY, SEARCH_TYPE } from "@/libs/utils/client/searchValue";
 import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
-import { SearchResultQueriesData } from "@/libs/utils/client/searchType";
+import { SearchResultQueriesData } from "@/libs/types/searchType";
 
 const UseSearchQueries = (
   keyword: string,

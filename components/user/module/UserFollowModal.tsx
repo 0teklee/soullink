@@ -4,7 +4,7 @@ import React from "react";
 import {
   FollowerUserResponseType,
   FollowingUserResponseType,
-} from "@/libs/types/common/userType";
+} from "@/libs/types/userType";
 import Title from "@/components/common/module/Title";
 
 import Image from "next/image";

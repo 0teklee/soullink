@@ -1,7 +1,4 @@
-import {
-  CommentAuthorInterface,
-  CommentType,
-} from "@/libs/types/common/userType";
+import { CommentAuthorInterface, CommentType } from "@/libs/types/userType";
 
 interface CommentDBinterface
   extends Omit<

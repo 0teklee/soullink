@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { SongLikeType } from "@/libs/types/common/Song&PlaylistType";
+import { SongLikeType } from "@/libs/types/song&playlistType";
 import { prisma } from "@/prisma/client";
 
 export async function POST(req: Request) {

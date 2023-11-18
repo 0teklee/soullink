@@ -1,5 +1,5 @@
 import { ReactPlayerProps } from "react-player";
-import { CommentType, UserType } from "@/libs/types/common/userType";
+import { CommentType, UserType } from "@/libs/types/userType";
 
 export interface SongType {
   id: string;
@@ -40,6 +40,20 @@ export interface PlaylistLikeType {
   userId?: string;
 }
 
+export interface PlaylistLikeResponseType {
+  message: string;
+  userId: string;
+  playlistId: string;
+  likedBy: {
+    userId: string;
+    playlistId: string;
+    user?: {
+      nickname: string;
+      profilePic?: string;
+    };
+  }[];
+}
+
 export interface PlaylistCreateRequestType
   extends Omit<CreatePlaylistType, "songs"> {
   songs: SongType[];
@@ -59,7 +73,6 @@ export interface PlaylistType {
   comments: CommentType[];
   likedBy: {
     userId: string;
-
     playlistId: string;
     isEditor?: boolean;
     user?: {

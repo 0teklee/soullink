@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import { motion, useAnimationControls } from "framer-motion";
-import TopListItem from "@/components/common/playlist/top-playlist/TopListItem";
+import TopListItem from "@/components/common/playlist/screen-width-slider/TopListItem";
 
 const TopListContainter = ({ playlists }: { playlists: PlaylistType[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

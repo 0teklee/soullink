@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { SongType } from "@/libs/types/common/Song&PlaylistType";
-import SongTable from "@/components/common/songTable/SongTable";
+import { SongType } from "@/libs/types/song&playlistType";
+import SongTable from "@/components/common/song/table/SongTable";
 
 const CommonSongModal = ({
   songs,

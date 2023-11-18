@@ -147,6 +147,20 @@ export async function GET(req: Request) {
             likedCount: true,
           },
         },
+        playedCount: true,
+        likedBy: {
+          select: {
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                nickname: true,
+                profilePic: true,
+                isEditor: true,
+              },
+            },
+          },
+        },
       },
     });
 

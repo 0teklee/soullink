@@ -1,8 +1,8 @@
 import React from "react";
 
-import { PlayerListItem } from "@/libs/types/common/Song&PlaylistType";
+import { PlayerListItem } from "@/libs/types/song&playlistType";
 import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/common/playerType";
+import { PlayerType } from "@/libs/types/playerType";
 
 interface IListMenuItem extends PlayerListItem {
   curIndex: number;

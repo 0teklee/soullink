@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { playerGlobalState } from "@/libs/recoil/playerAtom";
-import { playlistState } from "@/libs/recoil/playlistAtom";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import dayjs from "dayjs";
 import { postPlaylistCount } from "@/libs/utils/client/fetchers";
 import { useMutation } from "react-query";
@@ -11,6 +8,7 @@ import {
   isNowMoreThanTargetTime,
   setRecentPlaylistIdLocalStorage,
 } from "@/libs/utils/client/commonUtils";
+import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
 
 const UseSelectedPlaylistPlay = (playlistData: PlaylistType) => {
   const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
@@ -33,13 +31,8 @@ const UseSelectedPlaylistPlay = (playlistData: PlaylistType) => {
       "seconds",
     );
 
-    if (selectedPlaylist && selectedPlaylist.id === playlist.id && playing) {
-      setPlayerState({ ...playerState, playing: false });
-      return;
-    }
-
-    if (selectedPlaylist && selectedPlaylist.id === playlist.id && !playing) {
-      setPlayerState({ ...playerState, playing: true });
+    if (selectedPlaylist && selectedPlaylist.id === playlist.id) {
+      setPlayerState((prev) => ({ ...playerState, playing: !prev.playing }));
       return;
     }
 
@@ -56,6 +49,11 @@ const UseSelectedPlaylistPlay = (playlistData: PlaylistType) => {
     }
 
     setSelectedPlaylist(playlistData);
+    setPlayerState((prev) => ({
+      ...prev,
+      playing: true,
+      currentSongListIndex: 0,
+    }));
   };
 
   return {

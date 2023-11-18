@@ -1,5 +1,11 @@
 import { atom } from "recoil";
-import { PlayerType } from "@/libs/types/common/playerType";
+import { PlayerType } from "@/libs/types/playerType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+
+export const CommonLoginModalState = atom<boolean>({
+  key: "commonLoginModalState",
+  default: false,
+});
 
 export const playerGlobalState = atom<PlayerType>({
   key: "playerState",
@@ -17,4 +23,9 @@ export const playerGlobalState = atom<PlayerType>({
     startedAt: null,
     songStartedAt: null,
   },
+});
+
+export const playlistState = atom<null | PlaylistType>({
+  key: "playlistState",
+  default: null,
 });

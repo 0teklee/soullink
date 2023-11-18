@@ -1,5 +1,5 @@
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import { UserType } from "@/libs/types/common/userType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+import { UserType } from "@/libs/types/userType";
 import { UseQueryResult } from "react-query";
 
 export interface SearchAllData {

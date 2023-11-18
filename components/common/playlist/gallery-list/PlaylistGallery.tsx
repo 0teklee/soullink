@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { PlaylistType, SongType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";

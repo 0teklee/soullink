@@ -1,11 +1,11 @@
 "use client";
 
 import React, { Fragment, useEffect, useState } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import ImageCardItem from "@/components/common/carousel/img-card/ImageCardItem";
 import { fillEmptyPlaylist } from "@/libs/utils/client/commonUtils";
-import { getItemMotionInitial } from "@/components/common/carousel/utils";
+import { getItemMotionInitial } from "@/libs/utils/client/framerMotionUtils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { interval5Seconds } from "@/libs/utils/client/commonValues";
 

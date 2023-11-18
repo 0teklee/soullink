@@ -1,15 +1,12 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import Title from "@/components/common/module/Title";
 import { useQuery } from "react-query";
-import {
-  YoutubeItem,
-  YoutubeSearchResponse,
-} from "@/libs/types/apiData/client/searchTypes";
+import { YoutubeItem, YoutubeSearchResponse } from "@/libs/types/youtubeTypes";
 import Image from "next/image";
 import {
   CreatePlaylistType,
   CreateSongType,
-} from "@/libs/types/common/Song&PlaylistType";
+} from "@/libs/types/song&playlistType";
 import { formatSongNames } from "@/libs/utils/client/formatter";
 import useTimer from "@/libs/utils/hooks/useTimer";
 

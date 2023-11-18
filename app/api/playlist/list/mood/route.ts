@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { PlaylistMoodType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistMoodType } from "@/libs/types/song&playlistType";
 import { formatDateFilter } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {

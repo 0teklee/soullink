@@ -1,15 +1,9 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistState } from "@/libs/recoil/playlistAtom";
-import useTimer from "@/libs/utils/hooks/useTimer";
+import { useRecoilValue } from "recoil";
 import { useMutation } from "react-query";
-import { postPlaylistCount, postSongCount } from "@/libs/utils/client/fetchers";
-import { playerGlobalState } from "@/libs/recoil/playerAtom";
-import dayjs, { Dayjs } from "dayjs";
-import { played5MinsMs } from "@/libs/utils/client/commonValues";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import { isNowMoreThanTargetTime } from "@/libs/utils/client/commonUtils";
+import { postSongCount } from "@/libs/utils/client/fetchers";
+import dayjs from "dayjs";
+import { playerGlobalState } from "@/libs/recoil/atoms";
 
 const UseSongCountUpdater = () => {
   const playerState = useRecoilValue(playerGlobalState);

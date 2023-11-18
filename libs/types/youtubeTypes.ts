@@ -60,5 +60,3 @@ export interface YoutubeImgHigh {
   width: number;
   height: number;
 }
-
-/* soundcloud api type */

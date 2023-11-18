@@ -1,4 +1,4 @@
-import { PlaylistType, SongType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import { Session } from "next-auth";
 
 export interface UserType {
