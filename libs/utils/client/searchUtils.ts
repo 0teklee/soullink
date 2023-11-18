@@ -7,8 +7,8 @@ import { DAYS_FILTER_ARR } from "@/libs/utils/client/commonValues";
 import {
   SearchAllData,
   SearchResultQueriesData,
-} from "@/libs/utils/client/searchType";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+} from "@/libs/types/searchType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 
 export const getOrderByOptions = (type: SEARCH_TYPE | "") => {
   if (

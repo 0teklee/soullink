@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { PayloadCommentDeleteType } from "@/libs/types/common/userType";
+import { PayloadCommentDeleteType } from "@/libs/types/userType";
 
 export async function POST(req: Request) {
   try {

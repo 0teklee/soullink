@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/common/playerType";
+import { PlayerType } from "@/libs/types/playerType";
 
 const VolumeDropdown = ({
   playerState,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { TrendingSongPlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { TrendingSongPlaylistType } from "@/libs/types/song&playlistType";
 
 export async function GET() {
   try {

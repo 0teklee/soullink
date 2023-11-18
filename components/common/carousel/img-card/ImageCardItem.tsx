@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
@@ -17,7 +17,7 @@ const ImageCardItem = ({
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
 }) => {
-  const { title, id, author, coverImage } = playlist;
+  const { title, author, coverImage } = playlist;
   const isDefault = !title;
   const router = useRouter();
   return (

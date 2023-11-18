@@ -1,12 +1,11 @@
 "use client";
 
 import React, { RefObject } from "react";
-import { secondsFormatter } from "@/libs/utils/client/formatter";
+import { formatSecondsToString } from "@/libs/utils/client/formatter";
 import ReactPlayer from "react-player";
-import { PlayerProps, SongType } from "@/libs/types/common/Song&PlaylistType";
-import { PlayerType } from "@/libs/types/common/playerType";
+import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
+import { PlayerType } from "@/libs/types/playerType";
 import { SetterOrUpdater } from "recoil";
-import dayjs from "dayjs";
 
 const Player = ({
   song,
@@ -50,7 +49,8 @@ const Player = ({
         onReady={(ReactPlayer) => {
           setPlayerState({
             ...playerState,
-            duration: secondsFormatter(ReactPlayer.getDuration()) || "00:00",
+            duration:
+              formatSecondsToString(ReactPlayer.getDuration()) || "00:00",
             durationSec: ReactPlayer.getDuration(),
             isLoading: false,
           });
@@ -64,7 +64,7 @@ const Player = ({
         onProgress={(state) => {
           setPlayerState({
             ...playerState,
-            played: secondsFormatter(state.playedSeconds) || "00:00",
+            played: formatSecondsToString(state.playedSeconds) || "00:00",
             playedSec: state.playedSeconds,
           });
         }}

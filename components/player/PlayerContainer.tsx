@@ -3,13 +3,12 @@
 import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import PlayerController from "@/components/player/PlayerController";
-import { handleKeyPress } from "@/libs/utils/client/eventHandler";
-import { PlayerProps } from "@/libs/types/common/Song&PlaylistType";
+import { PlayerProps } from "@/libs/types/song&playlistType";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistState } from "@/libs/recoil/playlistAtom";
-import { playerGlobalState } from "@/libs/recoil/playerAtom";
 import useSongCountUpdater from "@/libs/utils/hooks/useSongCountUpdater";
 import dayjs from "dayjs";
+import { handlePlayerKeyPress } from "@/libs/utils/client/commonUtils";
+import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
@@ -54,17 +53,17 @@ const PlayerContainer = () => {
     }
     setPlayerState((prev) => ({
       ...prev,
-      playing: true,
+      playing: prev.playing,
     }));
   }, [selectedPlayList]);
 
   useEffect(() => {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
-      handleKeyPress(e, playerRef, setPlayerState);
+      handlePlayerKeyPress(e, playerRef, setPlayerState);
     });
     return () => {
       document.removeEventListener("keydown", (e: KeyboardEvent) => {
-        handleKeyPress(e, playerRef, setPlayerState);
+        handlePlayerKeyPress(e, playerRef, setPlayerState);
       });
     };
   }, []);
@@ -82,7 +81,8 @@ const PlayerContainer = () => {
             song={
               playerState &&
               selectedPlayList &&
-              selectedPlayList?.songs.length > 0 &&
+              selectedPlayList?.songs &&
+              selectedPlayList?.songs?.length > 0 &&
               selectedPlayList.songs[playerState.currentSongListIndex]?.url
                 ? selectedPlayList.songs[playerState.currentSongListIndex].url
                 : ""

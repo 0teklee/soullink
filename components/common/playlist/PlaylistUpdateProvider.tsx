@@ -2,8 +2,8 @@
 
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import { playlistState } from "@/libs/recoil/playlistAtom";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+import { playlistState } from "@/libs/recoil/atoms";
 
 const PlaylistUpdateProvider = <T,>({
   propsData,

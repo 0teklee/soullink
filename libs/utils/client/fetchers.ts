@@ -1,11 +1,12 @@
 import {
   CreatePlaylistType,
+  PlaylistLikeResponseType,
   PlaylistLikeType,
   PlaylistMoodType,
   PlaylistType,
   SongLikeType,
   TrendingSongPlaylistType,
-} from "@/libs/types/common/Song&PlaylistType";
+} from "@/libs/types/song&playlistType";
 import {
   CommentPayloadType,
   CommentType,
@@ -13,7 +14,8 @@ import {
   PayloadCommentLikeType,
   PostFollowType,
   UserType,
-} from "@/libs/types/common/userType";
+} from "@/libs/types/userType";
+import { commonMoods } from "@/libs/utils/client/commonValues";
 
 /* Playlist Fetchers */
 /* GET */
@@ -27,6 +29,30 @@ export const getMainPageTrendingPlaylists = async (): Promise<
   );
   const data = await res.json();
   return data.trendingPlayLists;
+};
+
+export const getMainPageFriendsPlaylists = async (
+  userId?: string | null,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/friends?userId=${
+      userId ? userId : ""
+    }`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.mainData.friendsList;
+};
+
+export const getMainPageTodayPlaylists = async (
+  userId = "",
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/today`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
+  const data = await res.json();
+  return data.todayPlaylist;
 };
 
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
@@ -72,6 +98,18 @@ export const getMoodPlaylists = async (
   );
   const data = await res.json();
   return data.moodPlayLists;
+};
+
+export const getAllMoodPlaylists = async () => {
+  try {
+    const res = await Promise.all(
+      commonMoods.map(async (mood) => await getMoodPlaylists(mood)),
+    ).then((res) => res.flat());
+    return res;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
 export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
@@ -206,10 +244,18 @@ export const postPlaylistCount = async (
   return data;
 };
 
-export const postPlaylistLike = async (request: PlaylistLikeType) => {
+export const postPlaylistLike = async (
+  request: PlaylistLikeType,
+): Promise<PlaylistLikeResponseType> => {
   if (!request.playlistId || !request.userId) {
-    return;
+    return {
+      message: "fail - no playlistId or userId",
+      userId: "",
+      playlistId: "",
+      likedBy: [],
+    };
   }
+
   const { playlistId } = request;
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${playlistId}/like`,
@@ -221,7 +267,7 @@ export const postPlaylistLike = async (request: PlaylistLikeType) => {
       },
     },
   );
-  const data = await res.json();
+  const data = (await res.json()) as PlaylistLikeResponseType;
   return data;
 };
 
@@ -471,4 +517,16 @@ export const getSearchCategoryPlaylists = async (
     .json()
     .then((data) => data.result);
   return resData;
+};
+
+/* ETC Common Fetchers */
+
+export const fetcherImagePost = async <T extends object>(
+  url: string,
+  data: FormData,
+): Promise<Response> => {
+  return await fetch(url, {
+    method: "POST",
+    body: data,
+  }).then((res) => res.json());
 };

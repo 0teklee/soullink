@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";

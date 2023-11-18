@@ -2,27 +2,29 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import Title from "@/components/common/module/Title";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import { useQuery } from "react-query";
 import { getRecentPlaylists } from "@/libs/utils/client/fetchers";
 
-const MainRecentPlayed = () => {
-  const [recentPlayedIds, setRecentPlayedIds] = useState(
-    localStorage.getItem("recentPlaylist") || "",
-  );
+const MainRecentPlayed = ({ propsData }: { propsData?: PlaylistType[] }) => {
+  const [recentPlayedIds, setRecentPlayedIds] = useState("");
 
   const { data: playLists } = useQuery<PlaylistType[]>(
     ["recentPlayed", recentPlayedIds],
     () => getRecentPlaylists(recentPlayedIds),
-    { enabled: !!recentPlayedIds },
+    { enabled: !!recentPlayedIds, initialData: propsData },
   );
 
   useEffect(() => {
-    if (recentPlayedIds) return;
+    if (recentPlayedIds || !localStorage) {
+      return;
+    }
     const recentPlayed = localStorage.getItem("recentPlaylist");
-    if (recentPlayed) setRecentPlayedIds(recentPlayed);
-  }, [localStorage]);
+    if (recentPlayed) {
+      setRecentPlayedIds(recentPlayed);
+    }
+  }, []);
 
   return (
     <section className={`flex flex-col items-start w-full gap-4`}>

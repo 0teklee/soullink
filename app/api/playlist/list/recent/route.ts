@@ -1,13 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const id = new URL(req.url).searchParams.get("id");
+  const searchId = id ? (JSON.parse(id) as string[]) : null;
+  const whereParam = searchId
+    ? {
+        id: {
+          in: searchId,
+        },
+      }
+    : {};
+
   try {
     const trendingPlaylist = await prisma.playlist.findMany({
       take: 20,
       orderBy: {
         likedCount: "desc",
       },
+      where: whereParam,
       select: {
         id: true,
         title: true,

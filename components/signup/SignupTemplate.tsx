@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
-import { handleImageUpload } from "@/libs/utils/client/ImageUpload";
 import Image from "next/image";
 import { useMutation } from "react-query";
-import { SignupPayload } from "@/libs/types/common/userType";
+import { SignupPayload } from "@/libs/types/userType";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 
 const SignupTemplate = () => {
   const { data: session, status } = useSession();
@@ -43,7 +43,7 @@ const SignupTemplate = () => {
   };
 
   const { mutate } = useMutation(fetcherSignup, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       router.push(`/`);
     },
   });

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import { motion, useAnimationControls } from "framer-motion";
 import { fillEmptyPlaylist } from "@/libs/utils/client/commonUtils";
 import FullImageCardItem from "@/components/common/carousel/full-img/FullImageCardItem";

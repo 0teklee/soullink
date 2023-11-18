@@ -1,7 +1,4 @@
-import {
-  PlaylistMoodType,
-  PlaylistType,
-} from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistMoodType, PlaylistType } from "@/libs/types/song&playlistType";
 
 export const breakpoints = {
   mobile: 400,
@@ -67,24 +64,9 @@ export const DAYS_FILTER_ARR = [
 
 export const MOOD_TYPE_ARR = ["energetic", "chill", "relaxed", "melancholic"];
 
-export enum MOOD_TYPE {
-  ENERGETIC = "energetic",
-  CHILL = "chill",
-  RELAXED = "relaxed",
-  MELANCHOLIC = "melancholic",
-}
-
 export const played5MinsMs = 5 * 60 * 1000;
 export const played5MinSeconds = 30;
 export const interval5Seconds = 5 * 1000;
 
 export const QUERY_CACHE_TIME = 5 * 60 * 1000;
 export const QUERY_STALE_TIME = QUERY_CACHE_TIME - interval5Seconds;
-
-export const TRENDING_QUERY_KEYS = [
-  "trendingMain",
-  "trendingCategories",
-  "filteredCategories",
-  "trendingMood",
-  "filteredMood",
-];

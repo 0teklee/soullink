@@ -1,7 +1,7 @@
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import { useRecoilState } from "recoil";
-import { playlistState } from "@/libs/recoil/playlistAtom";
-import { playerGlobalState } from "@/libs/recoil/playerAtom";
+
+import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
 
 export const useSetPlaylistFromSongTable = (
   songId: string,

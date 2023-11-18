@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { CommentType } from "@/libs/types/common/userType";
+import { CommentType } from "@/libs/types/userType";
 import Image from "next/image";
 import { HeartIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
@@ -17,7 +17,7 @@ import {
 } from "@/libs/utils/client/fetchers";
 import { useMutation } from "react-query";
 import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import { useRouter } from "next/navigation";
 import CommonModal from "@/components/common/modal/CommonModal";
 import CommentDeleteModal from "@/components/common/comments/CommentDeleteModal";

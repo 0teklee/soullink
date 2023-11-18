@@ -3,7 +3,7 @@ import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay"
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 
 const FullImageCardItem = ({
   playlist,

@@ -2,14 +2,11 @@
 
 import React from "react";
 import ListMenuItem from "@/components/player/module/ListMenuItem";
-import {
-  PlayerListItem,
-  PlaylistType,
-} from "@/libs/types/common/Song&PlaylistType";
+import { PlayerListItem, PlaylistType } from "@/libs/types/song&playlistType";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/common/playerType";
+import { PlayerType } from "@/libs/types/playerType";
 
 const ListMenuContainer = ({
   curIndex,

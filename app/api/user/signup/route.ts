@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { SignupPayload } from "@/libs/types/common/userType";
+import { SignupPayload } from "@/libs/types/userType";
 
 export async function POST(req: Request) {
   try {

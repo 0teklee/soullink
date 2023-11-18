@@ -6,23 +6,24 @@ import {
   DAYS_FILTER_ARR,
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
-  TRENDING_QUERY_KEYS,
 } from "@/libs/utils/client/commonValues";
 import { useQuery } from "react-query";
 import { getTrendingMainPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
-import PlaylistListContainer from "@/components/common/playlist/playlist-list/PlaylistListContainer";
+import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/solid";
-import PlaylistGallery from "@/components/common/playlist/gallerylist/PlaylistGallery";
+import PlaylistGallery from "@/components/common/playlist/gallery-list/PlaylistGallery";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 
-const TrendingMainTrend = () => {
+const TrendingMainTrend = ({ initData }: { initData: PlaylistType[] }) => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [isSlider, setIsSlider] = useState(false);
 
   const { data: trendingPlaylistData } = useQuery({
     queryKey: ["trendingMain", period],
     queryFn: () => getTrendingMainPlaylists(`${period}`),
+    initialData: initData,
     cacheTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
@@ -80,7 +81,6 @@ const TrendingMainTrend = () => {
               playlists={trendingPlaylistData}
               isLarge={true}
               isIndex={true}
-              refetchQueryKeys={TRENDING_QUERY_KEYS}
             />
           )}
         {isSlider &&

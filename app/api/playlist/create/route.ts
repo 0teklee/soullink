@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { PlaylistCreateRequestType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistCreateRequestType } from "@/libs/types/song&playlistType";
 
 export async function POST(req: Request) {
   try {

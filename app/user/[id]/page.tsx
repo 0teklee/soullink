@@ -11,7 +11,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <PlaylistUpdateProvider propsData={userData.createdPlaylists}>
-      <UserTemplate userProps={userData} />
+      <UserTemplate id={id} userProps={userData} />
     </PlaylistUpdateProvider>
   );
 };

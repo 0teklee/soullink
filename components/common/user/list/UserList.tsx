@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { UserType } from "@/libs/types/common/userType";
+import { UserType } from "@/libs/types/userType";
 
 const UserList = ({ users }: { users: UserType[] }) => {
   const router = useRouter();
