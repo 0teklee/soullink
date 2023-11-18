@@ -1,19 +1,15 @@
 import React from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import PlaylistListItem from "@/components/common/playlist/playlist-list/PlaylistListItem";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+import PlaylistListItem from "@/components/common/playlist/column-list/PlaylistListItem";
 
 const PlaylistListContainer = ({
   playlists,
   isLarge,
   isIndex,
-  refetch,
-  refetchQueryKeys,
 }: {
   playlists?: PlaylistType[];
   isLarge?: boolean;
   isIndex?: boolean;
-  refetch?: () => void;
-  refetchQueryKeys?: string[];
 }) => {
   return (
     <div className={`flex flex-col gap-0 w-full`}>
@@ -23,8 +19,6 @@ const PlaylistListContainer = ({
           key={`playlist_list_${playlist.id}_${index}`}
           playlist={playlist}
           index={isIndex ? index + 1 : undefined}
-          refetch={refetch}
-          refetchQueryKeys={refetchQueryKeys}
         />
       ))}
     </div>
