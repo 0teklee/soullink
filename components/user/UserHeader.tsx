@@ -6,7 +6,6 @@ import Image from "next/image";
 import BgColorExtract from "@/components/common/module/BgColorExtract";
 import { useMutation } from "react-query";
 import { postUserFollow } from "@/libs/utils/client/fetchers";
-import { useSession } from "next-auth/react";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import CommonModal from "@/components/common/modal/CommonModal";

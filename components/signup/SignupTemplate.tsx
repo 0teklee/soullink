@@ -43,7 +43,7 @@ const SignupTemplate = () => {
   };
 
   const { mutate } = useMutation(fetcherSignup, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       router.push(`/`);
     },
   });

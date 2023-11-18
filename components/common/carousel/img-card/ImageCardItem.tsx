@@ -17,7 +17,7 @@ const ImageCardItem = ({
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
 }) => {
-  const { title, id, author, coverImage } = playlist;
+  const { title, author, coverImage } = playlist;
   const isDefault = !title;
   const router = useRouter();
   return (

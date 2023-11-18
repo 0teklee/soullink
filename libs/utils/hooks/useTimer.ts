@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 const useTimer = (handler: () => void, delay = 100) => {
   const [timer, setTimer] = useState<null | NodeJS.Timeout>(null);

@@ -10,7 +10,7 @@ const UseMutatePlaylistLike = () => {
   const setLoginModal = useSetRecoilState(CommonLoginModalState);
   const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
 
-  const { mutate, data: playlistLikeRes } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({
       playlistId,
       userId,

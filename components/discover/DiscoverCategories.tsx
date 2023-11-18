@@ -21,7 +21,7 @@ const DiscoverCategories = ({
 
   const [selectedCategory, setSelectedCategory] = React.useState<string>("");
 
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["categoryPlaylists", userId],
     queryFn: () => getCategoriesPlaylists(userId),
     initialData: propsData,
