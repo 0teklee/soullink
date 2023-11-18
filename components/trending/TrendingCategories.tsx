@@ -8,18 +8,25 @@ import {
   DAYS_FILTER_ARR,
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
-  TRENDING_QUERY_KEYS,
 } from "@/libs/utils/client/commonValues";
 import {
   getFilteredCategoriesPlaylists,
   getTrendingCategoriesPlaylists,
 } from "@/libs/utils/client/fetchers";
-import PlaylistListContainer from "@/components/common/playlist/playlist-list/PlaylistListContainer";
+import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
 import FiltersList from "@/components/common/playlist/module/FiltersList";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 
-const TrendingCategories = () => {
+const TrendingCategories = ({
+  initData,
+}: {
+  initData: {
+    recentMostPlayedCategoryPlaylist: PlaylistType[];
+    categories: string[];
+  };
+}) => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [categoryFilterList, setCategoryFilterList] = useState<string[]>([]);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<
@@ -33,6 +40,7 @@ const TrendingCategories = () => {
       queryKey: ["trendingCategories", period],
       queryFn: () => getTrendingCategoriesPlaylists(`${period}`),
       enabled: selectedCategoryFilter.length === 0,
+      initialData: initData,
       cacheTime: QUERY_CACHE_TIME,
       staleTime: QUERY_STALE_TIME,
     },
@@ -153,7 +161,6 @@ const TrendingCategories = () => {
           }
           isLarge={true}
           isIndex={true}
-          refetchQueryKeys={TRENDING_QUERY_KEYS}
         />
       </div>
     </section>
