@@ -6,17 +6,16 @@ import {
   DAYS_FILTER_ARR,
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
-  TRENDING_QUERY_KEYS,
 } from "@/libs/utils/client/commonValues";
 import { useQueries } from "react-query";
 import { getMoodLists, getMoodPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
-import PlaylistListContainer from "@/components/common/playlist/playlist-list/PlaylistListContainer";
-import { formatMoodBgColor } from "@/components/playlistCreate/utils";
-import { PlaylistMoodType } from "@/libs/types/common/Song&PlaylistType";
+import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
+import { PlaylistMoodType, PlaylistType } from "@/libs/types/song&playlistType";
+import { formatMoodBgColor } from "@/libs/utils/client/formatter";
 
-const TrendingMood = () => {
+const TrendingMood = ({ initData }: { initData: PlaylistType[] }) => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [selectedMood, setSelectedMood] = useState<null | PlaylistMoodType>(
     null,
@@ -26,6 +25,7 @@ const TrendingMood = () => {
     {
       queryKey: ["trendingMood", period, selectedMood],
       queryFn: () => getMoodPlaylists(selectedMood, `${period}`),
+      initialData: initData,
       cacheTime: QUERY_CACHE_TIME,
       staleTime: QUERY_STALE_TIME,
     },
@@ -96,7 +96,6 @@ const TrendingMood = () => {
           playlists={moodPlaylistData}
           isLarge={true}
           isIndex={true}
-          refetchQueryKeys={TRENDING_QUERY_KEYS}
         />
       </div>
     </section>
