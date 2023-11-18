@@ -1,25 +1,29 @@
 import React, { Suspense } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import DiscoverMoodLists from "@/components/discover/module/DiscoverMoodLists";
-import DiscoverSuggestion from "@/components/discover/module/DiscoverSuggestion";
-import DiscoverEditorSelection from "@/components/discover/module/DiscoverEditorSelection";
-import DiscoverCategories from "@/components/discover/module/DiscoverCategories";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+import DiscoverMoodLists from "@/components/discover/DiscoverMoodLists";
+import DiscoverSuggestion from "@/components/discover/DiscoverSuggestion";
+import DiscoverEditorSelection from "@/components/discover/DiscoverEditorSelection";
+import DiscoverCategories from "@/components/discover/DiscoverCategories";
+import { getCategoriesPlaylists } from "@/libs/utils/client/fetchers";
 
 const DiscoverTemplate = ({
   moodPlaylists,
   editorPlaylists,
+  getCategoriesPlaylists,
 }: {
   editorPlaylists?: PlaylistType[];
-  moodPlaylists?: PlaylistType[][];
+  moodPlaylists?: PlaylistType[];
+  getCategoriesPlaylists?: {
+    categoryPlaylists: PlaylistType[];
+    categories: string[];
+  };
 }) => {
   return (
     <section className={`flex flex-col gap-12 py-6`}>
       <DiscoverEditorSelection editorPlaylists={editorPlaylists} />
       <DiscoverMoodLists moodPlaylists={moodPlaylists} />
-      <Suspense fallback={<div>Loading...</div>}>
-        <DiscoverCategories />
-        <DiscoverSuggestion />
-      </Suspense>
+      <DiscoverCategories propsData={getCategoriesPlaylists} />
+      <DiscoverSuggestion />
     </section>
   );
 };
