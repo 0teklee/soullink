@@ -1,35 +1,35 @@
 import React from "react";
 import {
+  getAllMoodPlaylists,
+  getCategoriesPlaylists,
   getEditorPlaylists,
-  getMoodPlaylists,
 } from "@/libs/utils/client/fetchers";
-import { commonMoods } from "@/libs/utils/client/commonValues";
 import DiscoverTemplate from "@/components/discover/DiscoverTemplate";
 import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
-
-const moodPlaylists = async () => {
-  try {
-    const res = await Promise.all(
-      commonMoods.map(async (mood) => await getMoodPlaylists(mood)),
-    );
-    return res;
-  } catch (error) {
-    console.error(error);
-  }
-};
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 
 const Page = async () => {
-  const allMoodPlaylists = await moodPlaylists();
-  const allMoodPlaylistsFlat = allMoodPlaylists?.flat() || [];
-  const editorPlaylists = await getEditorPlaylists();
+  const userId = await getServerSession(authOptions).then(
+    (res) => (res as UserSessionType)?.userId,
+  );
+
+  const [editorPlaylists, allMoodPlaylists, categoryPlaylists] =
+    await Promise.all([
+      await getEditorPlaylists(),
+      await getAllMoodPlaylists(),
+      await getCategoriesPlaylists(userId),
+    ]);
 
   return (
     <PlaylistUpdateProvider
-      propsData={[...allMoodPlaylistsFlat, ...editorPlaylists]}
+      propsData={[...allMoodPlaylists, ...editorPlaylists]}
     >
       <DiscoverTemplate
         moodPlaylists={allMoodPlaylists}
         editorPlaylists={editorPlaylists}
+        getCategoriesPlaylists={categoryPlaylists}
       />
     </PlaylistUpdateProvider>
   );
