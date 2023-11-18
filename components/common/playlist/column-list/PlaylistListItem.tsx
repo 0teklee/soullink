@@ -1,44 +1,45 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { formatPathName } from "@/libs/utils/client/formatter";
-import { formatMoodFontColor } from "@/components/playlistCreate/utils";
+import {
+  formatMoodFontColor,
+  formatPathName,
+} from "@/libs/utils/client/formatter";
 import dayjs from "dayjs";
 import CommonModal from "@/components/common/modal/CommonModal";
 import CommonSongModal from "@/components/common/modal/CommonSongModal";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
-import { useMutation } from "react-query";
-import { postPlaylistLike } from "@/libs/utils/client/fetchers";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
-import { useSetRecoilState } from "recoil";
-import { HeartIcon as OutlineHeartIcon } from "@heroicons/react/24/outline";
+import { UserSessionType } from "@/libs/types/userType";
+import {
+  HeartIcon as OutlineHeartIcon,
+  PauseIcon,
+  PlayIcon,
+} from "@heroicons/react/24/outline";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import CategoriesList from "@/components/common/category/list/CategoriesList";
-import useQueriesInvalidate from "@/libs/utils/hooks/useQueriesInvalidate";
+import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
+import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 
 const PlaylistListItem = ({
   playlist,
   index,
   isLarge,
-  refetch,
-  refetchQueryKeys,
 }: {
   playlist: PlaylistType;
   index?: number;
   isLarge?: boolean;
-  refetch?: () => void;
-  refetchQueryKeys?: string[];
 }) => {
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
 
   const router = useRouter();
+  const { playing, handleChangePlaylistState } =
+    useSelectedPlaylistPlay(playlist);
+  const { playlistLikeMutate } = useMutatePlaylistLike();
 
   const {
     id: playlistId,
@@ -59,40 +60,13 @@ const PlaylistListItem = ({
   const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
     likedBy?.filter((user) => user.userId === userId).length > 0,
   );
-  const { invalidateQueries } = useQueriesInvalidate();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const { mutate } = useMutation({
-    mutationFn: ({
-      playlistId,
-      userId,
-    }: {
-      playlistId: string;
-      userId?: string;
-    }) => postPlaylistLike({ playlistId, userId }),
-    onSuccess: () => {
-      if (refetchQueryKeys && refetchQueryKeys.length > 0) {
-        invalidateQueries(refetchQueryKeys);
-        return;
-      }
-      if (refetch) {
-        refetch();
-        return;
-      }
-      router.refresh();
-    },
-  });
 
   const cover = coverImage || `/image/common/default_cover_image.svg`;
 
   const handleLikePlaylist = async () => {
-    if (!userId) {
-      setLoginModalOpen(true);
-      return;
-    }
-
-    mutate({ playlistId, userId });
+    playlistLikeMutate(playlistId, userId);
   };
 
   const handleClickOutside = () => {
@@ -143,6 +117,18 @@ const PlaylistListItem = ({
               alt={`playlist_cover`}
               fill={true}
             />
+            <div
+              onClick={() => {
+                handleChangePlaylistState(playlist);
+              }}
+              className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-[3] cursor-pointer opacity-0 hover:opacity-100`}
+            >
+              {playing ? (
+                <PauseIcon className={`w-16 h-16 text-white`} />
+              ) : (
+                <PlayIcon className={`w-16 h-16 text-white`} />
+              )}
+            </div>
           </div>
           <div className={` flex flex-col items-start gap-3`}>
             <div>
