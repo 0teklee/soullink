@@ -3,19 +3,18 @@
 import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
-import SongTable from "@/components/common/songTable/SongTable";
-import PlaylistSongModal from "@/components/playlistCreate/PlaylistSongModal";
+import SongTable from "@/components/common/song/table/SongTable";
+import PlaylistSongModal from "@/components/playlist/create/PlaylistSongModal";
 import {
   CreatePlaylistType,
   CreateSongType,
-} from "@/libs/types/common/Song&PlaylistType";
-import { handleImageUpload } from "@/libs/utils/client/ImageUpload";
-import PlaylistCreateSubmit from "@/components/playlistCreate/PlaylistCreateSubmit";
+} from "@/libs/types/song&playlistType";
+import PlaylistCreateSubmit from "@/components/playlist/create/PlaylistCreateSubmit";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import { getSingleUserProfile } from "@/libs/utils/client/fetchers";
 import { useQuery } from "react-query";
 import {
@@ -23,8 +22,9 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { formatMoodBgColor } from "@/components/playlistCreate/utils";
 import { commonMoods } from "@/libs/utils/client/commonValues";
+import { handleImageUpload } from "@/libs/utils/client/commonUtils";
+import { formatMoodBgColor } from "@/libs/utils/client/formatter";
 
 const PlaylistCreateTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };

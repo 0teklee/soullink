@@ -3,15 +3,15 @@
 import React, { useMemo } from "react";
 import Title from "@/components/common/module/Title";
 import { SEARCH_TYPE } from "@/libs/utils/client/searchValue";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import { UserType } from "@/libs/types/common/userType";
-import PlaylistListContainer from "@/components/common/playlist/playlist-list/PlaylistListContainer";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+import { UserType } from "@/libs/types/userType";
+import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import {
   formatSearchResultDataProps,
   formatSearchResultType,
   getIsResultMoreThanOne,
 } from "@/libs/utils/client/searchUtils";
-import { SearchResultQueriesData } from "@/libs/utils/client/searchType";
+import { SearchResultQueriesData } from "@/libs/types/searchType";
 import CategoriesList from "@/components/common/category/list/CategoriesList";
 import UserList from "@/components/common/user/list/UserList";
 import Image from "next/image";
