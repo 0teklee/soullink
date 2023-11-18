@@ -1,34 +1,45 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import React from "react";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
-import SongTable from "@/components/common/songTable/SongTable";
+import SongTable from "@/components/common/song/table/SongTable";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 import process from "process";
-import { useMutation } from "react-query";
-import { postPlaylistLike } from "@/libs/utils/client/fetchers";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
 import { HeartIcon, PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import { formatPathName } from "@/libs/utils/client/formatter";
+import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
+import { useQuery } from "react-query";
+import { getSinglePlaylist } from "@/libs/utils/client/fetchers";
 
-const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
+const DetailTemplate = ({
+  id,
+  propsData,
+}: {
+  id: string;
+  propsData: PlaylistType;
+}) => {
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
   const router = useRouter();
 
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { data: playlistData } = useQuery({
+    queryKey: ["playlist", id],
+    queryFn: () => getSinglePlaylist(id),
+    enabled: !!id,
+    initialData: propsData,
+  });
+
   const { playing, handleChangePlaylistState } =
-    useSelectedPlaylistPlay(playlistData);
+    useSelectedPlaylistPlay(propsData);
 
   const {
     title,
@@ -40,31 +51,21 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
     id: playlistId,
     likedBy,
     playedCount,
-  } = playlistData;
+  } = playlistData || {};
 
   const { profilePic, nickname: authorName } = author || playlistDefault.author;
   const isUserLikedPlaylist =
+    likedBy &&
+    likedBy.length > 0 &&
+    userId &&
+    likedBy &&
     likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
 
-  const { mutate } = useMutation({
-    mutationFn: () => postPlaylistLike({ playlistId, userId: userId || "" }),
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { playlistLikeMutate } = useMutatePlaylistLike();
 
   const handleLikePlaylist = async () => {
-    if (!userId) {
-      setLoginModalOpen(true);
-      return;
-    }
-
-    mutate();
+    playlistLikeMutate(playlistId, userId);
   };
-
-  useEffect(() => {
-    router.refresh();
-  }, [session]);
 
   return (
     <section
@@ -88,24 +89,26 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
         </div>
       </div>
       <div className={`flex flex-col items-center justify-center gap-2`}>
-        <Title size={`h1`} text={title} />
-        <div className={`flex items-center gap-3`}>
-          <button
-            className={`font-normal text-black hover:underline`}
-            onClick={() => {
-              router.push(`/user/${formatPathName(author.nickname)}`);
-            }}
-          >
-            by {authorName}
-          </button>
-          <Image
-            className={`rounded-full`}
-            src={profilePic || "/image/common/default_profile.svg"}
-            alt={`user_profile`}
-            width={30}
-            height={30}
-          />
-        </div>
+        <Title size={`h1`} text={title || ""} />
+        {author && (
+          <div className={`flex items-center gap-3`}>
+            <button
+              className={`font-normal text-black hover:underline`}
+              onClick={() => {
+                router.push(`/user/${formatPathName(author.nickname)}`);
+              }}
+            >
+              by {authorName}
+            </button>
+            <Image
+              className={`rounded-full`}
+              src={profilePic || "/image/common/default_profile.svg"}
+              alt={`user_profile`}
+              width={30}
+              height={30}
+            />
+          </div>
+        )}
       </div>
       <div
         className={`relative flex items-center justify-center w-screen h-full overflow-hidden`}
@@ -122,18 +125,20 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
             alt={`cover_image`}
             fill={true}
           />
-          <div
-            onClick={() => {
-              handleChangePlaylistState(playlistData);
-            }}
-            className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-[3] cursor-pointer opacity-0 hover:opacity-100`}
-          >
-            {playing ? (
-              <PauseIcon className={`w-16 h-16 text-white`} />
-            ) : (
-              <PlayIcon className={`w-16 h-16 text-white`} />
-            )}
-          </div>
+          {playlistData && (
+            <div
+              onClick={() => {
+                handleChangePlaylistState(playlistData);
+              }}
+              className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-[3] cursor-pointer opacity-0 hover:opacity-100`}
+            >
+              {playing ? (
+                <PauseIcon className={`w-16 h-16 text-white`} />
+              ) : (
+                <PlayIcon className={`w-16 h-16 text-white`} />
+              )}
+            </div>
+          )}
         </div>
         <div className={`absolute bottom-0 right-0 w-full h-full blur-sm`}>
           {coverImage && (
@@ -175,12 +180,14 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
           <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
         </div>
       </div>
-      <SongTable
-        key={`table_${playlistId}`}
-        songList={songs}
-        playlist={playlistData}
-        isCreate={false}
-      />
+      {songs && songs.length > 0 && (
+        <SongTable
+          key={`table_${playlistId}`}
+          songList={songs}
+          playlist={propsData}
+          isCreate={false}
+        />
+      )}
       <div
         className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
       >
@@ -193,11 +200,13 @@ const DetailTemplate = ({ playlistData }: { playlistData: PlaylistType }) => {
       </div>
       <div className={`flex flex-col items-start w-full gap-6`}>
         <Title size={`h2`} text={`Comments`} />
-        <CommentContainer
-          postId={playlistId}
-          userId={userId || ""}
-          isProfile={false}
-        />
+        {playlistId && (
+          <CommentContainer
+            postId={playlistId}
+            userId={userId || ""}
+            isProfile={false}
+          />
+        )}
       </div>
     </section>
   );
