@@ -2,20 +2,17 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import Title from "@/components/common/module/Title";
 import { useSetRecoilState } from "recoil";
-import { playlistState } from "@/libs/recoil/playlistAtom";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { useMutation } from "react-query";
-import { postPlaylistLike } from "@/libs/utils/client/fetchers";
-import { CommonLoginModalState } from "@/libs/recoil/modalAtom";
+import { playlistState } from "@/libs/recoil/atoms";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
+import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
   const setCurrentPlayList = useSetRecoilState(playlistState);
 
   const { data: userSession } = useSession() as { data: UserSessionType };
@@ -37,20 +34,10 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
     likedBy &&
     likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
 
-  const { mutate } = useMutation({
-    mutationFn: () => postPlaylistLike({ playlistId, userId: userId || "" }),
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { playlistLikeMutate } = useMutatePlaylistLike();
 
   const handleLikePlaylist = async () => {
-    if (!userId) {
-      setLoginModalOpen(true);
-      return;
-    }
-
-    mutate();
+    playlistLikeMutate(playlistId, userId);
   };
 
   return (
