@@ -1,23 +1,38 @@
 "use client";
 
 import React, { useState } from "react";
-import { PlaylistType } from "@/libs/types/common/Song&PlaylistType";
-import { commonMoods } from "@/libs/utils/client/commonValues";
+import { PlaylistType } from "@/libs/types/song&playlistType";
+import {
+  commonMoods,
+  QUERY_CACHE_TIME,
+  QUERY_STALE_TIME,
+} from "@/libs/utils/client/commonValues";
 import { filterMoodPlaylists } from "@/libs/utils/client/commonUtils";
 import Title from "@/components/common/module/Title";
 import ImageCardContainer from "@/components/common/carousel/img-card/ImageCardContainer";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import { formatMoodFontColor } from "@/components/playlistCreate/utils";
+
+import { formatMoodFontColor } from "@/libs/utils/client/formatter";
+import { getAllMoodPlaylists } from "@/libs/utils/client/fetchers";
+import { useQuery } from "react-query";
 
 const DiscoverMoodLists = ({
   moodPlaylists,
 }: {
-  moodPlaylists?: PlaylistType[][];
+  moodPlaylists?: PlaylistType[];
 }) => {
+  const { data } = useQuery({
+    queryKey: ["moodPlaylists"],
+    queryFn: () => getAllMoodPlaylists(),
+    initialData: moodPlaylists,
+    cacheTime: QUERY_CACHE_TIME,
+    staleTime: QUERY_STALE_TIME,
+  });
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const sortedMoodPlaylists = commonMoods.map((mood) =>
-    filterMoodPlaylists(mood, moodPlaylists),
+    filterMoodPlaylists(mood, data),
   );
 
   return (
