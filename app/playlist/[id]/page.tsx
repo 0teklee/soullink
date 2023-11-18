@@ -1,5 +1,5 @@
 import React from "react";
-import DetailTemplate from "@/components/playlistDetail/DetailTemplate";
+import DetailTemplate from "@/components/playlist/detail/DetailTemplate";
 import {
   getPlaylistsPaths,
   getSinglePlaylist,
@@ -11,7 +11,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const playlistData = await getSinglePlaylist(id);
   return (
     <PlaylistUpdateProvider propsData={playlistData}>
-      <DetailTemplate playlistData={playlistData} />
+      <DetailTemplate id={id} propsData={playlistData} />
     </PlaylistUpdateProvider>
   );
 };
