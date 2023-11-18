@@ -3,7 +3,7 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
 import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/common/userType";
+import { UserSessionType } from "@/libs/types/userType";
 import { useQuery } from "react-query";
 import { getRecommendedPlaylists } from "@/libs/utils/client/fetchers";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
