@@ -42,7 +42,49 @@ export async function GET(req: Request) {
             },
           },
         },
-        likedPlayLists: true,
+        likedPlayLists: {
+          select: {
+            playlist: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                category: true,
+                coverImage: true,
+                createdAt: true,
+                author: {
+                  select: {
+                    id: true,
+                    nickname: true,
+                  },
+                },
+                likedCount: true,
+                playedCount: true,
+                mood: {
+                  select: {
+                    name: true,
+                  },
+                },
+                likedBy: {
+                  select: {
+                    userId: true,
+                  },
+                },
+                songs: {
+                  select: {
+                    id: true,
+                    title: true,
+                    artist: true,
+                    url: true,
+                    thumbnail: true,
+                    playedCount: true,
+                    likedUsers: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         likedSong: {
           select: {
             song: {
@@ -97,6 +139,9 @@ export async function GET(req: Request) {
 
     const user = {
       ...userDb,
+      likedPlaylists: userDb
+        ? userDb.likedPlayLists.map((playlist) => playlist.playlist)
+        : [],
       likedSong: {
         title: `Liked Songs`,
         id: `${userDb?.nickname} liked songs`,
