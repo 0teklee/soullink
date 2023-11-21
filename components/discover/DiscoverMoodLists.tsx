@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import {
   commonMoods,
@@ -13,17 +13,19 @@ import ImageCardContainer from "@/components/common/carousel/img-card/ImageCardC
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 import { formatMoodFontColor } from "@/libs/utils/client/formatter";
-import { getAllMoodPlaylists } from "@/libs/utils/client/fetchers";
+import { getDiscoverMoodPlaylists } from "@/libs/utils/client/fetchers";
 import { useQuery } from "react-query";
 
 const DiscoverMoodLists = ({
   moodPlaylists,
+  userId,
 }: {
   moodPlaylists?: PlaylistType[];
+  userId?: string;
 }) => {
   const { data } = useQuery({
     queryKey: ["moodPlaylists"],
-    queryFn: () => getAllMoodPlaylists(),
+    queryFn: () => getDiscoverMoodPlaylists(userId),
     initialData: moodPlaylists,
     cacheTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
@@ -34,6 +36,13 @@ const DiscoverMoodLists = ({
   const sortedMoodPlaylists = commonMoods.map((mood) =>
     filterMoodPlaylists(mood, data),
   );
+
+  const moodTextColor = formatMoodFontColor(commonMoods[selectedIndex]);
+
+  useEffect(() => {
+    const filledData = sortedMoodPlaylists.findIndex((mood) => mood.length > 0);
+    setSelectedIndex(filledData);
+  }, []);
 
   return (
     <div className={`flex flex-col gap-4 h-full min-h-[200px]`}>
@@ -48,9 +57,7 @@ const DiscoverMoodLists = ({
             }}
             className={`flex items-center justify-start gap-3 mb-1 text-xl text-gray-700 font-semibold cursor-pointer`}
           >
-            <p className={`${formatMoodFontColor(commonMoods[selectedIndex])}`}>
-              {commonMoods[selectedIndex]}
-            </p>
+            <p className={`${moodTextColor}`}>{commonMoods[selectedIndex]}</p>
             {isDropdownOpen ? (
               <ChevronUpIcon className={`w-5 h-5`} />
             ) : (
@@ -70,6 +77,7 @@ const DiscoverMoodLists = ({
                   key={`${mood}-${index}`}
                   className={`flex items-center justify-start gap-1 w-full p-2 text-xl text-gray-700 bg-white hover:bg-gray-50 hover:${formatMoodFontColor(
                     mood,
+                    true,
                   )} font-semibold cursor-pointer `}
                 >
                   <p>{mood}</p>
