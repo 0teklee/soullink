@@ -5,15 +5,10 @@ import {
   getSinglePlaylist,
 } from "@/libs/utils/client/fetchers";
 import process from "process";
-import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const playlistData = await getSinglePlaylist(id);
-  return (
-    <PlaylistUpdateProvider propsData={playlistData}>
-      <DetailTemplate id={id} propsData={playlistData} />
-    </PlaylistUpdateProvider>
-  );
+  return <DetailTemplate id={id} propsData={playlistData} />;
 };
 
 export default Page;
