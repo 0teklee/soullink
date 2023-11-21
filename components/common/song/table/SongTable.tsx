@@ -8,8 +8,6 @@ import {
 } from "@/libs/types/song&playlistType";
 
 import TableItem from "@/components/common/song/table/TableItem";
-import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/userType";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
