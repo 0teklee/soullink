@@ -5,24 +5,43 @@ import DiscoverSuggestion from "@/components/discover/DiscoverSuggestion";
 import DiscoverEditorSelection from "@/components/discover/DiscoverEditorSelection";
 import DiscoverCategories from "@/components/discover/DiscoverCategories";
 
+interface DiscoverCategoryData {
+  categoryPlaylists: PlaylistType[];
+  categories: string[];
+}
+
 const DiscoverTemplate = ({
-  moodPlaylists,
-  editorPlaylists,
-  getCategoriesPlaylists,
+  propsData,
+  userId,
+  userNickname,
 }: {
-  editorPlaylists?: PlaylistType[];
-  moodPlaylists?: PlaylistType[];
-  getCategoriesPlaylists?: {
-    categoryPlaylists: PlaylistType[];
-    categories: string[];
-  };
+  propsData: (PlaylistType[] | DiscoverCategoryData)[];
+  userId?: string;
+  userNickname?: string;
 }) => {
+  const [
+    editorPlaylists,
+    moodPlaylists,
+    categoryPlaylists,
+    recommendPlaylists,
+  ] = propsData;
   return (
     <section className={`flex flex-col gap-12 py-6`}>
-      <DiscoverEditorSelection editorPlaylists={editorPlaylists} />
-      <DiscoverMoodLists moodPlaylists={moodPlaylists} />
-      <DiscoverCategories propsData={getCategoriesPlaylists} />
-      <DiscoverSuggestion />
+      <DiscoverEditorSelection
+        editorPlaylists={editorPlaylists as PlaylistType[]}
+      />
+      <DiscoverMoodLists
+        moodPlaylists={moodPlaylists as PlaylistType[]}
+        userId={userId}
+      />
+      <DiscoverCategories
+        propsData={categoryPlaylists as DiscoverCategoryData}
+      />
+      <DiscoverSuggestion
+        recommendedPlaylists={recommendPlaylists as PlaylistType[]}
+        userNickname={userNickname}
+        userId={userId}
+      />
     </section>
   );
 };
