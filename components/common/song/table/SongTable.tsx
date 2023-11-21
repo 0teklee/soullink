@@ -31,7 +31,6 @@ const SongTable = ({
 }) => {
   const setIsLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
-  const { data: session } = useSession() as { data: UserSessionType };
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
 

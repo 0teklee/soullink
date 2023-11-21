@@ -18,7 +18,7 @@ const Page = async () => {
     getTrendingSongs(),
   ]);
 
-  const { userId, userNickname } =
+  const { userId } =
     ((await getServerSession(authOptions)) as UserSessionType) || {};
 
   return <TrendingTemplate propsData={propsData} userId={userId} />;
