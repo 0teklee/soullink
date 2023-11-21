@@ -4,20 +4,22 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import Title from "@/components/common/module/Title";
-import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { playlistState } from "@/libs/recoil/atoms";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
+import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 
 const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
-  const setCurrentPlayList = useSetRecoilState(playlistState);
-
   const { data: userSession } = useSession() as { data: UserSessionType };
   const userId = userSession?.userId;
   const router = useRouter();
+
+  const { handleChangePlaylistState } = useSelectedPlaylistPlay(
+    playlistItem,
+    userId,
+  );
 
   const [isOnHover, setIsOnHover] = useState(false);
 
@@ -86,7 +88,7 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
       </div>
       <div
         onClick={() => {
-          setCurrentPlayList(playlistItem);
+          handleChangePlaylistState(playlistItem);
         }}
         className={`relative xs:w-[300px]  xs:h-[300px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
       >
