@@ -85,7 +85,7 @@ const TableItem = ({
               <button className={`relative w-6 h-6`}>
                 {isUserLikedSong ? (
                   <HeartIconSolid
-                    className={`w-full h-full text-primary`}
+                    className={`w-full h-full text-primary hover:text-gray-500`}
                     onClick={() => {
                       if (!handleLikeSong) {
                         return;
@@ -95,7 +95,7 @@ const TableItem = ({
                   />
                 ) : (
                   <HeartIcon
-                    className={`w-full h-full text-gray-500`}
+                    className={`w-full h-full text-gray-500 hover:text-primary`}
                     onClick={() => {
                       if (!handleLikeSong) {
                         return;
