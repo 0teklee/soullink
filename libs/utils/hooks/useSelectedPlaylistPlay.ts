@@ -19,7 +19,7 @@ const UseSelectedPlaylistPlay = (
 ) => {
   const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
   const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
-  const { playing, startedAt, currentSongListIndex } = playerState;
+  const { playing, startedAt } = playerState;
 
   const { mutate: postPlaylistPlayedTime } = useMutation({
     mutationFn: ({ id, time }: { id: string; time: number }) =>
