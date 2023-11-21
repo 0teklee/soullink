@@ -15,21 +15,10 @@ import {
   PostFollowType,
   UserType,
 } from "@/libs/types/userType";
-import { commonMoods } from "@/libs/utils/client/commonValues";
+import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
 
 /* Playlist Fetchers */
 /* GET */
-
-export const getMainPageTrendingPlaylists = async (): Promise<
-  PlaylistType[]
-> => {
-  const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
-  );
-  const data = await res.json();
-  return data.trendingPlayLists;
-};
 
 export const getMainPageFriendsPlaylists = async (
   userId?: string | null,
@@ -44,16 +33,48 @@ export const getMainPageFriendsPlaylists = async (
   return data.mainData.friendsList;
 };
 
-export const getMainPageTodayPlaylists = async (
-  userId = "",
-): Promise<PlaylistType[]> => {
+export const getMainPageTodayPlaylists = async (): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/today`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
+    { next: { tags: ["today_playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.todayPlaylist;
 };
+
+export const getTimelinePlaylists = async (
+  id?: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/timeline?userId=${
+      id ? id : ""
+    }`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
+  return res.timelinePlaylists;
+};
+
+export const getRecentPlaylists = async (
+  id?: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/user/recent?userId=${id ? id : ""}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
+  return res.recentPlayed;
+};
+
+export const getLocalRecentPlaylists = async (
+  id: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent?id=${id}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
+  return res.trendingPlayLists;
+};
+
+/* Playlist Detail page */
 
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
   const res = await fetch(
@@ -75,41 +96,18 @@ export const getPlaylistsPaths = async (): Promise<string[]> => {
   return paths;
 };
 
-/* Trending Discover fetchers */
+/* Discover fetchers */
 
-export const getRecentPlaylists = async (
-  id: string,
+export const getDiscoverMoodPlaylists = async (
+  userId?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent?id=${id}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/recommend?userId=${
+      userId || ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
-  );
-  const data = await res.json();
-  return data.trendingPlayLists;
-};
-
-export const getMoodPlaylists = async (
-  param: PlaylistMoodType | null | undefined,
-  period = "0",
-): Promise<PlaylistType[]> => {
-  const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood?param=${param}&recent=${period}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
-  );
-  const data = await res.json();
-  return data.moodPlayLists;
-};
-
-export const getAllMoodPlaylists = async () => {
-  try {
-    const res = await Promise.all(
-      commonMoods.map(async (mood) => await getMoodPlaylists(mood)),
-    ).then((res) => res.flat());
-    return res;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+  ).then((res) => res.json());
+  return res.moodPlayLists;
 };
 
 export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
@@ -127,9 +125,8 @@ export const getRecommendedPlaylists = async (
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recommend?userId=${userId}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
-  );
-  const data = await res.json();
-  return data.userRecommendPlaylist;
+  ).then((res) => res.json());
+  return res.userRecommendPlaylist;
 };
 
 /* Trending Fetchers */
@@ -193,6 +190,22 @@ export const getFilteredCategoriesPlaylists = async (
   return {
     filteredCategoriesList: data.filteredCategoriesList,
   };
+};
+
+export const getMoodPlaylists = async (
+  param: PlaylistMoodType | null | undefined,
+  period = "0",
+  userId?: string,
+): Promise<PlaylistType[]> => {
+  const res = await fetch(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/mood?param=${param}&recent=${period}&userId=${
+      userId || ""
+    }`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
+  return res.moodPlayLists;
 };
 
 export const getMoodLists = async (
@@ -274,9 +287,11 @@ export const postPlaylistLike = async (
 /* Song Fetchers */
 /* GET */
 
-export const getTrendingSongs = async (): Promise<TrendingSongPlaylistType> => {
+export const getTrendingSongs = async (
+  period?: DAYS_FILTER,
+): Promise<TrendingSongPlaylistType> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending-songs`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending-songs?recent=${period}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -520,6 +535,44 @@ export const getSearchCategoryPlaylists = async (
 };
 
 /* ETC Common Fetchers */
+
+export const getRecentPlayedPlaylists = async (
+  userId?: string,
+): Promise<{
+  message: string;
+  recentPlayed: PlaylistType[];
+  userId?: string;
+}> => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/user/recent?userId=${
+      userId ? userId : ""
+    }`,
+  );
+  const data = await res.json();
+  return data;
+};
+
+export const postRecentPlayed = async (
+  userId: string,
+  playlistId: string,
+): Promise<{
+  message: string;
+  userId?: string;
+  playlistId?: string;
+}> => {
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/recent`, {
+    method: "POST",
+    body: JSON.stringify({
+      userId,
+      playlistId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+  return data;
+};
 
 export const fetcherImagePost = async <T extends object>(
   url: string,
