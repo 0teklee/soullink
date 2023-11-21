@@ -1,34 +1,31 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import dayjs from "dayjs";
 
 export async function GET() {
-  const now = new Date();
-  const today = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    23,
-    59,
-    59,
-  );
-  const yesterday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() - 1,
-    23,
-    59,
-    59,
-  );
+  const now = dayjs();
+  const today = now.startOf("day").toDate();
+  const yesterday = now.subtract(1, "day").startOf("day").toDate();
 
   try {
     const todayPlaylist = await prisma.playlist.findMany({
       take: 20,
       where: {
-        AND: [
+        OR: [
           {
             createdAt: {
               gte: yesterday,
               lt: today,
+            },
+          },
+          {
+            recentPlay: {
+              every: {
+                createdAt: {
+                  gte: yesterday,
+                  lt: today,
+                },
+              },
             },
           },
         ],
@@ -40,6 +37,12 @@ export async function GET() {
           },
         },
         { createdAt: "asc" },
+        {
+          recentPlay: {
+            _count: "desc",
+          },
+        },
+        { playedCount: "desc" },
         {
           likedCount: "desc",
         },
