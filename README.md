@@ -9,7 +9,7 @@
 - ~~bugfix : player song like state not updating~~
 
 ### SOON TO BE ADDED ###
-**2023-11-22 ~**
+**2023-11-22**
 - User Profile Page Revision - add edit profile feature & user customizing profile page styling
 - Detail Page Revision - add edit & delete feature & user customizing detail page
 - Add "Frequency" filter to common filters (search, table list)
