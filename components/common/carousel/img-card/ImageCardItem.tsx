@@ -5,6 +5,10 @@ import { PlaylistType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
+import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/libs/types/userType";
+import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 
 const ImageCardItem = ({
   playlist,
@@ -17,9 +21,14 @@ const ImageCardItem = ({
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
 }) => {
+  const { data: session } = useSession() as { data: UserSessionType };
   const { title, author, coverImage } = playlist;
   const isDefault = !title;
   const router = useRouter();
+  const { handleChangePlaylistState, playing } = useSelectedPlaylistPlay(
+    playlist,
+    session?.userId,
+  );
   return (
     <div>
       <div
@@ -46,6 +55,19 @@ const ImageCardItem = ({
               fill={true}
               src={coverImage || "/image/common/default_cover_image.svg"}
             />
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                handleChangePlaylistState(playlist);
+              }}
+              className={`absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-30 z-10 opacity-0 hover:opacity-100`}
+            >
+              {playing ? (
+                <PauseIcon className={`w-8 h-8`} />
+              ) : (
+                <PlayIcon className={`w-8 h-8`} />
+              )}
+            </div>
           </div>
         )}
         {isDefault && (
