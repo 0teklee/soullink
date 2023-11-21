@@ -4,9 +4,8 @@ import dayjs from "dayjs";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const { userId, mood } = Object.fromEntries(url.searchParams.entries()) as {
+  const { userId } = Object.fromEntries(url.searchParams.entries()) as {
     userId?: string;
-    mood?: string;
   };
 
   const DISCOVER_MOOD_UPDATE_DAYS = 1;
@@ -56,7 +55,7 @@ export async function GET(req: Request) {
       userLikeMood.length > 0
         ? userLikeMood
             .map((mood) => mood.mood.name)
-            .reduce((acc, cur, currentIndex) => {
+            .reduce((acc, cur) => {
               const rank = acc.findIndex((mood) => mood === cur);
               if (rank === -1) {
                 acc.push(cur);
