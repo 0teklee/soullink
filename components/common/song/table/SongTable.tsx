@@ -20,17 +20,18 @@ const SongTable = ({
   setSongList,
   playlist,
   setIsModalOpen,
+  userId,
 }: {
   songList: SongType[] | CreateSongType[];
   setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
   isCreate?: boolean;
   setSongList?: Dispatch<SetStateAction<CreateSongType[]>>;
   playlist?: PlaylistType;
+  userId?: string;
 }) => {
   const setIsLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
   const { data: session } = useSession() as { data: UserSessionType };
-  const userId = session?.userId;
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
 
