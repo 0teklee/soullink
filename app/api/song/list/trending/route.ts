@@ -1,25 +1,48 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatDateFilter } from "@/libs/utils/server/formatter";
 
-// Trending Get 요청 예시
-
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    // for example to get songs
-    const songs = await prisma.song.findMany({
+    const url = new URL(req.url);
+    const { recent } = Object.fromEntries(url.searchParams.entries()) as {
+      recent: string;
+    };
+
+    const recentDate = formatDateFilter(recent);
+
+    const songs = await prisma.songLikedByUsers.findMany({
       take: 20,
-      orderBy: {
-        playedCount: "desc",
+      where: {
+        createdAt: {
+          gte: recentDate,
+        },
       },
+      orderBy: [
+        {
+          song: {
+            playedCount: "desc",
+          },
+        },
+        {
+          song: {
+            likedCount: "desc",
+          },
+        },
+      ],
       select: {
-        id: true,
-        title: true,
-        artist: true,
-        thumbnail: true,
-        playedCount: true,
-        likedUsers: {
+        song: {
           select: {
-            userId: true,
+            id: true,
+            title: true,
+            artist: true,
+            thumbnail: true,
+            playedCount: true,
+            likedUsers: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
       },
