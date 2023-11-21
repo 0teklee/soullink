@@ -49,7 +49,6 @@ const useSongLike = () => {
 
     if (!songId) {
       throw new Error("Song id is not provided");
-      return;
     }
 
     mutate({ songId, userId });
