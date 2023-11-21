@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   };
 
   const recentDate = formatDateFilter(recent);
-  const isAll = param === "null";
+  const isAll = param === "null" || param === "undefined" || !param;
   const moodSearch = isAll
     ? {
         createdAt: {
