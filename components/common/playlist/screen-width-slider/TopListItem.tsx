@@ -8,13 +8,20 @@ import { useRouter } from "next/navigation";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { formatPathName } from "@/libs/utils/client/formatter";
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/libs/types/userType";
 
 const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
+  const { data: session } = useSession() as { data: UserSessionType };
+  const userId = session?.userId;
+
   const { title, author, description, coverImage, songs, likedBy } = playlist;
   const { nickname } = author;
   const cover = coverImage || `/image/common/default_cover_image.svg`;
-  const { playing, handleChangePlaylistState } =
-    useSelectedPlaylistPlay(playlist);
+  const { playing, handleChangePlaylistState } = useSelectedPlaylistPlay(
+    playlist,
+    userId,
+  );
   const router = useRouter();
 
   return (
