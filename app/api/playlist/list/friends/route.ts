@@ -1,37 +1,48 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import dayjs from "dayjs";
 
 export async function GET(req: Request) {
   try {
+    const now = dayjs();
+    const lastweek = now.subtract(1, "week");
     const userIdQuery = new URL(req.url).searchParams.get("userId");
     const userIdWhere = userIdQuery
       ? {
           OR: [
             {
-              author: {
-                followers: {
-                  some: {
-                    follower: {
-                      id: userIdQuery,
+              AND: [
+                {
+                  author: {
+                    followers: {
+                      some: {
+                        follower: {
+                          id: userIdQuery,
+                        },
+                      },
                     },
                   },
                 },
-              },
-            },
-            {
-              author: {
-                following: {
-                  some: {
+                {
+                  author: {
                     following: {
-                      id: userIdQuery,
+                      some: {
+                        following: {
+                          id: userIdQuery,
+                        },
+                      },
                     },
                   },
                 },
-              },
+              ],
             },
             {
               likedBy: {
                 some: {
+                  createdAt: {
+                    gte: lastweek.toDate(),
+                    lte: now.toDate(),
+                  },
                   user: {
                     followers: {
                       some: {
@@ -45,13 +56,19 @@ export async function GET(req: Request) {
               },
             },
             {
-              likedBy: {
+              recentPlay: {
                 some: {
+                  createdAt: {
+                    gte: lastweek.toDate(),
+                    lte: now.toDate(),
+                  },
                   user: {
-                    following: {
-                      some: {
-                        following: {
-                          id: userIdQuery,
+                    some: {
+                      followers: {
+                        some: {
+                          follower: {
+                            id: userIdQuery,
+                          },
                         },
                       },
                     },
@@ -66,7 +83,15 @@ export async function GET(req: Request) {
     const friendsList = await prisma.playlist.findMany({
       take: 20,
       where: userIdWhere,
-      orderBy: [{ likedCount: "desc" }, { playedCount: "desc" }],
+      orderBy: [
+        { playedCount: "desc" },
+        {
+          recentPlay: {
+            _count: "desc",
+          },
+        },
+        { likedCount: "desc" },
+      ],
       select: {
         id: true,
         title: true,
@@ -82,7 +107,20 @@ export async function GET(req: Request) {
         },
         authorId: true,
         playedCount: true,
-        songs: true,
+        songs: {
+          select: {
+            id: true,
+            title: true,
+            artist: true,
+            url: true,
+            likedCount: true,
+            likedUsers: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+        },
         likedBy: {
           select: {
             userId: true,
