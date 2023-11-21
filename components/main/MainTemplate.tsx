@@ -1,32 +1,32 @@
 import React from "react";
-import MainTrending from "@/components/main/MainTrending";
 import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
-import MainHotTracks from "@/components/main/MainHotTracks";
 import MainRecentPlayed from "@/components/main/MainRecentPlayed";
-import {
-  PlaylistType,
-  TrendingSongPlaylistType,
-} from "@/libs/types/song&playlistType";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import MainTodayList from "@/components/main/MainTodayList";
+import MainTimeline from "@/components/main/MainTimeline";
 
 const MainTemplate = ({
   propsData,
-  hotTracks,
   userId,
+  userNickname,
 }: {
   propsData: PlaylistType[][];
-  hotTracks: TrendingSongPlaylistType;
   userId?: string;
+  userNickname?: string;
 }) => {
-  const [todayList, trendingPlayLists, friendsPlayLists] = propsData;
+  const [todayList, timelinePlaylist, friendsPlayLists, recentPlaylist] =
+    propsData;
 
   return (
     <section className={`flex flex-col items-start py-6 gap-12 `}>
       <MainTodayList playlists={todayList} />
-      <MainTrending playLists={trendingPlayLists} />
+      <MainTimeline playlists={timelinePlaylist} userId={userId} />
       <MainFriendsPlaylists playLists={friendsPlayLists} userId={userId} />
-      <MainHotTracks trendingSongList={hotTracks} />
-      <MainRecentPlayed />
+      <MainRecentPlayed
+        propsData={recentPlaylist}
+        userId={userId}
+        userNickname={userNickname}
+      />
     </section>
   );
 };

@@ -16,11 +16,18 @@ export async function POST(req: Request) {
         where: { userId_songId: { userId, songId } },
       });
 
-      await prisma.song.update({
+      const likedBy = await prisma.song.update({
         where: { id: songId },
         data: {
           likedCount: {
             decrement: 1,
+          },
+        },
+        select: {
+          likedUsers: {
+            select: {
+              userId: true,
+            },
           },
         },
       });
@@ -28,6 +35,8 @@ export async function POST(req: Request) {
       return new NextResponse(
         JSON.stringify({
           message: "unlike success",
+          songId,
+          likedBy: likedBy.likedUsers,
         }),
         { status: 200, statusText: "OK" },
       );
@@ -40,11 +49,18 @@ export async function POST(req: Request) {
       },
     });
 
-    await prisma.song.update({
+    const likedBy = await prisma.song.update({
       where: { id: songId },
       data: {
         likedCount: {
           increment: 1,
+        },
+      },
+      select: {
+        likedUsers: {
+          select: {
+            userId: true,
+          },
         },
       },
     });
@@ -52,6 +68,8 @@ export async function POST(req: Request) {
     return new NextResponse(
       JSON.stringify({
         message: "like success",
+        songId,
+        likedUsers: likedBy.likedUsers,
       }),
       { status: 200, statusText: "OK" },
     );

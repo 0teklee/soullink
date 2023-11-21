@@ -2,12 +2,13 @@
 
 import { useMutation, useQueryClient } from "react-query";
 import { postSongLike } from "@/libs/utils/client/fetchers";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { CommonLoginModalState, playlistState } from "@/libs/recoil/atoms";
 
 const useSongLike = () => {
   const queryClient = useQueryClient();
   const setLoginModal = useSetRecoilState(CommonLoginModalState);
+  const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
 
   const { mutate } = useMutation({
     mutationFn: ({ songId, userId }: { songId: string; userId: string }) => {
@@ -16,8 +17,27 @@ const useSongLike = () => {
       }
       return postSongLike({ songId, userId: userId || "" });
     },
-    onSuccess: async () => {
-      await queryClient.resetQueries();
+    onSuccess: async (res) => {
+      await queryClient.invalidateQueries().then(() => {
+        if (
+          selectedPlaylist &&
+          selectedPlaylist.songs.filter((song) => song.id === res.songId)
+            .length > 0
+        ) {
+          setSelectedPlaylist({
+            ...selectedPlaylist,
+            songs: selectedPlaylist.songs.map((song) => {
+              if (song.id === res.songId) {
+                return {
+                  ...song,
+                  likedUsers: res.likedUsers,
+                };
+              }
+              return song;
+            }),
+          });
+        }
+      });
     },
   });
 
@@ -29,7 +49,6 @@ const useSongLike = () => {
 
     if (!songId) {
       throw new Error("Song id is not provided");
-      return;
     }
 
     mutate({ songId, userId });

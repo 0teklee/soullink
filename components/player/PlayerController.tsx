@@ -79,7 +79,6 @@ const PlayerController = ({
   const [isPlaylistLiked, setIsPlaylistLiked] = useState(isUserPlaylistLiked);
 
   const { playlistLikeMutate } = useMutatePlaylistLike();
-
   const { songLikeMutate } = useMutateSongLike();
 
   const handlePrev = () => {
@@ -270,15 +269,14 @@ const PlayerController = ({
           className={`flex items-center justify-evenly gap-2 xs:justify-start xs:flex-1 xs:gap-3`}
         >
           <div
-            className={`album_cover w-8 h-8 bg-gray-300 overflow-hidden  xs:hidden`}
+            className={`album_cover relative w-8 h-8 bg-gray-300 overflow-hidden  xs:hidden`}
           >
             <Image
-              className={`rounded`}
+              className={`object-cover rounded`}
               src={
                 playlist?.coverImage || `/image/common/default_cover_image.svg`
               }
-              width={32}
-              height={32}
+              fill={true}
               alt={`album_cover`}
             />
           </div>

@@ -8,9 +8,20 @@ export async function GET(req: Request) {
     if (!userId) {
       const nonLoginSuggestions = await prisma.playlist.findMany({
         take: 10,
-        orderBy: {
-          likedCount: "desc",
-        },
+        orderBy: [
+          { createdAt: "desc" },
+          {
+            recentPlay: {
+              _count: "desc",
+            },
+          },
+          {
+            likedCount: "desc",
+          },
+          {
+            playedTime: "desc",
+          },
+        ],
         select: {
           id: true,
           title: true,
@@ -67,117 +78,111 @@ export async function GET(req: Request) {
       );
     }
 
-    const userFavoritePlaylist = await prisma.playlist.findMany({
-      where: {
-        OR: [
-          {
-            likedCount: {
-              gte: 1,
-            },
-            author: {
-              followers: {
-                every: {
-                  followerId: userId,
+    const userLikeCategoriesMood = await prisma.user
+      .findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          likedPlayLists: {
+            take: 10,
+            orderBy: [
+              {
+                playlist: {
+                  recentPlay: {
+                    _count: "desc",
+                  },
                 },
               },
-            },
-          },
-          {
-            likedCount: {
-              gte: 1,
-            },
-            likedBy: {
-              every: {
-                user: {
-                  following: {
-                    some: {
-                      followingId: userId,
+              {
+                playlist: {
+                  recentPlay: {
+                    _count: "desc",
+                  },
+                },
+              },
+            ],
+            select: {
+              playlist: {
+                select: {
+                  category: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                  mood: {
+                    select: {
+                      name: true,
                     },
                   },
                 },
               },
             },
           },
-        ],
-      },
-      take: 10,
-      orderBy: {
-        likedCount: "desc",
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        createdAt: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-            isEditor: true,
-          },
-        },
-        likedBy: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                id: true,
-                nickname: true,
-                profilePic: true,
-                isEditor: true,
-              },
-            },
-          },
-        },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-          },
-        },
-        mood: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-
-    const followingUsers = await prisma.user
-      .findUnique({
-        where: {
-          id: userId,
-        },
-        select: {
-          id: true,
-          following: {
-            select: {
-              followingId: true,
-            },
-          },
         },
       })
-      .then((res) => res?.following || []);
+      .then((res) => {
+        if (!res) {
+          return {};
+        }
 
-    const userFollowingPlaylistPromise = await prisma.playlist.findMany({
+        const playlist = res.likedPlayLists.map(
+          (playlist) => playlist.playlist,
+        );
+        const likeCategories = playlist
+          .map((item) => item.category.map((category) => category.name))
+          .flat()
+          .filter((v, i, a) => a.indexOf(v) === i);
+
+        const likeMoods = playlist
+          .map((item) => item.mood.name)
+          .filter((v, i, a) => a.indexOf(v) === i);
+
+        return {
+          likeCategories,
+          likeMoods,
+        };
+      });
+
+    const { likeCategories, likeMoods } = userLikeCategoriesMood;
+
+    const userFavoritePlaylist = await prisma.playlist.findMany({
       where: {
-        AND: [
+        OR: [
           {
-            likedCount: {
-              gte: 1,
+            author: {
+              followers: {
+                some: {
+                  followerId: userId,
+                },
+              },
             },
           },
           {
             likedBy: {
-              every: {
-                userId: {
-                  in: followingUsers.map((user) => user.followingId),
+              some: {
+                user: {
+                  followers: {
+                    some: {
+                      followerId: userId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            mood: {
+              name: {
+                in: likeMoods,
+              },
+            },
+          },
+          {
+            category: {
+              some: {
+                name: {
+                  in: likeCategories,
                 },
               },
             },
@@ -185,9 +190,20 @@ export async function GET(req: Request) {
         ],
       },
       take: 10,
-      orderBy: {
-        likedCount: "desc",
-      },
+      orderBy: [
+        { createdAt: "desc" },
+        {
+          recentPlay: {
+            _count: "desc",
+          },
+        },
+        {
+          playedTime: "desc",
+        },
+        {
+          likedCount: "desc",
+        },
+      ],
       select: {
         id: true,
         title: true,
@@ -233,28 +249,10 @@ export async function GET(req: Request) {
       },
     });
 
-    const userFollowingPlaylist = await Promise.all(
-      userFollowingPlaylistPromise,
-    ).then((res) => {
-      return res.flat();
-    });
-
-    const userRecommendPlaylist = userFavoritePlaylist
-      .concat(userFollowingPlaylist)
-      .filter((playlist, index) => {
-        return (
-          index ===
-          userFavoritePlaylist.concat(userFollowingPlaylist).findIndex((p) => {
-            return p.id === playlist.id;
-          })
-        );
-      })
-      .sort((a, b) => b.likedCount - a.likedCount);
-
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        userRecommendPlaylist,
+        userRecommendPlaylist: userFavoritePlaylist,
       }),
       {
         status: 200,

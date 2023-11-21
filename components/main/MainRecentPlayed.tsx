@@ -5,21 +5,39 @@ import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import { useQuery } from "react-query";
-import { getRecentPlaylists } from "@/libs/utils/client/fetchers";
+import {
+  getLocalRecentPlaylists,
+  getRecentPlaylists,
+} from "@/libs/utils/client/fetchers";
 
-const MainRecentPlayed = ({ propsData }: { propsData?: PlaylistType[] }) => {
+const MainRecentPlayed = ({
+  propsData,
+  userId,
+  userNickname,
+}: {
+  propsData?: PlaylistType[];
+  userId?: string;
+  userNickname?: string;
+}) => {
   const [recentPlayedIds, setRecentPlayedIds] = useState("");
+  const [isLocal, setIsLocal] = useState(!userId);
 
-  const { data: playLists } = useQuery<PlaylistType[]>(
-    ["recentPlayed", recentPlayedIds],
-    () => getRecentPlaylists(recentPlayedIds),
-    { enabled: !!recentPlayedIds, initialData: propsData },
-  );
+  const { data: recentPlayedPlayLists, isSuccess: isRecentSuccess } = useQuery({
+    queryKey: ["recentPlayed", userId],
+    queryFn: !isLocal
+      ? () => getRecentPlaylists(userId)
+      : () => getLocalRecentPlaylists(recentPlayedIds),
+    onError: () => setIsLocal(true),
+    initialData: propsData,
+  });
+
+  const isDataSuccess = isRecentSuccess && recentPlayedPlayLists;
 
   useEffect(() => {
     if (recentPlayedIds || !localStorage) {
       return;
     }
+
     const recentPlayed = localStorage.getItem("recentPlaylist");
     if (recentPlayed) {
       setRecentPlayedIds(recentPlayed);
@@ -28,11 +46,15 @@ const MainRecentPlayed = ({ propsData }: { propsData?: PlaylistType[] }) => {
 
   return (
     <section className={`flex flex-col items-start w-full gap-4`}>
-      <Title text={`Recent Played`} size={`h1`} />
+      <Title
+        text={`Recently Played ${userNickname ? `by ${userNickname}` : ""}`}
+        size={`h1`}
+      />
       <Suspense fallback={<div>Loading...</div>}>
-        {playLists && playLists.length > 0 ? (
-          <PlayListSlider playLists={playLists} />
-        ) : (
+        {isDataSuccess && recentPlayedPlayLists?.length > 0 && (
+          <PlayListSlider playLists={recentPlayedPlayLists} />
+        )}
+        {isDataSuccess && recentPlayedPlayLists?.length === 0 && (
           <Title text={`No recent listening history`} size={`h2`} />
         )}
       </Suspense>

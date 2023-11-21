@@ -4,31 +4,24 @@ import {
   getMoodPlaylists,
   getTrendingCategoriesPlaylists,
   getTrendingMainPlaylists,
+  getTrendingSongs,
 } from "@/libs/utils/client/fetchers";
-import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 
 const Page = async () => {
-  const [mainInitData, categoryInitData, moodInitData] = await Promise.all([
+  const propsData = await Promise.all([
     getTrendingMainPlaylists(`0`),
     getTrendingCategoriesPlaylists(`0`),
     getMoodPlaylists(null, `0`),
+    getTrendingSongs(),
   ]);
 
-  return (
-    <PlaylistUpdateProvider
-      propsData={[
-        ...mainInitData,
-        ...(categoryInitData?.recentMostPlayedCategoryPlaylist || []),
-        ...moodInitData,
-      ]}
-    >
-      <TrendingTemplate
-        mainInitData={mainInitData}
-        categoryInitData={categoryInitData}
-        moodInitData={moodInitData}
-      />
-    </PlaylistUpdateProvider>
-  );
+  const { userId } =
+    ((await getServerSession(authOptions)) as UserSessionType) || {};
+
+  return <TrendingTemplate propsData={propsData} userId={userId} />;
 };
 
 export default Page;

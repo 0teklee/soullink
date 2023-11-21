@@ -40,7 +40,7 @@ export const filterMoodPlaylists = (
 ) => {
   if (!playlistArr) return [];
   const moodPlaylists = playlistArr.filter((playlist) => {
-    playlist.mood.name === moodType;
+    return playlist.mood.name === moodType;
   });
   return moodPlaylists;
 };

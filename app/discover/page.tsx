@@ -1,37 +1,33 @@
 import React from "react";
 import {
-  getAllMoodPlaylists,
   getCategoriesPlaylists,
+  getDiscoverMoodPlaylists,
   getEditorPlaylists,
+  getRecommendedPlaylists,
 } from "@/libs/utils/client/fetchers";
 import DiscoverTemplate from "@/components/discover/DiscoverTemplate";
-import PlaylistUpdateProvider from "@/components/common/playlist/PlaylistUpdateProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { UserSessionType } from "@/libs/types/userType";
 
 const Page = async () => {
-  const userId = await getServerSession(authOptions).then(
-    (res) => (res as UserSessionType)?.userId,
+  const { userId, userNickname } = await getServerSession(authOptions).then(
+    (session) => (session as UserSessionType) || {},
   );
 
-  const [editorPlaylists, allMoodPlaylists, categoryPlaylists] =
-    await Promise.all([
-      await getEditorPlaylists(),
-      await getAllMoodPlaylists(),
-      await getCategoriesPlaylists(userId),
-    ]);
+  const propsData = await Promise.all([
+    await getEditorPlaylists(),
+    await getDiscoverMoodPlaylists(),
+    await getCategoriesPlaylists(userId),
+    await getRecommendedPlaylists(userId || ""),
+  ]);
 
   return (
-    <PlaylistUpdateProvider
-      propsData={[...allMoodPlaylists, ...editorPlaylists]}
-    >
-      <DiscoverTemplate
-        moodPlaylists={allMoodPlaylists}
-        editorPlaylists={editorPlaylists}
-        getCategoriesPlaylists={categoryPlaylists}
-      />
-    </PlaylistUpdateProvider>
+    <DiscoverTemplate
+      propsData={propsData}
+      userId={userId}
+      userNickname={userNickname}
+    />
   );
 };
 

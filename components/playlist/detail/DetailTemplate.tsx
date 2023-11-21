@@ -38,8 +38,10 @@ const DetailTemplate = ({
     initialData: propsData,
   });
 
-  const { playing, handleChangePlaylistState } =
-    useSelectedPlaylistPlay(propsData);
+  const { playing, handleChangePlaylistState } = useSelectedPlaylistPlay(
+    propsData,
+    userId,
+  );
 
   const {
     title,

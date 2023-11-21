@@ -37,8 +37,10 @@ const PlaylistListItem = ({
   const userId = session?.userId;
 
   const router = useRouter();
-  const { playing, handleChangePlaylistState } =
-    useSelectedPlaylistPlay(playlist);
+  const { playing, handleChangePlaylistState } = useSelectedPlaylistPlay(
+    playlist,
+    userId,
+  );
   const { playlistLikeMutate } = useMutatePlaylistLike();
 
   const {
@@ -279,7 +281,9 @@ const PlaylistListItem = ({
           <div
             className={`flex flex-wrap items-center gap-1 text-gray-500 text-xs`}
           >
-            <CategoriesList categories={playlist.category} />
+            {playlist?.category && playlist.category.length > 0 && (
+              <CategoriesList categories={playlist.category} />
+            )}
           </div>
         </div>
       </div>

@@ -8,8 +8,6 @@ import {
 } from "@/libs/types/song&playlistType";
 
 import TableItem from "@/components/common/song/table/TableItem";
-import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/userType";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
@@ -20,17 +18,17 @@ const SongTable = ({
   setSongList,
   playlist,
   setIsModalOpen,
+  userId,
 }: {
   songList: SongType[] | CreateSongType[];
   setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
   isCreate?: boolean;
   setSongList?: Dispatch<SetStateAction<CreateSongType[]>>;
   playlist?: PlaylistType;
+  userId?: string;
 }) => {
   const setIsLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
-  const { data: session } = useSession() as { data: UserSessionType };
-  const userId = session?.userId;
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
 

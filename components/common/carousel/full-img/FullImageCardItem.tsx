@@ -1,23 +1,15 @@
 import React from "react";
-import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 
-const FullImageCardItem = ({
-  playlist,
-}: {
-  playlist: PlaylistType;
-  isEditor?: boolean;
-}) => {
+const FullImageCardItem = ({ playlist }: { playlist: PlaylistType }) => {
   const { title, author, description, coverImage, songs, likedBy } = playlist;
   const { nickname, isEditor: isAuthorEditor } = author;
   const likedByEditorUser = likedBy?.filter((user) => user.isEditor);
 
   const cover = coverImage || `/image/common/default_cover_image.svg`;
-  const { playing, handleChangePlaylistState } =
-    useSelectedPlaylistPlay(playlist);
   const router = useRouter();
 
   return (
