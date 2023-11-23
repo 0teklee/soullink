@@ -8,7 +8,7 @@ import PlaylistItem from "@/components/common/playlist/PlaylistItem";
 import "swiper/css";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 
-const PlayListSlider = ({ playLists }: { playLists: PlaylistType[] }) => {
+const PlayListSlider = ({ playlists }: { playlists: PlaylistType[] }) => {
   return (
     <>
       <div className={`w-full`}>
@@ -35,7 +35,7 @@ const PlayListSlider = ({ playLists }: { playLists: PlaylistType[] }) => {
             },
           }}
         >
-          {playLists.map((item, index) => {
+          {playlists.map((item, index) => {
             return (
               <SwiperSlide key={`slide_item_${item.id}_${index}`}>
                 <PlaylistItem playlistItem={item} />
