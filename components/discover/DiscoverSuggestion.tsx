@@ -27,7 +27,7 @@ const DiscoverSuggestion = ({
       <div className={`flex items-center justify-start gap-2`}>
         <Title size={`h1`} text={`Playlists for ${userNickname || "you"}`} />
       </div>
-      {data && data.length > 0 && <PlayListSlider playLists={data} />}
+      {data && data.length > 0 && <PlayListSlider playlists={data} />}
     </div>
   );
 };
