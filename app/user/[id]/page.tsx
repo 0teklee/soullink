@@ -1,14 +1,32 @@
 import React from "react";
 import UserTemplate from "@/components/user/UserTemplate";
 import {
+  getRecentPlaylists,
   getSingleUserProfile,
   getUsersPaths,
 } from "@/libs/utils/client/fetchers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
-  const userData = await getSingleUserProfile(id);
+  const [userData, recentPlayedPlaylist] = await Promise.all([
+    getSingleUserProfile(id),
+    getRecentPlaylists(id),
+  ]);
 
-  return <UserTemplate id={id} userProps={userData} />;
+  const { userId } = await getServerSession(authOptions).then(
+    (session) => (session as UserSessionType) || {},
+  );
+
+  return (
+    <UserTemplate
+      id={id}
+      userProps={userData}
+      userId={userId}
+      recentPlayed={recentPlayedPlaylist}
+    />
+  );
 };
 
 export default Page;

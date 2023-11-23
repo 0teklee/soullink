@@ -14,7 +14,7 @@ model User {
   email               String                 @unique
   nickname            String                 @unique @db.Char(20)
   bio                 String                 @db.Char(120)
-  profilePic          String?
+  profilePic          String?                @db.LongText()
   isBlocked           Boolean
   isEditor            Boolean                @default(false)
   blockReason         String                 @default("NULL")

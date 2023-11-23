@@ -1,28 +1,54 @@
 "use client";
 
 import React, { useState } from "react";
-import { UserSessionType, UserType } from "@/libs/types/userType";
+import { EditProfilePayload, UserType } from "@/libs/types/userType";
 import Image from "next/image";
 import BgColorExtract from "@/components/common/module/BgColorExtract";
-import { useMutation } from "react-query";
-import { postUserFollow } from "@/libs/utils/client/fetchers";
+import { useMutation, useQueryClient } from "react-query";
+import {
+  postNicknameDuplicate,
+  postUserEdit,
+  postUserFollow,
+} from "@/libs/utils/client/fetchers";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import CommonModal from "@/components/common/modal/CommonModal";
 import UserFollowModal from "@/components/user/module/UserFollowModal";
-import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  MinusIcon,
+  PlusIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import useTimer from "@/libs/utils/hooks/useTimer";
+import { handleImageUpload } from "@/libs/utils/client/commonUtils";
+import { useRouter } from "next/navigation";
+import DomPurifiedText from "@/components/common/module/DOMPurifiedText";
 
 const UserHeader = ({
   userProfile,
-  session,
+  userId,
 }: {
   userProfile: UserType;
-  session?: UserSessionType;
+  userId?: string;
 }) => {
+  const queryClient = useQueryClient();
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFollowerModal, setIsFollowerModal] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDuplicated, setIsDuplicated] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [editPayload, setEditPayload] = useState<EditProfilePayload>({
+    userId: userId || "",
+    nickname: userProfile.nickname,
+    profilePic: userProfile?.profilePic,
+    bio: userProfile?.bio,
+  });
 
   const {
     nickname,
@@ -34,26 +60,77 @@ const UserHeader = ({
     id: targetId,
   } = userProfile;
 
-  const isProfileOwner = session?.userId === targetId;
-  const isFollowing = followers?.some(
-    (user) => user.follower.id === session?.userId,
-  );
+  const isProfileOwner = userId === targetId;
+  const isFollowing = followers?.some((user) => user.follower.id === userId);
 
   const { mutate: followMutate } = useMutation({
-    mutationFn: () =>
-      postUserFollow({ targetId, userId: session?.userId || "" }),
+    mutationFn: () => postUserFollow({ targetId, userId: userId || "" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user"]);
+    },
   });
+
+  const { mutate: nicknameDuplicateMutate, isLoading: isDuplicateLoading } =
+    useMutation({
+      mutationFn: ({ nickname }: { nickname: string }) =>
+        postNicknameDuplicate({ nickname }),
+      onSuccess: (res) => {
+        setIsDuplicated(res);
+      },
+    });
+
+  const { mutate: editProfileMutate } = useMutation({
+    mutationFn: (payload: EditProfilePayload) => postUserEdit(payload),
+    onSuccess: (res) => {
+      queryClient.resetQueries(["user"]);
+      router.push(`/user/${res.userNickname}`);
+    },
+  });
+
+  const { timer, resetTimer } = useTimer(() => {
+    if (!editPayload.nickname) {
+      return;
+    }
+    if (editPayload.nickname === userProfile.nickname) {
+      setIsDuplicated(undefined);
+      return;
+    }
+    nicknameDuplicateMutate({ nickname: editPayload.nickname });
+  }, 500);
+
+  const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditPayload((prev) => ({
+      ...prev,
+      nickname: e.target.value,
+    }));
+
+    resetTimer(timer);
+  };
+
+  const handlePayloadImgUpload = (imgUrl: string) => {
+    setEditPayload((prev) => ({
+      ...prev,
+      profilePic: imgUrl,
+    }));
+  };
 
   const handleFollow = () => {
     if (isProfileOwner) {
       return;
     }
 
-    if (!session?.userId) {
+    if (!userId) {
       setLoginModalOpen(true);
       return;
     }
     followMutate();
+  };
+
+  const handleEditProfile = () => {
+    if (!editPayload.nickname || isDuplicated) {
+      return;
+    }
+    editProfileMutate(editPayload);
   };
 
   return (
@@ -94,8 +171,28 @@ const UserHeader = ({
                   </div>
                 )}
                 <div className={`relative w-[250px] h-[250px]`}>
+                  {isEdit && (
+                    <button
+                      onClick={() => {
+                        handleImageUpload(handlePayloadImgUpload);
+                      }}
+                      className={`absolute w-full h-full cursor-pointer z-10`}
+                    >
+                      <PhotoIcon
+                        className={`absolute top-0 right-0 z-10 text-white`}
+                        width={24}
+                        height={24}
+                      />
+                    </button>
+                  )}
                   <Image
-                    src={profilePic || "/image/common/default_cover_image.svg"}
+                    className={`object-cover`}
+                    src={
+                      isEdit
+                        ? editPayload?.profilePic ||
+                          "/image/common/default_cover_image.svg"
+                        : profilePic || "/image/common/default_cover_image.svg"
+                    }
                     alt={nickname}
                     fill={true}
                   />
@@ -103,7 +200,40 @@ const UserHeader = ({
               </div>
               <div className={`flex flex-col items-center gap-1`}>
                 <div className={`flex items-center justify-center`}>
-                  <p className={`text-2xl font-semibold `}>{nickname}</p>
+                  {!isEdit && (
+                    <p className={`text-2xl font-semibold `}>{nickname}</p>
+                  )}
+                  {isEdit && (
+                    <div className={`relative`}>
+                      <input
+                        type="text"
+                        className={`appearance-none text-center text-2xl font-semibold text-bg-difference bg-transparent border-b-2 border-[text-bg-difference] focus:outline-none focus:border-primary`}
+                        onChange={handleNickNameChange}
+                        onKeyUp={() => resetTimer(timer)}
+                        value={editPayload.nickname}
+                      />
+                      {isDuplicated !== undefined && (
+                        <div className={`w-full mt-0.5`}>
+                          {isDuplicated && (
+                            <div
+                              className={`flex items-center gap-1 text-pink-700`}
+                            >
+                              <XMarkIcon className={`w-4 h-4`} />
+                              <p className={`text-xs`}>nickname already used</p>
+                            </div>
+                          )}
+                          {isDuplicated === false && (
+                            <div
+                              className={`flex items-center gap-1 text-primary`}
+                            >
+                              <CheckIcon className={`w-4 h-4`} />
+                              <p className={`text-xs`}>available</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className={`bg-transparent`}>
                   <div className={`mb-1`}>
@@ -130,15 +260,80 @@ const UserHeader = ({
                         follower {followers?.length}
                       </button>
                     </div>
+                    {isProfileOwner && (
+                      <div
+                        className={`flex justify-between gap-2 my-3 text-sm`}
+                      >
+                        <button
+                          className={`w-full px-2 py-1  ${
+                            isEdit
+                              ? `text-primary rounded border border-primary hover:text-white hover:bg-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-primary`
+                              : ``
+                          }`}
+                          disabled={
+                            isEdit && (isDuplicated || isDuplicateLoading)
+                          }
+                          onClick={() => {
+                            if (isEdit) {
+                              handleEditProfile();
+                            }
+
+                            if (!isEdit) {
+                              setEditPayload((prev) => ({
+                                ...prev,
+                                nickname: userProfile.nickname,
+                                profilePic: userProfile?.profilePic,
+                                bio: userProfile?.bio,
+                              }));
+                            }
+                            setIsEdit((prev) => !prev);
+                          }}
+                        >
+                          {isEdit ? `Complete` : `Edit Profile`}
+                        </button>
+                        <button
+                          className={`w-full px-2 py-1 ${
+                            isEdit
+                              ? `text-pink-700 rounded border border-pink-700 hover:text-white hover:bg-pink-700`
+                              : `hidden`
+                          }`}
+                          onClick={() => {
+                            setIsEdit(false);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-            <div>
-              <div
-                className={`w-full max-w-5xl line-clamp-[12] overflow-ellipsis`}
-              >
-                <p className={`text-base `}>{!!bio && bio}</p>
+            <div className={`w-full`}>
+              <div className={`w-full line-clamp-[12] overflow-ellipsis`}>
+                {!!bio && !isEdit && (
+                  <div className={`text-base `}>
+                    <DomPurifiedText text={bio} />
+                  </div>
+                )}
+                {isEdit && (
+                  <div className={`w-full`}>
+                    <textarea
+                      className={`appearance-none w-full text-base font-normal text-bg-difference bg-transparent border-b-2 border-[text-bg-difference] focus:outline-none focus:border-primary`}
+                      onChange={(e) =>
+                        setEditPayload((prev) => ({
+                          ...prev,
+                          bio: e.target.value,
+                        }))
+                      }
+                      value={editPayload.bio}
+                      maxLength={120}
+                    />
+                    <p className={`text-sm text-bg-difference`}>
+                      {editPayload?.bio ? editPayload?.bio?.length : 0}/120
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

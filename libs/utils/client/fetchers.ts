@@ -10,12 +10,15 @@ import {
 import {
   CommentPayloadType,
   CommentType,
+  EditProfilePayload,
   PayloadCommentDeleteType,
   PayloadCommentLikeType,
   PostFollowType,
   UserType,
 } from "@/libs/types/userType";
 import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
+
+import { formatEditUserPayload } from "@/libs/utils/client/formatter";
 
 /* Playlist Fetchers */
 /* GET */
@@ -411,6 +414,34 @@ export const postUserFollow = async (request: PostFollowType) => {
   const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/follow`, {
     method: "POST",
     body: JSON.stringify(request),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+  return data;
+};
+
+export const postNicknameDuplicate = async (request: { nickname: string }) => {
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/user/duplicate`,
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const data = await res.json();
+  return data.isDuplicate;
+};
+
+export const postUserEdit = async (request: EditProfilePayload) => {
+  const formattedData = formatEditUserPayload(request);
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/edit`, {
+    method: "PATCH",
+    body: JSON.stringify(formattedData),
     headers: {
       "Content-Type": "application/json",
     },

@@ -52,7 +52,7 @@ const MainRecentPlayed = ({
       />
       <Suspense fallback={<div>Loading...</div>}>
         {isDataSuccess && recentPlayedPlayLists?.length > 0 && (
-          <PlayListSlider playLists={recentPlayedPlayLists} />
+          <PlayListSlider playlists={recentPlayedPlayLists} />
         )}
         {isDataSuccess && recentPlayedPlayLists?.length === 0 && (
           <Title text={`No recent listening history`} size={`h2`} />

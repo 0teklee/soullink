@@ -1,8 +1,12 @@
-import { CommentAuthorInterface } from "@/libs/types/userType";
+import {
+  CommentAuthorInterface,
+  EditProfilePayload,
+} from "@/libs/types/userType";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { emptyRegex, titleRegex } from "@/libs/utils/client/commonValues";
 import { PlaylistMoodType } from "@/libs/types/song&playlistType";
+import { sanitize } from "isomorphic-dompurify";
 
 dayjs.extend(isBetween);
 
@@ -128,4 +132,34 @@ export const formatMoodFontColor = (
     default:
       return isHover ? "hover:text-[#01FF00]" : "text-[#01FF00]";
   }
+};
+
+export const formatInputText = (text: string) => {
+  const regex = /<br\s*[\/]?>/gi;
+  const tagRegex = /<[^>]*>?/gm;
+  const formatted = text.trim().replace(regex, "\n").replace(tagRegex, "");
+
+  return sanitize(formatted);
+};
+
+export const formatEditUserPayload = (payload: EditProfilePayload) => {
+  const formatted = { ...payload } as EditProfilePayload;
+
+  for (const key in payload) {
+    if (!formatted[key as keyof EditProfilePayload]) {
+      delete formatted[key as keyof EditProfilePayload];
+    }
+    if (key === "bio" && formatted.bio) {
+      formatted[key as keyof EditProfilePayload] = formatInputText(
+        formatted.bio,
+      );
+    }
+
+    if (key === "nickname" && formatted.nickname) {
+      formatted[key as keyof EditProfilePayload] = formatInputText(
+        formatted.nickname.trim(),
+      );
+    }
+  }
+  return formatted;
 };
