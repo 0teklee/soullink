@@ -1,8 +1,8 @@
 import React from "react";
-import { sanitize } from "isomorphic-dompurify";
+import { formatInputText } from "@/libs/utils/client/formatter";
 
 const DomPurifiedText = ({ text }: { text: string }) => {
-  const purified = sanitize(text);
+  const purified = formatInputText(text);
   return <div dangerouslySetInnerHTML={{ __html: purified }} />;
 };
 
