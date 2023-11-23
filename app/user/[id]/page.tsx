@@ -15,7 +15,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
     getRecentPlaylists(id),
   ]);
 
-  const { userId, userNickname } = await getServerSession(authOptions).then(
+  const { userId } = await getServerSession(authOptions).then(
     (session) => (session as UserSessionType) || {},
   );
 
