@@ -107,6 +107,18 @@ export interface SignupPayload {
   };
 }
 
+export interface EditProfilePayload {
+  userId: string;
+  profilePic?: string;
+  nickname?: string;
+  bio?: string;
+  socialLinks?: {
+    website?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+}
+
 export interface PostFollowType {
   userId: string;
   targetId: string;
