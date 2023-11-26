@@ -15,6 +15,8 @@ model User {
   nickname            String                 @unique @db.Char(20)
   bio                 String                 @db.Char(120)
   profilePic          String?                @db.LongText()
+  profileColor        String?                @db.LongText()
+  profileBgColor      String?                @db.LongText()
   isBlocked           Boolean
   isEditor            Boolean                @default(false)
   blockReason         String                 @default("NULL")
@@ -52,6 +54,8 @@ model Playlist {
   description String                 @db.MediumText
   author      User                   @relation(fields: [authorId], references: [id])
   authorId    String
+  bannerColor String?                @db.LongText()
+  bgColor     String?                @db.LongText()
   songs       Song[]
   comments    Comment[]
   likedBy     PlaylistLikedByUsers[]
