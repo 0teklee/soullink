@@ -1,6 +1,6 @@
 "use client";
 import { useRecoilValue } from "recoil";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postSongCount } from "@/libs/utils/client/fetchers";
 import dayjs from "dayjs";
 import { playerGlobalState } from "@/libs/recoil/atoms";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSongLike } from "@/libs/utils/client/fetchers";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { CommonLoginModalState, playlistState } from "@/libs/recoil/atoms";
@@ -18,26 +18,30 @@ const useSongLike = () => {
       return postSongLike({ songId, userId: userId || "" });
     },
     onSuccess: async (res) => {
-      await queryClient.invalidateQueries().then(() => {
-        if (
-          selectedPlaylist &&
-          selectedPlaylist.songs.filter((song) => song.id === res.songId)
-            .length > 0
-        ) {
-          setSelectedPlaylist({
-            ...selectedPlaylist,
-            songs: selectedPlaylist.songs.map((song) => {
-              if (song.id === res.songId) {
-                return {
-                  ...song,
-                  likedUsers: res.likedUsers,
-                };
-              }
-              return song;
-            }),
-          });
-        }
-      });
+      await queryClient
+        .invalidateQueries({
+          type: "all",
+        })
+        .then(() => {
+          if (
+            selectedPlaylist &&
+            selectedPlaylist.songs.filter((song) => song.id === res.songId)
+              .length > 0
+          ) {
+            setSelectedPlaylist({
+              ...selectedPlaylist,
+              songs: selectedPlaylist.songs.map((song) => {
+                if (song.id === res.songId) {
+                  return {
+                    ...song,
+                    likedUsers: res.likedUsers,
+                  };
+                }
+                return song;
+              }),
+            });
+          }
+        });
     },
   });
 

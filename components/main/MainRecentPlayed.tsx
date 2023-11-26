@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   getLocalRecentPlaylists,
   getRecentPlaylists,
@@ -27,11 +27,16 @@ const MainRecentPlayed = ({
     queryFn: !isLocal
       ? () => getRecentPlaylists(userId)
       : () => getLocalRecentPlaylists(recentPlayedIds),
-    onError: () => setIsLocal(true),
     initialData: propsData,
   });
 
   const isDataSuccess = isRecentSuccess && recentPlayedPlayLists;
+
+  useEffect(() => {
+    if (!userId) {
+      setIsLocal(true);
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (recentPlayedIds || !localStorage) {

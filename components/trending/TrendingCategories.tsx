@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import {
   DAYS_FILTER,
   DAYS_FILTER_ARR,
@@ -35,24 +35,26 @@ const TrendingCategories = ({
   const [isSearchOn, setIsSearchOn] = useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 
-  const [trendingCategoriesQuery, categoriesFilterQuery] = useQueries([
-    {
-      queryKey: ["trendingCategories", period],
-      queryFn: () => getTrendingCategoriesPlaylists(`${period}`),
-      enabled: selectedCategoryFilter.length === 0,
-      initialData: initData,
-      cacheTime: QUERY_CACHE_TIME,
-      staleTime: QUERY_STALE_TIME,
-    },
-    {
-      queryKey: ["filteredCategories", period],
-      queryFn: () =>
-        getFilteredCategoriesPlaylists(`${period}`, selectedCategoryFilter),
-      enabled: selectedCategoryFilter.length > 0,
-      cacheTime: QUERY_CACHE_TIME,
-      staleTime: QUERY_STALE_TIME,
-    },
-  ]);
+  const [trendingCategoriesQuery, categoriesFilterQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["trendingCategories", period],
+        queryFn: () => getTrendingCategoriesPlaylists(`${period}`),
+        enabled: selectedCategoryFilter.length === 0,
+        initialData: initData,
+        gcTime: QUERY_CACHE_TIME,
+        staleTime: QUERY_STALE_TIME,
+      },
+      {
+        queryKey: ["filteredCategories", period],
+        queryFn: () =>
+          getFilteredCategoriesPlaylists(`${period}`, selectedCategoryFilter),
+        enabled: selectedCategoryFilter.length > 0,
+        gcTime: QUERY_CACHE_TIME,
+        staleTime: QUERY_STALE_TIME,
+      },
+    ],
+  });
 
   const { data: trendingData, refetch: trendingRefetch } =
     trendingCategoriesQuery;

@@ -8,7 +8,7 @@ import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 import SongTable from "@/components/common/song/table/SongTable";
 import { PlaylistType } from "@/libs/types/song&playlistType";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import {
   getRecentPlaylists,
   getSingleUserProfile,
@@ -30,22 +30,24 @@ const UserTemplate = ({
   recentPlayed?: PlaylistType[];
   userId?: string;
 }) => {
-  const [userDataQuery, recentQuery] = useQueries([
-    {
-      queryKey: ["user", id],
-      queryFn: () => getSingleUserProfile(id),
-      enabled: !!id,
-      initialData: userProps,
-      cacheTime: QUERY_CACHE_TIME,
-      staleTime: QUERY_STALE_TIME,
-    },
-    {
-      queryKey: ["recentPlayed", id],
-      queryFn: () => getRecentPlaylists(userProps?.id),
-      enabled: !!userProps?.id,
-      initialData: recentPlayed,
-    },
-  ]);
+  const [userDataQuery, recentQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["user", id],
+        queryFn: () => getSingleUserProfile(id),
+        enabled: !!id,
+        initialData: userProps,
+        gcTime: QUERY_CACHE_TIME,
+        staleTime: QUERY_STALE_TIME,
+      },
+      {
+        queryKey: ["recentPlayed", id],
+        queryFn: () => getRecentPlaylists(userProps?.id),
+        enabled: !!userProps?.id,
+        initialData: recentPlayed,
+      },
+    ],
+  });
 
   const { data: userData } = userDataQuery || {};
   const { data: recentPlayedPlayLists } = recentQuery || {};

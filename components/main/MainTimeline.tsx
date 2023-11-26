@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getTimelinePlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/libs/types/song&playlistType";

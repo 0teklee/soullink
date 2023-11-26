@@ -4,7 +4,7 @@ import React from "react";
 import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import FullImageCardContainer from "@/components/common/carousel/full-img/FullImageCardContainer";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getEditorPlaylists } from "@/libs/utils/client/fetchers";
 import {
   QUERY_CACHE_TIME,
@@ -20,7 +20,7 @@ const DiscoverEditorSelection = ({
     queryKey: ["editorPlaylists"],
     queryFn: () => getEditorPlaylists(),
     initialData: editorPlaylists,
-    cacheTime: QUERY_CACHE_TIME,
+    gcTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
 

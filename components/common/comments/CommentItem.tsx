@@ -15,7 +15,7 @@ import {
   postDeleteComment,
   postLikeComment,
 } from "@/libs/utils/client/fetchers";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import { useRouter } from "next/navigation";

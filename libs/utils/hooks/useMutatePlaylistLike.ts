@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postPlaylistLike } from "@/libs/utils/client/fetchers";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { CommonLoginModalState, playlistState } from "@/libs/recoil/atoms";
@@ -19,7 +19,9 @@ const UseMutatePlaylistLike = () => {
       userId: string;
     }) => postPlaylistLike({ playlistId, userId }),
     onSuccess: async (res) => {
-      await queryClient.invalidateQueries();
+      await queryClient.refetchQueries({
+        type: "all",
+      });
 
       if (selectedPlaylist && selectedPlaylist.id === res.playlistId) {
         setSelectedPlaylist({

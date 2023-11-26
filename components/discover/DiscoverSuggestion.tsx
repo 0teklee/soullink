@@ -2,7 +2,7 @@
 
 import React from "react";
 import Title from "@/components/common/module/Title";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getRecommendedPlaylists } from "@/libs/utils/client/fetchers";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import { PlaylistType } from "@/libs/types/song&playlistType";

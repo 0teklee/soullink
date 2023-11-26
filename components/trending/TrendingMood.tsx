@@ -7,7 +7,7 @@ import {
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
 } from "@/libs/utils/client/commonValues";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import { getMoodLists, getMoodPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
@@ -21,21 +21,23 @@ const TrendingMood = ({ initData }: { initData: PlaylistType[] }) => {
     null,
   );
 
-  const [moodPlaylistQuery, moodListQuery] = useQueries([
-    {
-      queryKey: ["trendingMood", period, selectedMood],
-      queryFn: () => getMoodPlaylists(selectedMood, `${period}`),
-      initialData: initData,
-      cacheTime: QUERY_CACHE_TIME,
-      staleTime: QUERY_STALE_TIME,
-    },
-    {
-      queryKey: ["filteredMood", period],
-      queryFn: () => getMoodLists(`${period}`),
-      cacheTime: QUERY_CACHE_TIME,
-      staleTime: QUERY_STALE_TIME,
-    },
-  ]);
+  const [moodPlaylistQuery, moodListQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["trendingMood", period, selectedMood],
+        queryFn: () => getMoodPlaylists(selectedMood, `${period}`),
+        initialData: initData,
+        gcTime: QUERY_CACHE_TIME,
+        staleTime: QUERY_STALE_TIME,
+      },
+      {
+        queryKey: ["filteredMood", period],
+        queryFn: () => getMoodLists(`${period}`),
+        gcTime: QUERY_CACHE_TIME,
+        staleTime: QUERY_STALE_TIME,
+      },
+    ],
+  });
 
   const { data: moodPlaylistData, refetch: trendingRefetch } =
     moodPlaylistQuery;
