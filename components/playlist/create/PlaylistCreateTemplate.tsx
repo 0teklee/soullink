@@ -6,8 +6,9 @@ import Image from "next/image";
 import SongTable from "@/components/common/song/table/SongTable";
 import PlaylistSongModal from "@/components/playlist/create/PlaylistSongModal";
 import {
-  CreatePlaylistType,
-  CreateSongType,
+  PlaylistCreateRequestType,
+  PlaylistMoodType,
+  SongType,
 } from "@/libs/types/song&playlistType";
 import PlaylistCreateSubmit from "@/components/playlist/create/PlaylistCreateSubmit";
 import { useSession } from "next-auth/react";
@@ -16,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import { getSingleUserProfile } from "@/libs/utils/client/fetchers";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -25,6 +26,7 @@ import {
 import { commonMoods } from "@/libs/utils/client/commonValues";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import { formatMoodBgColor } from "@/libs/utils/client/formatter";
+import CommonModal from "@/components/common/modal/CommonModal";
 
 const PlaylistCreateTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };
@@ -33,14 +35,14 @@ const PlaylistCreateTemplate = () => {
   const router = useRouter();
   const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
-  const [songList, setSongList] = useState<CreateSongType[]>([]);
-  const [payload, setPayload] = useState<CreatePlaylistType>({
+  const [songList, setSongList] = useState<SongType[]>([]);
+  const [payload, setPayload] = useState<PlaylistCreateRequestType>({
     title: "",
     description: "",
     coverImage: "",
     songs: songList,
-    mood: "",
     categories: [],
+    mood: "" as PlaylistMoodType,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMaxSongList, setIsMaxSongList] = useState(false);
@@ -49,18 +51,15 @@ const PlaylistCreateTemplate = () => {
 
   const { title, description, songs, mood: currentMood, categories } = payload;
 
-  const { data: userData } = useQuery(
-    ["user", userId],
-    () => {
-      if (!userId) {
-        return;
-      }
-      getSingleUserProfile(userId);
+  const { data: userData } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => {
+      return userId ? getSingleUserProfile(userId) : null;
     },
-    { enabled: !!userId },
-  );
+    enabled: !!userId,
+  });
 
-  const { likedSong } = userData || { likedSong: [] };
+  const { likedSong } = userData || {};
 
   const isPayloadValid =
     !!title &&
@@ -257,7 +256,6 @@ const PlaylistCreateTemplate = () => {
             isCreate={true}
             setSongList={setSongList}
           />
-
           <p
             className={`${
               isMaxSongList ? "text-pink-600" : "text-gray-300"
@@ -265,7 +263,6 @@ const PlaylistCreateTemplate = () => {
           >
             *You can add up to 20 songs to the list
           </p>
-
           <button
             className={`flex items-center gap-1`}
             onClick={() => {
@@ -285,14 +282,17 @@ const PlaylistCreateTemplate = () => {
             <span className={`text-gray-400`}>add</span>
           </button>
         </div>
-        <div className={`w-full`}>
-          <Title size={`h3`} text={`Your Favorite Songs`} />
-          <SongTable
-            songList={likedSong as CreateSongType[]}
-            isCreate={true}
-            setSongList={setSongList}
-          />
-        </div>
+        {likedSong && likedSong?.songs && likedSong?.songs?.length > 0 && (
+          <div className={`w-full`}>
+            <Title size={`h3`} text={`Your Favorite Songs`} />
+            <SongTable
+              songList={(likedSong?.songs as SongType[]) || []}
+              isCreate={true}
+              isCreateFavorite={true}
+              setSongList={setSongList}
+            />
+          </div>
+        )}
         <div
           className={`flex flex-col items-start w-full pr-12 xs:pr-0 xs:w-[300px] xs:items-center xs:justify-center`}
         >
@@ -342,13 +342,14 @@ const PlaylistCreateTemplate = () => {
           payload={payload}
           userId={userId}
         />
-        {isModalOpen && (
+
+        <CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
           <PlaylistSongModal
             setModalOpen={setIsModalOpen}
             setSongList={setSongList}
             setPayload={setPayload}
           />
-        )}
+        </CommonModal>
       </div>
     </section>
   );
