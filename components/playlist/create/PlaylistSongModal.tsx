@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 
 import Title from "@/components/common/module/Title";
@@ -39,7 +33,6 @@ const PlaylistSongModal = ({
   setPayload: Dispatch<SetStateAction<PlaylistCreateRequestType>>;
 }) => {
   const queryClient = useQueryClient();
-  const youtubePageParam = useRef<string>("");
   const { ref: infiniteQueryRef, inView } = useInView();
 
   const [page, setPage] = useState("submit");
@@ -54,19 +47,14 @@ const PlaylistSongModal = ({
   const [isYoutubeError, setIsYoutubeError] = useState<boolean>(false);
 
   const {
-    error,
     data: youtubeData,
-    isSuccess,
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
     queryKey: ["youtube", searchWord],
     queryFn: async () => {
-      const res = await getYoutubeSearchResult(
-        searchWord,
-        youtubePageParam.current as string,
-      );
+      const res = await getYoutubeSearchResult(searchWord, "");
 
       if (!res) {
         setIsYoutubeError(true);
@@ -74,7 +62,9 @@ const PlaylistSongModal = ({
       }
       return res;
     },
-    getNextPageParam: () => undefined,
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPageToken;
+    },
     initialPageParam: "",
     throwOnError: false,
     enabled: !!searchWord && isTypingDone,
@@ -120,16 +110,6 @@ const PlaylistSongModal = ({
   };
 
   useEffect(() => {
-    if (
-      isSuccess &&
-      youtubeData?.pages[youtubeData?.pages.length - 1]?.nextPageToken
-    ) {
-      youtubePageParam.current =
-        youtubeData?.pages[youtubeData?.pages.length - 1]?.nextPageToken;
-    }
-  }, [isSuccess, youtubeData]);
-
-  useEffect(() => {
     if (!searchWord) {
       queryClient.invalidateQueries({ queryKey: ["youtube"] });
       return;
@@ -137,7 +117,7 @@ const PlaylistSongModal = ({
   }, [searchWord]);
 
   useEffect(() => {
-    if (inView && !isLoading && !isFetchingNextPage && !isLast && !error) {
+    if (inView && !isLoading && !isFetchingNextPage && !isLast) {
       fetchNextPage();
     }
   }, [inView]);
@@ -362,12 +342,16 @@ const PlaylistSongModal = ({
                   );
                 });
               })}
-            {isDataLoaded && !error && (
-              <div
-                className={`py-5 bg-transparent opacity-0`}
-                ref={infiniteQueryRef}
-              />
-            )}
+            {isDataLoaded &&
+              !isFetchingNextPage &&
+              !isYoutubeError &&
+              !isLast &&
+              !isLoading && (
+                <div
+                  className={`py-5 bg-transparent opacity-0`}
+                  ref={infiniteQueryRef}
+                />
+              )}
           </div>
           {isYoutubeError && (
             <div
