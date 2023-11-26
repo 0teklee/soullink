@@ -19,6 +19,7 @@
 - **Add index on Playlist songs**
 - **Add Error boundary & common error handler with toast alert**
 - **Add Suspense boundary**
+- **Add Modal provider & modal logic abstract**
 - Add optimistic update
 - Manage Modal with global state & move it to RootLayout
 - Add "Frequency" filter to common filters (search, table list)
