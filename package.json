@@ -14,6 +14,8 @@
   "dependencies": {
     "@heroicons/react": "^2.0.17",
     "@prisma/client": "^5.0.0",
+    "@tanstack/react-query": "^5.8.7",
+    "@tanstack/react-query-devtools": "^5.8.7",
     "@types/node": "18.15.11",
     "@types/react": "18.0.31",
     "@types/react-dom": "18.0.11",
@@ -26,9 +28,12 @@
     "next-auth": "^4.23.1",
     "prisma": "^5.5.2",
     "react": "18.2.0",
+    "react-color": "^2.19.3",
     "react-dom": "18.2.0",
+    "react-error-boundary": "^4.0.11",
+    "react-intersection-observer": "^9.5.3",
     "react-player": "^2.10.0",
-    "react-query": "^3.39.3",
+    "react-toast": "^1.0.3",
     "recoil": "^0.7.7",
     "swiper": "^10.2.0",
     "typescript": "5.0.3"
