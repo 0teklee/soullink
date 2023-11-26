@@ -4,7 +4,7 @@ import { PlaylistCreateRequestType } from "@/libs/types/song&playlistType";
 
 export async function POST(req: Request) {
   try {
-    const request: PlaylistCreateRequestType = await req
+    const request: PlaylistCreateRequestType & { userId: string } = await req
       .json()
       .then((data) => data);
     const playlist = await prisma.playlist.create({
