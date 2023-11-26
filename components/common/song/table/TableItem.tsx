@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  CreateSongType,
-  PlaylistType,
-  SongType,
-} from "@/libs/types/song&playlistType";
+import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import {
   HeartIcon,
   MinusCircleIcon,
   PauseIcon,
   PlayIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useSetPlaylistFromSongTable } from "@/libs/utils/hooks/useSetPlaylistFromSongTable";
 import { useRouter } from "next/navigation";
@@ -19,15 +16,17 @@ const TableItem = ({
   index,
   handleLikeSong,
   isCreate,
+  isCreateFavorite,
   setSongList,
   playlist,
   userId,
 }: {
-  song: SongType | CreateSongType;
+  song: SongType;
   index: number;
   handleLikeSong?: (songId: string, userId?: string) => void;
   isCreate?: boolean;
-  setSongList?: React.Dispatch<React.SetStateAction<CreateSongType[]>>;
+  isCreateFavorite?: boolean;
+  setSongList?: React.Dispatch<React.SetStateAction<SongType[]>>;
   playlist?: PlaylistType;
   userId?: string;
 }) => {
@@ -52,7 +51,6 @@ const TableItem = ({
       return;
     }
     playSongFromTable(playlist);
-    router.refresh();
   };
 
   useEffect(() => {
@@ -130,7 +128,7 @@ const TableItem = ({
           </td>
         </>
       )}
-      {isCreate && setSongList && (
+      {isCreate && !isCreateFavorite && setSongList && (
         <td className={`flex items-center py-2 xs:hidden`}>
           <button
             className={`relative top-0.5 text-gray-500 text-sm font-medium`}
@@ -139,6 +137,22 @@ const TableItem = ({
             }}
           >
             <MinusCircleIcon
+              className={` hover:text-gray-100`}
+              width={20}
+              height={20}
+            />
+          </button>
+        </td>
+      )}
+      {isCreate && isCreateFavorite && setSongList && (
+        <td className={`flex items-center py-2 xs:hidden`}>
+          <button
+            className={`relative top-0.5 text-gray-500 text-sm font-medium`}
+            onClick={() => {
+              setSongList((prev) => [...prev, song]);
+            }}
+          >
+            <PlusCircleIcon
               className={` hover:text-gray-100`}
               width={20}
               height={20}
