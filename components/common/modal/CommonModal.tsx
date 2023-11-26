@@ -24,7 +24,7 @@ const ModalContainer = ({
       onClick={(e) => {
         e.stopPropagation();
       }}
-      className={`w-fit px-10 py-8 bg-white rounded-lg shadow-xl`}
+      className={`w-fit max-h-[calc(100vh-180px)] overflow-y-scroll px-10 py-8 bg-white rounded-lg shadow-xl`}
     >
       {children}
     </div>
