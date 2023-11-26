@@ -42,6 +42,16 @@ export async function GET(req: Request) {
         },
         likedBy: true,
         playedCount: true,
+        mood: {
+          select: {
+            name: true,
+          },
+        },
+        category: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 

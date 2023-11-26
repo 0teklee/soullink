@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { EditProfilePayload, UserType } from "@/libs/types/userType";
 import Image from "next/image";
 import BgColorExtract from "@/components/common/module/BgColorExtract";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   postNicknameDuplicate,
   postUserEdit,
@@ -66,11 +66,11 @@ const UserHeader = ({
   const { mutate: followMutate } = useMutation({
     mutationFn: () => postUserFollow({ targetId, userId: userId || "" }),
     onSuccess: () => {
-      queryClient.invalidateQueries(["user"]);
+      queryClient.invalidateQueries({ refetchType: "all" });
     },
   });
 
-  const { mutate: nicknameDuplicateMutate, isLoading: isDuplicateLoading } =
+  const { mutate: nicknameDuplicateMutate, isPending: isDuplicateLoading } =
     useMutation({
       mutationFn: ({ nickname }: { nickname: string }) =>
         postNicknameDuplicate({ nickname }),
@@ -82,7 +82,7 @@ const UserHeader = ({
   const { mutate: editProfileMutate } = useMutation({
     mutationFn: (payload: EditProfilePayload) => postUserEdit(payload),
     onSuccess: (res) => {
-      queryClient.resetQueries(["user"]);
+      queryClient.refetchQueries({ type: "all" });
       router.push(`/user/${res.userNickname}`);
     },
   });

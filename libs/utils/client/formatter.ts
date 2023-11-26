@@ -5,7 +5,11 @@ import {
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { emptyRegex, titleRegex } from "@/libs/utils/client/commonValues";
-import { PlaylistMoodType } from "@/libs/types/song&playlistType";
+import {
+  PlaylistCreateRequestType,
+  PlaylistMoodType,
+  SongType,
+} from "@/libs/types/song&playlistType";
 import { sanitize } from "isomorphic-dompurify";
 
 dayjs.extend(isBetween);
@@ -24,11 +28,17 @@ export const formatPathName = (title: string): string => {
 };
 
 export const formatSongNames = (title: string): string => {
-  return decodeURIComponent(title)
+  return title
     .replace("VEVO", "")
     .replace(titleRegex, "")
     .replace(emptyRegex, "")
     .replace(" - ", " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#39;/g, "'")
     .trim();
 };
 
@@ -142,6 +152,22 @@ export const formatInputText = (text: string) => {
   return sanitize(formatted);
 };
 
+export const formatIsSongCustomUrlValid = (
+  customUrl: string,
+  availDomain: string[],
+) => {
+  const urlRegex =
+    /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z0-9-]+)(\/[a-zA-Z0-9-]+)?$/;
+  const splitUrl = customUrl.split(".");
+  const isAvailDomain =
+    splitUrl.filter(
+      (url) =>
+        availDomain.filter((availItem) => url.includes(availItem)).length > 0,
+    ).length > 0;
+
+  return isAvailDomain && urlRegex.test(customUrl);
+};
+
 export const formatEditUserPayload = (payload: EditProfilePayload) => {
   const formatted = { ...payload } as EditProfilePayload;
 
@@ -162,4 +188,27 @@ export const formatEditUserPayload = (payload: EditProfilePayload) => {
     }
   }
   return formatted;
+};
+
+export const formatEditPlaylistValid = (
+  payload: PlaylistCreateRequestType,
+  songList: SongType[],
+  userId?: string,
+  playlistId?: string,
+) => {
+  return (
+    payload?.title.length > 0 &&
+    payload?.description.length > 0 &&
+    payload?.songs.length > 0 &&
+    !!payload?.title &&
+    payload?.title.length <= 40 &&
+    !!payload?.description &&
+    payload?.description.length < 100 &&
+    !!payload?.songs &&
+    payload?.songs.length > 0 &&
+    payload?.songs.length <= 20 &&
+    songList.length > 0 &&
+    !!userId &&
+    !!playlistId
+  );
 };

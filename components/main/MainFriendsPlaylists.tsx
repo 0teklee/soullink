@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { getMainPageFriendsPlaylists } from "@/libs/utils/client/fetchers";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const MainFriendsPlaylists = ({
   playLists,

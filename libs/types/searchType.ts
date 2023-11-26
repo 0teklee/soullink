@@ -1,6 +1,6 @@
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import { UserType } from "@/libs/types/userType";
-import { UseQueryResult } from "react-query";
+import { UseQueryResult } from "@tanstack/react-query";
 
 export interface SearchAllData {
   result: {

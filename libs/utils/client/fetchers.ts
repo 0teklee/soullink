@@ -1,5 +1,5 @@
 import {
-  CreatePlaylistType,
+  PlaylistCreateRequestType,
   PlaylistLikeResponseType,
   PlaylistLikeType,
   PlaylistMoodType,
@@ -19,6 +19,7 @@ import {
 import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
 
 import { formatEditUserPayload } from "@/libs/utils/client/formatter";
+import { YoutubeSearchResponse } from "@/libs/types/youtubeTypes";
 
 /* Playlist Fetchers */
 /* GET */
@@ -225,21 +226,57 @@ export const getMoodLists = async (
 /* POST */
 
 export const postCreatePlaylist = async (
-  payload: CreatePlaylistType,
+  payload: PlaylistCreateRequestType,
   userId: string,
 ) => {
-  const res = await fetch(`/api/playlist/create`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ...payload,
-      userId: userId || "",
-    }),
-  });
-  const data = await res.json();
-  return data;
+  try {
+    if (!userId) {
+      throw new Error("no userId or playlistId");
+    }
+
+    const res = await fetch(`/api/playlist/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+        userId: userId || "",
+      }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const postEditPlaylist = async (
+  payload: PlaylistCreateRequestType,
+  userId: string,
+  playlistId: string,
+) => {
+  try {
+    if (!userId || !playlistId) {
+      throw new Error("no userId or playlistId");
+    }
+
+    const res = await fetch(`/api/playlist/${playlistId}/edit`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+        userId,
+        playlistId,
+      }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const postPlaylistCount = async (
@@ -566,6 +603,28 @@ export const getSearchCategoryPlaylists = async (
 };
 
 /* ETC Common Fetchers */
+
+export const getYoutubeSearchResult = async (
+  search: string,
+  pageToken?: string,
+) => {
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_APP_BASE_URL
+      }/api/search/youtube?search=${search}&pageToken=${
+        pageToken ? pageToken : ""
+      }`,
+    );
+    const data: { message: string; result: YoutubeSearchResponse } =
+      await res.json();
+
+    return data.result;
+  } catch (err) {
+    console.error("youtube error", err);
+    throw new Error(`youtube error ${err}`, { cause: "youtube" });
+  }
+};
 
 export const getRecentPlayedPlaylists = async (
   userId?: string,

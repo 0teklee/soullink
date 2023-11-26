@@ -1,7 +1,7 @@
 import React from "react";
-import { CreatePlaylistType } from "@/libs/types/song&playlistType";
+import { PlaylistCreateRequestType } from "@/libs/types/song&playlistType";
 import { useRouter } from "next/navigation";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postCreatePlaylist } from "@/libs/utils/client/fetchers";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { useSetRecoilState } from "recoil";
@@ -12,7 +12,7 @@ const PlaylistCreateSubmit = ({
   isPayloadValid,
   userId,
 }: {
-  payload: CreatePlaylistType;
+  payload: PlaylistCreateRequestType;
   isPayloadValid: boolean;
   userId?: string;
 }) => {

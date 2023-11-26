@@ -14,7 +14,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 import { formatMoodFontColor } from "@/libs/utils/client/formatter";
 import { getDiscoverMoodPlaylists } from "@/libs/utils/client/fetchers";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const DiscoverMoodLists = ({
   moodPlaylists,
@@ -27,7 +27,7 @@ const DiscoverMoodLists = ({
     queryKey: ["moodPlaylists"],
     queryFn: () => getDiscoverMoodPlaylists(userId),
     initialData: moodPlaylists,
-    cacheTime: QUERY_CACHE_TIME,
+    gcTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
 

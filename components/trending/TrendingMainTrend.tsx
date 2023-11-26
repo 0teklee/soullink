@@ -7,7 +7,7 @@ import {
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
 } from "@/libs/utils/client/commonValues";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getTrendingMainPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
@@ -24,7 +24,7 @@ const TrendingMainTrend = ({ initData }: { initData: PlaylistType[] }) => {
     queryKey: ["trendingMain", period],
     queryFn: () => getTrendingMainPlaylists(`${period}`),
     initialData: initData,
-    cacheTime: QUERY_CACHE_TIME,
+    gcTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
 

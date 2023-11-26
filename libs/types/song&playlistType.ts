@@ -12,27 +12,13 @@ export interface SongType {
   likedUsers?: { userId: string; songId?: string }[];
 }
 
-type SongUrlType = "youtube" | "" | "custom";
+export type SONG_URL_TYPE = "youtube" | "custom" | "";
 
 export type PlaylistMoodType = "upbeat" | "chill" | "relaxed" | "melancholic";
-
-export interface CreateSongType
-  extends Omit<SongType, "playedCount" | "likedCount" | "id"> {
-  type: SongUrlType;
-}
 
 export interface SongLikeType {
   songId: string;
   userId: string;
-}
-
-export interface CreatePlaylistType {
-  title: string;
-  description: string;
-  coverImage?: string;
-  songs: CreateSongType[];
-  mood: PlaylistMoodType | "";
-  categories?: string[];
 }
 
 export interface PlaylistLikeType {
@@ -54,10 +40,13 @@ export interface PlaylistLikeResponseType {
   }[];
 }
 
-export interface PlaylistCreateRequestType
-  extends Omit<CreatePlaylistType, "songs"> {
+export interface PlaylistCreateRequestType {
+  title: string;
+  description: string;
+  categories: string[];
+  mood: PlaylistMoodType;
+  coverImage?: string;
   songs: SongType[];
-  userId: string;
 }
 
 export interface PlaylistType {

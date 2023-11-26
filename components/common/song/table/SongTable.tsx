@@ -1,11 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction } from "react";
-import {
-  CreateSongType,
-  PlaylistType,
-  SongType,
-} from "@/libs/types/song&playlistType";
+import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 
 import TableItem from "@/components/common/song/table/TableItem";
 import { useSetRecoilState } from "recoil";
@@ -15,15 +11,17 @@ import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
 const SongTable = ({
   songList,
   isCreate,
+  isCreateFavorite,
   setSongList,
   playlist,
   setIsModalOpen,
   userId,
 }: {
-  songList: SongType[] | CreateSongType[];
+  songList: SongType[];
   setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
+  isCreateFavorite?: boolean;
   isCreate?: boolean;
-  setSongList?: Dispatch<SetStateAction<CreateSongType[]>>;
+  setSongList?: Dispatch<SetStateAction<SongType[]>>;
   playlist?: PlaylistType;
   userId?: string;
 }) => {
@@ -98,6 +96,7 @@ const SongTable = ({
                     song={song}
                     index={index}
                     isCreate={isCreate}
+                    isCreateFavorite={isCreateFavorite}
                     userId={userId}
                     playlist={playlist}
                     setSongList={setSongList}

@@ -5,7 +5,7 @@ import {
   postPlaylistCount,
   postRecentPlayed,
 } from "@/libs/utils/client/fetchers";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { played5MinSeconds } from "@/libs/utils/client/commonValues";
 import {
   isNowMoreThanTargetTime,

@@ -4,11 +4,17 @@ import {
   getPlaylistsPaths,
   getSinglePlaylist,
 } from "@/libs/utils/client/fetchers";
-import process from "process";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const playlistData = await getSinglePlaylist(id);
-  return <DetailTemplate id={id} propsData={playlistData} />;
+  const { userId } = await getServerSession(authOptions).then((session) => {
+    return (session as UserSessionType) || {};
+  });
+
+  return <DetailTemplate id={id} propsData={playlistData} userId={userId} />;
 };
 
 export default Page;

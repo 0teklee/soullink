@@ -85,25 +85,6 @@ export async function GET(req: Request) {
             },
           },
         },
-        likedSong: {
-          select: {
-            song: {
-              select: {
-                id: true,
-                title: true,
-                artist: true,
-                thumbnail: true,
-                url: true,
-                playedCount: true,
-                likedUsers: {
-                  select: {
-                    userId: true,
-                  },
-                },
-              },
-            },
-          },
-        },
         createdPlaylists: {
           select: {
             id: true,
@@ -137,6 +118,28 @@ export async function GET(req: Request) {
       },
     });
 
+    const songLiked = await prisma.song.findMany({
+      where: {
+        likedUsers: {
+          every: {
+            userId: userDb?.id,
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        artist: true,
+        thumbnail: true,
+        playedCount: true,
+        likedUsers: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
     const user = {
       ...userDb,
       likedPlaylists: userDb
@@ -150,7 +153,7 @@ export async function GET(req: Request) {
           nickname: userDb?.nickname,
         },
         coverImage: userDb?.profilePic,
-        songs: userDb?.likedSong.map((song) => song.song),
+        songs: songLiked,
         isSongTable: true,
       },
     };

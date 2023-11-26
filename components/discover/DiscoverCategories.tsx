@@ -4,7 +4,7 @@ import React from "react";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import { UserSessionType } from "@/libs/types/userType";
 import { useSession } from "next-auth/react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCategoriesPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersList from "@/components/common/playlist/module/FiltersList";

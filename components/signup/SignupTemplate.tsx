@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { SignupPayload } from "@/libs/types/userType";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -42,7 +42,8 @@ const SignupTemplate = () => {
     return data;
   };
 
-  const { mutate } = useMutation(fetcherSignup, {
+  const { mutate } = useMutation({
+    mutationFn: fetcherSignup,
     onSuccess: () => {
       router.push(`/`);
     },

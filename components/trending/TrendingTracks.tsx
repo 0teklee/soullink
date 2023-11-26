@@ -9,7 +9,7 @@ import {
   TrendingSongPlaylistType,
 } from "@/libs/types/song&playlistType";
 import { getTrendingSongs } from "@/libs/utils/client/fetchers";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { DAYS_FILTER, DAYS_FILTER_ARR } from "@/libs/utils/client/commonValues";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
 

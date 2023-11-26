@@ -9,27 +9,32 @@ import SongTable from "@/components/common/song/table/SongTable";
 import CommentContainer from "@/components/common/comments/CommentContainer";
 import process from "process";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
-import { useSession } from "next-auth/react";
-import { UserSessionType } from "@/libs/types/userType";
 import { HeartIcon, PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import {
+  HeartIcon as HeartIconSolid,
+  PencilIcon,
+} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getSinglePlaylist } from "@/libs/utils/client/fetchers";
+import CommonModal from "@/components/common/modal/CommonModal";
+import DetailEditModal from "@/components/playlist/detail/module/DetailEditModal";
 
 const DetailTemplate = ({
   id,
   propsData,
+  userId,
 }: {
   id: string;
   propsData: PlaylistType;
+  userId?: string;
 }) => {
-  const { data: session } = useSession() as { data: UserSessionType };
-  const userId = session?.userId;
   const router = useRouter();
+
+  const [isEdit, setIsEdit] = React.useState<boolean>(false);
 
   const { data: playlistData } = useQuery({
     queryKey: ["playlist", id],
@@ -55,7 +60,14 @@ const DetailTemplate = ({
     playedCount,
   } = playlistData || {};
 
-  const { profilePic, nickname: authorName } = author || playlistDefault.author;
+  const {
+    profilePic,
+    nickname: authorName,
+    id: authorId,
+  } = author || playlistDefault.author;
+
+  const isUserAuthor = !!userId && !!authorId && userId === authorId;
+
   const isUserLikedPlaylist =
     likedBy &&
     likedBy.length > 0 &&
@@ -78,6 +90,17 @@ const DetailTemplate = ({
           {dayjs(createdAt).format(`YYYY.MM.DD`)}
         </p>
         <div className={`flex items-center gap-4`}>
+          {isUserAuthor && (
+            <div
+              onClick={() => {
+                setIsEdit(!isEdit);
+              }}
+              className={`flex items-center gap-2 cursor-pointer`}
+            >
+              <PencilIcon className={`w-5 h-5 text-gray-900`} />
+              <p className={`text-sm text-gray-500`}>Edit playlist</p>
+            </div>
+          )}
           <button className={`relative w-5 h-5`}>
             <Image src={`/image/common/share.svg`} alt={`share`} fill={true} />
           </button>
@@ -188,6 +211,7 @@ const DetailTemplate = ({
           songList={songs}
           playlist={propsData}
           isCreate={false}
+          userId={userId}
         />
       )}
       <div
@@ -210,6 +234,15 @@ const DetailTemplate = ({
           />
         )}
       </div>
+      {isEdit && isUserAuthor && playlistData && (
+        <CommonModal isModalOpen={isEdit} setIsModalOpen={setIsEdit}>
+          <DetailEditModal
+            userId={userId}
+            setIsEdit={setIsEdit}
+            playlistData={playlistData}
+          />
+        </CommonModal>
+      )}
     </section>
   );
 };

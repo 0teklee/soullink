@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CommentPayloadType, UserSessionType } from "@/libs/types/userType";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postComment } from "@/libs/utils/client/fetchers";
 import { useSetRecoilState } from "recoil";
 import { CommonLoginModalState } from "@/libs/recoil/atoms";

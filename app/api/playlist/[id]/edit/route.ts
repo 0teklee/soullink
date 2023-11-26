@@ -2,19 +2,22 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { PlaylistCreateRequestType } from "@/libs/types/song&playlistType";
 
-export async function POST(req: Request) {
+export async function PATCH(req: Request) {
   try {
-    const request: PlaylistCreateRequestType & { userId: string } = await req
-      .json()
-      .then((data) => data);
-    const playlist = await prisma.playlist.create({
+    const request: PlaylistCreateRequestType & {
+      userId: string;
+      playlistId: string;
+    } = await req.json().then((data) => data);
+
+    const playlist = await prisma.playlist.update({
+      where: {
+        id: request.playlistId,
+        authorId: request.userId,
+      },
       data: {
         title: request.title,
         description: request.description,
         coverImage: request.coverImage || "",
-        author: {
-          connect: { id: request.userId },
-        },
         songs: {
           connectOrCreate: request.songs.map((song) => ({
             where: { url: song.url },
@@ -23,22 +26,6 @@ export async function POST(req: Request) {
               title: song.title,
               url: song.url,
               thumbnail: song?.thumbnail,
-            },
-          })),
-        },
-        mood: {
-          connectOrCreate: {
-            where: { name: request.mood },
-            create: {
-              name: request.mood,
-            },
-          },
-        },
-        category: {
-          connectOrCreate: request.categories?.map((category) => ({
-            where: { name: category },
-            create: {
-              name: category,
             },
           })),
         },
@@ -54,7 +41,7 @@ export async function POST(req: Request) {
       { status: 200, statusText: "OK" },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("patch playlist error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",

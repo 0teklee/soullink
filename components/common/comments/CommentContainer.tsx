@@ -4,7 +4,7 @@ import { CommentType } from "@/libs/types/userType";
 import CommentItem from "@/components/common/comments/CommentItem";
 import CommentInput from "@/components/common/comments/CommentInput";
 import { getComments } from "@/libs/utils/client/fetchers";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const CommentContainer = ({
   postId,
