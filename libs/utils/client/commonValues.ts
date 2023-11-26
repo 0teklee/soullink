@@ -1,4 +1,8 @@
-import { PlaylistMoodType, PlaylistType } from "@/libs/types/song&playlistType";
+import {
+  PlaylistMoodType,
+  PlaylistType,
+  SONG_URL_TYPE,
+} from "@/libs/types/song&playlistType";
 
 export const breakpoints = {
   mobile: 400,
@@ -10,6 +14,7 @@ export const breakpoints = {
 
 interface IDefaultPlaylist extends Omit<PlaylistType, "author" | "updatedAt"> {
   author: {
+    id: string;
     profilePic: string;
     nickname: string;
   };
@@ -21,6 +26,7 @@ export const playlistDefault: IDefaultPlaylist = {
   coverImage: "",
   createdAt: "",
   author: {
+    id: "",
     profilePic: "",
     nickname: "",
   },
@@ -63,6 +69,23 @@ export const DAYS_FILTER_ARR = [
 ];
 
 export const MOOD_TYPE_ARR = ["energetic", "chill", "relaxed", "melancholic"];
+export const SONG_DEFAULT_VALUE = {
+  id: "",
+  url: "",
+  title: "",
+  artist: "",
+  thumbnail: "",
+  playedCount: 0,
+  likedCount: 0,
+};
+export const SONG_TYPE_OPTIONS: SONG_URL_TYPE[] = ["youtube", "custom"];
+export const SONG_AVAIL_CUSTOM_URL = [
+  "soundcloud",
+  "mixcloud",
+  "vimeo",
+  "facebook",
+  "twitch",
+];
 
 export const played5MinsMs = 5 * 60 * 1000;
 export const played5MinSeconds = 30;
