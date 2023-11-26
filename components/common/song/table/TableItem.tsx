@@ -30,8 +30,6 @@ const TableItem = ({
   playlist?: PlaylistType;
   userId?: string;
 }) => {
-  const router = useRouter();
-
   const playSongItemHook = useSetPlaylistFromSongTable(
     "id" in song ? song.id : "",
     playlist,
