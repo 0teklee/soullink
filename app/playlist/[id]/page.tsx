@@ -7,14 +7,29 @@ import {
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { UserSessionType } from "@/libs/types/userType";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
-  const playlistData = await getSinglePlaylist(id);
+  const queryClient = new QueryClient();
+
   const { userId } = await getServerSession(authOptions).then((session) => {
     return (session as UserSessionType) || {};
   });
 
-  return <DetailTemplate id={id} propsData={playlistData} userId={userId} />;
+  await queryClient.prefetchQuery({
+    queryKey: ["playlist", id],
+    queryFn: () => getSinglePlaylist(id),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <DetailTemplate id={id} userId={userId} />
+    </HydrationBoundary>
+  );
 };
 
 export default Page;
