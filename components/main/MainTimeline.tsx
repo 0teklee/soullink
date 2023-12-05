@@ -4,7 +4,6 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTimelinePlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
-import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 
 const MainTimeline = ({ userId }: { userId?: string }) => {

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import Title from "@/components/common/module/Title";
 import { DeleteModalPropsType } from "@/libs/types/modalType";
 import useSetModal from "@/libs/utils/hooks/useSetModal";

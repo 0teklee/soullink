@@ -1,7 +1,6 @@
 import React from "react";
 import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
 import MainRecentPlayed from "@/components/main/MainRecentPlayed";
-import { PlaylistType } from "@/libs/types/song&playlistType";
 import MainTodayList from "@/components/main/MainTodayList";
 import MainTimeline from "@/components/main/MainTimeline";
 

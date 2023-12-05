@@ -4,7 +4,6 @@ import React, { ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import ErrorFallback from "@/components/common/error/ErrorFallback";
-import CommonErrorModal from "@/components/common/modal/CommonErrorModal";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 

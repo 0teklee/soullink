@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import CommonLoginModal from "@/components/common/modal/CommonLoginModal";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import DetailEditModal from "@/components/playlist/detail/module/DetailEditModal";
 import CommonModal from "@/components/common/modal/CommonModal";
@@ -20,8 +20,7 @@ import CommonErrorModal from "@/components/common/modal/CommonErrorModal";
 
 const CommonModalProvider = () => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(CommonModalState);
-  const [modalTypeState, setModalTypeState] =
-    useRecoilState(CommonModalTypeState);
+  const modalTypeState = useRecoilValue(CommonModalTypeState);
   const [playlistEditModalProps, setPlaylistEditModalProps] = useRecoilState(
     PlaylistEditPropsState,
   );

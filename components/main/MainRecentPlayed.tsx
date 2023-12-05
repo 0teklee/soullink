@@ -2,7 +2,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import Title from "@/components/common/module/Title";
-import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import { useQuery } from "@tanstack/react-query";
 import {

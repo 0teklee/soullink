@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { UserType } from "@/libs/types/userType";
 import UserHeader from "@/components/user/UserHeader";
 import Title from "@/components/common/module/Title";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
