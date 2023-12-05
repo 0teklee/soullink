@@ -2,12 +2,14 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSongLike } from "@/libs/utils/client/fetchers";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { CommonLoginModalState, playlistState } from "@/libs/recoil/atoms";
+import { useRecoilState } from "recoil";
+import { playlistState } from "@/libs/recoil/atoms";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const useSongLike = () => {
   const queryClient = useQueryClient();
-  const setLoginModal = useSetRecoilState(CommonLoginModalState);
+  const { setModal: setLoginModal } = useSetModal();
   const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
 
   const { mutate } = useMutation({
@@ -47,7 +49,7 @@ const useSongLike = () => {
 
   const songLikeMutate = (songId?: string, userId?: string) => {
     if (!userId) {
-      setLoginModal(true);
+      setLoginModal(MODAL_TYPE.LOGIN);
       return;
     }
 
