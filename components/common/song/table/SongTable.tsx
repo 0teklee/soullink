@@ -4,9 +4,9 @@ import React, { Dispatch, SetStateAction } from "react";
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 
 import TableItem from "@/components/common/song/table/TableItem";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const SongTable = ({
   songList,
@@ -25,7 +25,7 @@ const SongTable = ({
   playlist?: PlaylistType;
   userId?: string;
 }) => {
-  const setIsLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { setModal } = useSetModal();
 
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
@@ -34,7 +34,7 @@ const SongTable = ({
 
   const handleLikeSong = async (songId: string, userId?: string) => {
     if (!userId || !isLogin) {
-      setIsLoginModalOpen(true);
+      setModal(MODAL_TYPE.LOGIN);
       return;
     }
 
