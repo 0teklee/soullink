@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { formatDateFilter } from "@/libs/utils/server/formatter";
+import {
+  formatDateFilter,
+  formatPlaylistsSongOrder,
+} from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -107,10 +110,31 @@ export async function GET(req: Request) {
         },
       },
     });
+
+    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+      where: {
+        playlist: {
+          id: {
+            in: recentMostPlayedCategoryPlaylist.map((playlist) => playlist.id),
+          },
+        },
+      },
+      select: {
+        playlistId: true,
+        songId: true,
+        songIndex: true,
+      },
+    });
+
+    const recentMostPlayedCategoryListsOrdered = formatPlaylistsSongOrder(
+      recentMostPlayedCategoryPlaylist,
+      playlistSongOrder,
+    );
+
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        recentMostPlayedCategoryPlaylist,
+        recentMostPlayedCategoryPlaylist: recentMostPlayedCategoryListsOrdered,
         categories: mostCountCategoryList.map((category) => category.name),
       }),
       {
