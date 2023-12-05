@@ -3,29 +3,19 @@
 import React, { useState } from "react";
 import Title from "@/components/common/module/Title";
 import SongTable from "@/components/common/song/table/SongTable";
-import {
-  PlaylistType,
-  SongType,
-  TrendingSongPlaylistType,
-} from "@/libs/types/song&playlistType";
+import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import { getTrendingSongs } from "@/libs/utils/client/fetchers";
 import { useQuery } from "@tanstack/react-query";
 import { DAYS_FILTER, DAYS_FILTER_ARR } from "@/libs/utils/client/commonValues";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const TrendingTracks = ({
-  trendingSongList,
-  userId,
-}: {
-  trendingSongList: TrendingSongPlaylistType;
-  userId?: string;
-}) => {
+const TrendingTracks = ({ userId }: { userId?: string }) => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
 
   const { data } = useQuery({
     queryKey: ["mainPageTrendingSongs", period],
     queryFn: () => getTrendingSongs(period),
-    initialData: trendingSongList,
   });
 
   const handleDropdownChange = (val: DAYS_FILTER) => {
@@ -45,14 +35,16 @@ const TrendingTracks = ({
           DAYS_FILTER_ARR.find((item) => item.value === period)?.label
         }
       />
-      {data && data.songs && data.songs.length > 0 && (
-        <SongTable
-          songList={data.songs as SongType[]}
-          playlist={data as PlaylistType}
-          isCreate={false}
-          userId={userId}
-        />
-      )}
+      <ReactQueryErrorBoundary>
+        {data && data.songs && data.songs.length > 0 && (
+          <SongTable
+            songList={data.songs as SongType[]}
+            playlist={data as PlaylistType}
+            isCreate={false}
+            userId={userId}
+          />
+        )}
+      </ReactQueryErrorBoundary>
     </section>
   );
 };
