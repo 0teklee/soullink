@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { PlaylistType } from "@/libs/types/song&playlistType";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   commonMoods,
   QUERY_CACHE_TIME,
@@ -15,26 +14,21 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { formatMoodFontColor } from "@/libs/utils/client/formatter";
 import { getDiscoverMoodPlaylists } from "@/libs/utils/client/fetchers";
 import { useQuery } from "@tanstack/react-query";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const DiscoverMoodLists = ({
-  moodPlaylists,
-  userId,
-}: {
-  moodPlaylists?: PlaylistType[];
-  userId?: string;
-}) => {
+const DiscoverMoodLists = ({ userId }: { userId?: string }) => {
   const { data } = useQuery({
     queryKey: ["moodPlaylists"],
     queryFn: () => getDiscoverMoodPlaylists(userId),
-    initialData: moodPlaylists,
     gcTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const sortedMoodPlaylists = commonMoods.map((mood) =>
-    filterMoodPlaylists(mood, data),
+  const sortedMoodPlaylists = useMemo(
+    () => commonMoods.map((mood) => filterMoodPlaylists(mood, data)),
+    [data],
   );
 
   const moodTextColor = formatMoodFontColor(commonMoods[selectedIndex]);
@@ -55,13 +49,13 @@ const DiscoverMoodLists = ({
             onClick={() => {
               setIsDropdownOpen((prev) => !prev);
             }}
-            className={`flex items-center justify-start gap-3 mb-1 text-xl text-gray-700 font-semibold cursor-pointer`}
+            className={`flex items-center justify-start gap-3 mb-1 text-xl  font-semibold cursor-pointer`}
           >
             <p className={`${moodTextColor}`}>{commonMoods[selectedIndex]}</p>
             {isDropdownOpen ? (
-              <ChevronUpIcon className={`w-5 h-5`} />
+              <ChevronUpIcon className={`w-5 h-5 text-gray-700`} />
             ) : (
-              <ChevronDownIcon className={`w-5 h-5`} />
+              <ChevronDownIcon className={`w-5 h-5 text-gray-700`} />
             )}
           </div>
           {isDropdownOpen && (
@@ -86,7 +80,9 @@ const DiscoverMoodLists = ({
             </div>
           )}
         </div>
-        <ImageCardContainer playlists={sortedMoodPlaylists[selectedIndex]} />
+        <ReactQueryErrorBoundary>
+          <ImageCardContainer playlists={sortedMoodPlaylists[selectedIndex]} />
+        </ReactQueryErrorBoundary>
       </div>
     </div>
   );
