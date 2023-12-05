@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import {
   formatDateFilter,
+  formatPlaylistsSongOrder,
   formatSearchOrderBy,
 } from "@/libs/utils/server/formatter";
 
@@ -115,10 +116,30 @@ export async function GET(req: Request) {
       },
     });
 
+    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+      where: {
+        playlist: {
+          id: {
+            in: playlists.map((playlist) => playlist.id),
+          },
+        },
+      },
+      select: {
+        playlistId: true,
+        songId: true,
+        songIndex: true,
+      },
+    });
+
+    const searchPlaylistsOrdered = formatPlaylistsSongOrder(
+      playlists,
+      playlistSongOrder,
+    );
+
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        result: playlists,
+        result: searchPlaylistsOrdered,
       }),
       {
         status: 200,
