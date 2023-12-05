@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import DetailEditModal from "@/components/playlist/detail/module/DetailEditModal";
 import CommonModal from "@/components/common/modal/CommonModal";
-import PlaylistSongModal from "@/components/playlist/create/PlaylistSongModal";
+import PlaylistSongModal from "@/components/playlist/module/PlaylistSongModal";
 import CommentDeleteModal from "@/components/common/comments/CommentDeleteModal";
 import {
   CommonModalState,
