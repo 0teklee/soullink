@@ -2,7 +2,6 @@
 
 import React from "react";
 import Title from "@/components/common/module/Title";
-import { PlaylistType } from "@/libs/types/song&playlistType";
 import FullImageCardContainer from "@/components/common/carousel/full-img/FullImageCardContainer";
 import { useQuery } from "@tanstack/react-query";
 import { getEditorPlaylists } from "@/libs/utils/client/fetchers";
@@ -10,16 +9,12 @@ import {
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
 } from "@/libs/utils/client/commonValues";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const DiscoverEditorSelection = ({
-  editorPlaylists,
-}: {
-  editorPlaylists?: PlaylistType[];
-}) => {
+const DiscoverEditorSelection = () => {
   const { data } = useQuery({
     queryKey: ["editorPlaylists"],
-    queryFn: () => getEditorPlaylists(),
-    initialData: editorPlaylists,
+    queryFn: getEditorPlaylists,
     gcTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
@@ -31,7 +26,9 @@ const DiscoverEditorSelection = ({
           <Title size={`h1`} text={`Featured Playlists`} />
         </div>
         <div className={`mt-12 absolute left-0 bg-white`}>
-          <FullImageCardContainer playlists={data} />
+          <ReactQueryErrorBoundary>
+            <FullImageCardContainer playlists={data} />
+          </ReactQueryErrorBoundary>
         </div>
       </div>
     </div>
