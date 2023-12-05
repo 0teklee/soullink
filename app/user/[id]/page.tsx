@@ -8,24 +8,33 @@ import {
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { UserSessionType } from "@/libs/types/userType";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
-  const [userData, recentPlayedPlaylist] = await Promise.all([
-    getSingleUserProfile(id),
-    getRecentPlaylists(id),
+  const queryClient = new QueryClient();
+
+  const [{ userId }] = await Promise.all([
+    getServerSession(authOptions).then(
+      (session) => (session as UserSessionType) || {},
+    ),
+    queryClient.prefetchQuery({
+      queryKey: ["user", id],
+      queryFn: () => getSingleUserProfile(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["recentPlayed", id],
+      queryFn: () => getRecentPlaylists(id),
+    }),
   ]);
 
-  const { userId } = await getServerSession(authOptions).then(
-    (session) => (session as UserSessionType) || {},
-  );
-
   return (
-    <UserTemplate
-      id={id}
-      userProps={userData}
-      userId={userId}
-      recentPlayed={recentPlayedPlaylist}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <UserTemplate id={id} userId={userId} />
+    </HydrationBoundary>
   );
 };
 
