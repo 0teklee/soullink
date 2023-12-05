@@ -11,11 +11,9 @@ import {
 } from "@/libs/utils/client/fetchers";
 
 const MainRecentPlayed = ({
-  propsData,
   userId,
   userNickname,
 }: {
-  propsData?: PlaylistType[];
   userId?: string;
   userNickname?: string;
 }) => {
@@ -27,7 +25,6 @@ const MainRecentPlayed = ({
     queryFn: !isLocal
       ? () => getRecentPlaylists(userId)
       : () => getLocalRecentPlaylists(recentPlayedIds),
-    initialData: propsData,
   });
 
   const isDataSuccess = isRecentSuccess && recentPlayedPlayLists;
