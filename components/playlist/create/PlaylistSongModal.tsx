@@ -1,12 +1,8 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import Title from "@/components/common/module/Title";
-import {
-  PlaylistCreateRequestType,
-  SONG_URL_TYPE,
-  SongType,
-} from "@/libs/types/song&playlistType";
+import { SONG_URL_TYPE, SongType } from "@/libs/types/song&playlistType";
 import {
   formatIsSongCustomUrlValid,
   formatSongNames,
@@ -22,18 +18,27 @@ import {
 } from "@/libs/utils/client/commonValues";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { MODAL_TYPE, SongModalPropsType } from "@/libs/types/modalType";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+
+import {
+  PlaylistEditPropsState,
+  SongModalPropsState,
+} from "@/libs/recoil/modalAtoms";
 
 const PlaylistSongModal = ({
-  setModalOpen,
-  setSongList,
-  setPayload,
+  songModalProps: { isEdit },
 }: {
-  setModalOpen: Dispatch<SetStateAction<boolean>>;
-  setSongList: Dispatch<SetStateAction<SongType[]>>;
-  setPayload: Dispatch<SetStateAction<PlaylistCreateRequestType>>;
+  songModalProps: SongModalPropsType;
 }) => {
   const queryClient = useQueryClient();
+  const playlistEditProps = useRecoilValue(PlaylistEditPropsState);
+  const setSongModalProps = useSetRecoilState(SongModalPropsState);
+
+  const { userId, playlistData } = playlistEditProps || {};
   const { ref: infiniteQueryRef, inView } = useInView();
+  const { setModal, setModalOpenState } = useSetModal();
 
   const [page, setPage] = useState("submit");
   const [songValue, setSongValue] = useState<SongType>(SONG_DEFAULT_VALUE);
@@ -89,24 +94,32 @@ const PlaylistSongModal = ({
   };
 
   const handleAddSong = () => {
-    if (urlType === "custom" && isUrlValid) {
+    if (urlType === "custom" && !isUrlValid) {
       setIsAvailableCustomUrl(false);
       return;
     }
 
-    if (songValue.title === "" || songValue.artist === "") {
-      alert("Please fill the title and artist");
+    if (songValue.title === "" || songValue.artist === "" || !songValue.url) {
+      alert("Please fill title, artist and url of the song");
       return;
     }
 
-    setSongList((prev) => [...prev, songValue]);
-    setPayload((prev) => ({
+    setSongValue(SONG_DEFAULT_VALUE);
+
+    setSongModalProps((prev) => ({
       ...prev,
-      songs: [...prev.songs, songValue],
+      modalSong: songValue,
     }));
 
-    setSongValue(SONG_DEFAULT_VALUE);
-    setModalOpen(false);
+    if (isEdit && playlistData && userId) {
+      setModal(MODAL_TYPE.PLAYLIST_EDIT, {
+        userId,
+        playlistData,
+      });
+
+      return;
+    }
+    setModalOpenState(false);
   };
 
   useEffect(() => {
@@ -127,11 +140,15 @@ const PlaylistSongModal = ({
       onClick={(e) => {
         e.stopPropagation();
       }}
-      className={`relative flex flex-col items-center justify-center gap-4 max-w-md p-5 xs:p-2 bg-white`}
+      className={`relative flex flex-col items-center justify-center gap-4 max-w-md p-5 xs:p-2 bg-white text-gray-700`}
     >
       <button
         onClick={() => {
-          setModalOpen(false);
+          if (isEdit) {
+            setModal(MODAL_TYPE.PLAYLIST_EDIT);
+            return;
+          }
+          setModalOpenState(false);
         }}
         className={`absolute top-2 right-3 text-gray-400 text-base`}
       >
@@ -364,9 +381,9 @@ const PlaylistSongModal = ({
               <button
                 onClick={() => {
                   queryClient.invalidateQueries({ queryKey: ["youtube"] });
-                  setModalOpen(false);
+                  setModalOpenState(false);
                 }}
-                className={`px-3 py-2 bg-pink-600 text-sm text-white font-semibold rounded`}
+                className={`px-3 py-2 bg-red-500 text-sm text-white font-semibold rounded`}
               >
                 Go back
               </button>
