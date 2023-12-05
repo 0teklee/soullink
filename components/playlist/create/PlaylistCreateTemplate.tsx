@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import SongTable from "@/components/common/song/table/SongTable";
-import PlaylistSongModal from "@/components/playlist/create/PlaylistSongModal";
 import {
   PlaylistCreateRequestType,
   PlaylistMoodType,
@@ -14,8 +13,7 @@ import PlaylistCreateSubmit from "@/components/playlist/create/PlaylistCreateSub
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
 import { useRouter } from "next/navigation";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
+import { useRecoilState } from "recoil";
 import { getSingleUserProfile } from "@/libs/utils/client/fetchers";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -26,14 +24,15 @@ import {
 import { commonMoods } from "@/libs/utils/client/commonValues";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import { formatMoodBgColor } from "@/libs/utils/client/formatter";
-import CommonModal from "@/components/common/modal/CommonModal";
+import { SongModalPropsState } from "@/libs/recoil/modalAtoms";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const PlaylistCreateTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
 
   const router = useRouter();
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
 
   const [songList, setSongList] = useState<SongType[]>([]);
   const [payload, setPayload] = useState<PlaylistCreateRequestType>({
@@ -44,10 +43,15 @@ const PlaylistCreateTemplate = () => {
     categories: [],
     mood: "" as PlaylistMoodType,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMaxSongList, setIsMaxSongList] = useState(false);
   const [isMoodDropdownOpen, setIsMoodDropdownOpen] = useState(false);
   const [categoryInput, setCategoryInput] = useState("");
+
+  const [songModalState, setSongModalProps] =
+    useRecoilState(SongModalPropsState);
+  const { setModal } = useSetModal();
+
+  const { modalSong } = songModalState || {};
 
   const { title, description, songs, mood: currentMood, categories } = payload;
 
@@ -109,9 +113,21 @@ const PlaylistCreateTemplate = () => {
   };
 
   useEffect(() => {
+    if (!!modalSong) {
+      setSongList((prev) => {
+        if (prev.find((song) => song.id === modalSong.id)) {
+          return prev;
+        }
+        return [...prev, modalSong];
+      });
+      setSongModalProps(null);
+    }
+  }, [modalSong]);
+
+  useEffect(() => {
     if (session && !userId) {
       router.push("/");
-      setLoginModalOpen(true);
+      setModal(MODAL_TYPE.LOGIN);
     }
   }, [userId]);
 
@@ -270,7 +286,9 @@ const PlaylistCreateTemplate = () => {
                 setIsMaxSongList(true);
                 return;
               }
-              setIsModalOpen(true);
+              setModal(MODAL_TYPE.SONG, {
+                isEdit: false,
+              });
             }}
           >
             <Image
@@ -343,13 +361,13 @@ const PlaylistCreateTemplate = () => {
           userId={userId}
         />
 
-        <CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
-          <PlaylistSongModal
-            setModalOpen={setIsModalOpen}
-            setSongList={setSongList}
-            setPayload={setPayload}
-          />
-        </CommonModal>
+        {/*<CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>*/}
+        {/*  <PlaylistSongModal*/}
+        {/*    setIsModalOpen={setIsModalOpen}*/}
+        {/*    setSongList={setSongList}*/}
+        {/*    setPayload={setPayload}*/}
+        {/*  />*/}
+        {/*</CommonModal>*/}
       </div>
     </section>
   );
