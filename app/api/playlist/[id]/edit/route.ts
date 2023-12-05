@@ -46,7 +46,7 @@ export async function PATCH(req: Request) {
       where: {
         playlistId: request.playlistId,
       },
-      data: playlist.songs.map((song, index) => ({
+      data: playlist.songs.map((song) => ({
         playlistId: playlist.id,
         songId: song.id,
         songIndex: request.songs.findIndex((s) => s.url === song.url),

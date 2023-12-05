@@ -1,5 +1,4 @@
 import { CommentAuthorInterface, CommentType } from "@/libs/types/userType";
-import { SongType } from "@/libs/types/song&playlistType";
 
 interface CommentDBinterface
   extends Omit<

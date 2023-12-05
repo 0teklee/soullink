@@ -3,7 +3,6 @@ import { prisma } from "@/prisma/client";
 import {
   formatDateFilter,
   formatPlaylistsSongOrder,
-  formatSongOrder,
 } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {

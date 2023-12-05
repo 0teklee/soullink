@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     });
 
     await prisma.playlistSongIndex.createMany({
-      data: playlist.songs.map((song, index) => ({
+      data: playlist.songs.map((song) => ({
         playlistId: playlist.id,
         songId: song.id,
         songIndex: request.songs.findIndex((s) => s.url === song.url),
