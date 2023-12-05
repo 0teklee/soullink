@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import dayjs from "dayjs";
+import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -129,10 +130,30 @@ export async function GET(req: Request) {
       },
     });
 
+    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+      where: {
+        playlist: {
+          id: {
+            in: friendsList.map((playlist) => playlist.id),
+          },
+        },
+      },
+      select: {
+        playlistId: true,
+        songId: true,
+        songIndex: true,
+      },
+    });
+
+    const friendsListOrdered = formatPlaylistsSongOrder(
+      friendsList,
+      playlistSongOrder,
+    );
+
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        mainData: { friendsList },
+        mainData: { friendsList: friendsListOrdered },
       }),
       {
         status: 200,
