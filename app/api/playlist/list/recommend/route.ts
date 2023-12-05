@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -66,10 +67,31 @@ export async function GET(req: Request) {
           },
         },
       });
+
+      const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+        where: {
+          playlist: {
+            id: {
+              in: nonLoginSuggestions.map((playlist) => playlist.id),
+            },
+          },
+        },
+        select: {
+          playlistId: true,
+          songId: true,
+          songIndex: true,
+        },
+      });
+
+      const nonLoginSuggestionsOrdered = formatPlaylistsSongOrder(
+        nonLoginSuggestions,
+        playlistSongOrder,
+      );
+
       return new NextResponse(
         JSON.stringify({
           message: "success",
-          userRecommendPlaylist: nonLoginSuggestions,
+          userRecommendPlaylist: nonLoginSuggestionsOrdered,
         }),
         {
           status: 200,
@@ -249,10 +271,30 @@ export async function GET(req: Request) {
       },
     });
 
+    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+      where: {
+        playlist: {
+          id: {
+            in: userFavoritePlaylist.map((playlist) => playlist.id),
+          },
+        },
+      },
+      select: {
+        playlistId: true,
+        songId: true,
+        songIndex: true,
+      },
+    });
+
+    const userFavoritePlaylistsOrdered = formatPlaylistsSongOrder(
+      userFavoritePlaylist,
+      playlistSongOrder,
+    );
+
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        userRecommendPlaylist: userFavoritePlaylist,
+        userRecommendPlaylist: userFavoritePlaylistsOrdered,
       }),
       {
         status: 200,
