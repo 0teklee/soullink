@@ -30,6 +30,27 @@ export async function PATCH(req: Request) {
           })),
         },
       },
+      select: {
+        id: true,
+        title: true,
+        songs: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+      },
+    });
+
+    await prisma.playlistSongIndex.updateMany({
+      where: {
+        playlistId: request.playlistId,
+      },
+      data: playlist.songs.map((song, index) => ({
+        playlistId: playlist.id,
+        songId: song.id,
+        songIndex: request.songs.findIndex((s) => s.url === song.url),
+      })),
     });
 
     return new NextResponse(
