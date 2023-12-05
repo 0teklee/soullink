@@ -8,8 +8,7 @@ import ListMenuContainer from "@/components/player/module/ListMenuContainer";
 import { PlayerProps, PlaylistType } from "@/libs/types/song&playlistType";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
-import { SetterOrUpdater, useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
+import { SetterOrUpdater } from "recoil";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
@@ -17,6 +16,8 @@ import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 import { PlayerType } from "@/libs/types/playerType";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 import useMutateSongLike from "@/libs/utils/hooks/useMutateSongLike";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const PlayerController = ({
   playerState,
@@ -33,7 +34,7 @@ const PlayerController = ({
 }) => {
   const playerCur = playerRef?.current;
   const { data: userSession } = useSession() as { data: UserSessionType };
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { setModal } = useSetModal();
 
   const { userId } = userSession || "";
   const {
@@ -115,7 +116,7 @@ const PlayerController = ({
 
   const handleLikeSong = async () => {
     if (!userId) {
-      setLoginModalOpen(true);
+      setModal(MODAL_TYPE.LOGIN);
       return;
     }
 
