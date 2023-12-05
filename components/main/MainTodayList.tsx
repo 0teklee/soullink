@@ -6,11 +6,10 @@ import TopListContainter from "@/components/common/playlist/screen-width-slider/
 import { useQuery } from "@tanstack/react-query";
 import { getMainPageTodayPlaylists } from "@/libs/utils/client/fetchers";
 
-const MainTodayList = ({ playlists }: { playlists: PlaylistType[] }) => {
+const MainTodayList = () => {
   const { data } = useQuery({
     queryKey: ["todayPlaylists"],
     queryFn: () => getMainPageTodayPlaylists(),
-    initialData: playlists,
   });
 
   return (
