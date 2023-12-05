@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  useInfiniteQuery,
-  useQueryClient,
-} from "@tanstack/react-query/build/modern/index";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getYoutubeSearchResult } from "@/libs/utils/client/fetchers";
 import { useInView } from "react-intersection-observer";
 import Title from "@/components/common/module/Title";
