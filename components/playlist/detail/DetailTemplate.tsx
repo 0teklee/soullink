@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
-import { PlaylistType } from "@/libs/types/song&playlistType";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
 import SongTable from "@/components/common/song/table/SongTable";
-import CommentContainer from "@/components/common/comments/CommentContainer";
+import CommentSection from "@/components/common/comments/CommentSection";
 import process from "process";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
 import { HeartIcon, PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
@@ -20,31 +19,26 @@ import { formatPathName } from "@/libs/utils/client/formatter";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 import { useQuery } from "@tanstack/react-query";
 import { getSinglePlaylist } from "@/libs/utils/client/fetchers";
-import CommonModal from "@/components/common/modal/CommonModal";
-import DetailEditModal from "@/components/playlist/detail/module/DetailEditModal";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const DetailTemplate = ({
-  id,
-  propsData,
-  userId,
-}: {
-  id: string;
-  propsData: PlaylistType;
-  userId?: string;
-}) => {
+const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   const router = useRouter();
+
+  const { playlistLikeMutate } = useMutatePlaylistLike();
+  const { setModal } = useSetModal();
 
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
 
   const { data: playlistData } = useQuery({
     queryKey: ["playlist", id],
     queryFn: () => getSinglePlaylist(id),
-    enabled: !!id,
-    initialData: propsData,
+    throwOnError: true,
   });
 
   const { playing, handleChangePlaylistState } = useSelectedPlaylistPlay(
-    propsData,
+    playlistData,
     userId,
   );
 
@@ -67,15 +61,14 @@ const DetailTemplate = ({
   } = author || playlistDefault.author;
 
   const isUserAuthor = !!userId && !!authorId && userId === authorId;
-
-  const isUserLikedPlaylist =
-    likedBy &&
-    likedBy.length > 0 &&
-    userId &&
-    likedBy &&
-    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
-
-  const { playlistLikeMutate } = useMutatePlaylistLike();
+  const isUserLikedPlaylist = useMemo(
+    () =>
+      !!userId &&
+      !!likedBy &&
+      likedBy.length > 0 &&
+      likedBy.filter((likeItem) => likeItem.userId === userId).length > 0,
+    [userId, likedBy, playlistId],
+  );
 
   const handleLikePlaylist = async () => {
     playlistLikeMutate(playlistId, userId);
@@ -94,6 +87,14 @@ const DetailTemplate = ({
             <div
               onClick={() => {
                 setIsEdit(!isEdit);
+                if (!(playlistData && userId)) {
+                  return;
+                }
+
+                setModal(MODAL_TYPE.PLAYLIST_EDIT, {
+                  userId,
+                  playlistData,
+                });
               }}
               className={`flex items-center gap-2 cursor-pointer`}
             >
@@ -206,13 +207,15 @@ const DetailTemplate = ({
         </div>
       </div>
       {songs && songs.length > 0 && (
-        <SongTable
-          key={`table_${playlistId}`}
-          songList={songs}
-          playlist={propsData}
-          isCreate={false}
-          userId={userId}
-        />
+        <ReactQueryErrorBoundary>
+          <SongTable
+            key={`table_${playlistId}`}
+            songList={songs}
+            playlist={playlistData}
+            isCreate={false}
+            userId={userId}
+          />
+        </ReactQueryErrorBoundary>
       )}
       <div
         className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
@@ -227,22 +230,13 @@ const DetailTemplate = ({
       <div className={`flex flex-col items-start w-full gap-6`}>
         <Title size={`h2`} text={`Comments`} />
         {playlistId && (
-          <CommentContainer
+          <CommentSection
             postId={playlistId}
             userId={userId || ""}
             isProfile={false}
           />
         )}
       </div>
-      {isEdit && isUserAuthor && playlistData && (
-        <CommonModal isModalOpen={isEdit} setIsModalOpen={setIsEdit}>
-          <DetailEditModal
-            userId={userId}
-            setIsEdit={setIsEdit}
-            playlistData={playlistData}
-          />
-        </CommonModal>
-      )}
     </section>
   );
 };
