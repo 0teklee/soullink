@@ -7,17 +7,10 @@ import Title from "@/components/common/module/Title";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 
-const MainTimeline = ({
-  playlists,
-  userId,
-}: {
-  playlists: PlaylistType[];
-  userId?: string;
-}) => {
+const MainTimeline = ({ userId }: { userId?: string }) => {
   const { data } = useQuery({
     queryKey: ["timeline_playlists", userId],
     queryFn: () => getTimelinePlaylists(userId),
-    initialData: playlists,
   });
 
   return (
