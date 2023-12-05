@@ -14,16 +14,15 @@ import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/solid";
 import PlaylistGallery from "@/components/common/playlist/gallery-list/PlaylistGallery";
-import { PlaylistType } from "@/libs/types/song&playlistType";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const TrendingMainTrend = ({ initData }: { initData: PlaylistType[] }) => {
+const TrendingMainTrend = () => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [isSlider, setIsSlider] = useState(false);
 
   const { data: trendingPlaylistData } = useQuery({
     queryKey: ["trendingMain", period],
-    queryFn: () => getTrendingMainPlaylists(`${period}`),
-    initialData: initData,
+    queryFn: () => getTrendingMainPlaylists(period),
     gcTime: QUERY_CACHE_TIME,
     staleTime: QUERY_STALE_TIME,
   });
@@ -74,20 +73,22 @@ const TrendingMainTrend = ({ initData }: { initData: PlaylistType[] }) => {
             </button>
           </div>
         </div>
-        {!isSlider &&
-          trendingPlaylistData &&
-          trendingPlaylistData.length > 0 && (
-            <PlaylistListContainer
-              playlists={trendingPlaylistData}
-              isLarge={true}
-              isIndex={true}
-            />
-          )}
-        {isSlider &&
-          trendingPlaylistData &&
-          trendingPlaylistData.length > 0 && (
-            <PlaylistGallery playlists={trendingPlaylistData} />
-          )}
+        <ReactQueryErrorBoundary>
+          {!isSlider &&
+            trendingPlaylistData &&
+            trendingPlaylistData.length > 0 && (
+              <PlaylistListContainer
+                playlists={trendingPlaylistData}
+                isLarge={true}
+                isIndex={true}
+              />
+            )}
+          {isSlider &&
+            trendingPlaylistData &&
+            trendingPlaylistData.length > 0 && (
+              <PlaylistGallery playlists={trendingPlaylistData} />
+            )}
+        </ReactQueryErrorBoundary>
       </div>
     </section>
   );
