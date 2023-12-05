@@ -2,18 +2,37 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { formatPrivate } from "@/libs/utils/server/formatter";
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params: { id } }: { params: { id: string } },
+) {
   try {
-    const pathname = new URL(req.url).pathname.split("/");
-    const id = decodeURIComponent(pathname[pathname.length - 1]);
-    const userId = new URL(req.url).searchParams.get("userId");
-    const isProfile = new URL(req.url).searchParams.get("isProfile") === "true";
+    const url = new URL(req.url);
+    const { userId, isProfile, lastId } = Object.fromEntries(
+      url.searchParams.entries(),
+    ) as {
+      userId: string;
+      isProfile?: string;
+      lastId?: string;
+    };
 
-    if (isProfile) {
+    const profile = isProfile === "true";
+
+    const lastIdCursor = lastId
+      ? { id: lastId }
+      : (undefined as { id: string } | undefined);
+
+    if (profile) {
       const unprocessedComments = await prisma.comment.findMany({
         where: {
           profileId: id,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 10,
+        skip: 1,
+        cursor: lastIdCursor,
         select: {
           id: true,
           createdAt: true,
@@ -96,6 +115,12 @@ export async function GET(req: Request) {
       where: {
         playlistId: id,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 10,
+      skip: 1,
+      cursor: lastIdCursor,
       select: {
         id: true,
         createdAt: true,
@@ -173,9 +198,9 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("post playlistDetail error: ", err);
+    console.log("comment error: ", err);
     return new NextResponse(
-      JSON.stringify({ message: "fail", errorCode: 404 }),
+      JSON.stringify({ message: `fail ${err}`, errorCode: 404 }),
       {
         status: 500,
         statusText: "Internal Server Error",

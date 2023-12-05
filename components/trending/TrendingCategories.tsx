@@ -17,16 +17,9 @@ import PlaylistListContainer from "@/components/common/playlist/column-list/Play
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
 import FiltersList from "@/components/common/playlist/module/FiltersList";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PlaylistType } from "@/libs/types/song&playlistType";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const TrendingCategories = ({
-  initData,
-}: {
-  initData: {
-    recentMostPlayedCategoryPlaylist: PlaylistType[];
-    categories: string[];
-  };
-}) => {
+const TrendingCategories = () => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [categoryFilterList, setCategoryFilterList] = useState<string[]>([]);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<
@@ -39,16 +32,15 @@ const TrendingCategories = ({
     queries: [
       {
         queryKey: ["trendingCategories", period],
-        queryFn: () => getTrendingCategoriesPlaylists(`${period}`),
+        queryFn: () => getTrendingCategoriesPlaylists(period),
         enabled: selectedCategoryFilter.length === 0,
-        initialData: initData,
         gcTime: QUERY_CACHE_TIME,
         staleTime: QUERY_STALE_TIME,
       },
       {
         queryKey: ["filteredCategories", period],
         queryFn: () =>
-          getFilteredCategoriesPlaylists(`${period}`, selectedCategoryFilter),
+          getFilteredCategoriesPlaylists(period, selectedCategoryFilter),
         enabled: selectedCategoryFilter.length > 0,
         gcTime: QUERY_CACHE_TIME,
         staleTime: QUERY_STALE_TIME,
@@ -155,15 +147,17 @@ const TrendingCategories = ({
             />
           )}
         </div>
-        <PlaylistListContainer
-          playlists={
-            isCategoryData
-              ? filteredCategoriesData.filteredCategoriesList
-              : trendingData?.recentMostPlayedCategoryPlaylist
-          }
-          isLarge={true}
-          isIndex={true}
-        />
+        <ReactQueryErrorBoundary>
+          <PlaylistListContainer
+            playlists={
+              isCategoryData
+                ? filteredCategoriesData.filteredCategoriesList
+                : trendingData?.recentMostPlayedCategoryPlaylist
+            }
+            isLarge={true}
+            isIndex={true}
+          />
+        </ReactQueryErrorBoundary>
       </div>
     </section>
   );

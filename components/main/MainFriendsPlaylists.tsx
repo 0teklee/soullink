@@ -9,17 +9,10 @@ import { formatPathName } from "@/libs/utils/client/formatter";
 import { getMainPageFriendsPlaylists } from "@/libs/utils/client/fetchers";
 import { useQuery } from "@tanstack/react-query";
 
-const MainFriendsPlaylists = ({
-  playLists,
-  userId,
-}: {
-  playLists: PlaylistType[];
-  userId?: string;
-}) => {
+const MainFriendsPlaylists = ({ userId }: { userId?: string }) => {
   const { data } = useQuery<PlaylistType[]>({
     queryKey: ["mainPageFriendsPlaylists"],
     queryFn: () => getMainPageFriendsPlaylists(userId),
-    initialData: playLists,
   });
 
   return (

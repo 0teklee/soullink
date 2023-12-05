@@ -114,15 +114,15 @@ export const formatMoodBgColor = (
 ) => {
   switch (mood) {
     case "upbeat":
-      return isHover ? "hover:bg-[#FF6F00]" : "bg-[#FF6F00]";
+      return isHover ? "hover:bg-upbeat" : "bg-upbeat";
     case "chill":
-      return isHover ? "hover:bg-[#9cf440]" : "bg-[#9cf440]";
+      return isHover ? "hover:bg-chill" : "bg-chill";
     case "relaxed":
-      return isHover ? "hover:bg-[#2e70ff]" : "bg-[#2e70ff]";
+      return isHover ? "hover:bg-relaxed" : "bg-relaxed";
     case "melancholic":
-      return isHover ? "hover:bg-[#6e00d0]" : "bg-[#6e00d0]";
+      return isHover ? "hover:bg-melancholic" : "bg-melancholic";
     default:
-      return isHover ? "hover:bg-[#01FF00]" : "bg-[#01FF00]";
+      return isHover ? "hover:bg-primary" : "bg-primary";
   }
 };
 
@@ -132,15 +132,15 @@ export const formatMoodFontColor = (
 ) => {
   switch (mood) {
     case "upbeat":
-      return isHover ? "hover:text-[#FF6F00]" : "text-[#FF6F00]";
+      return isHover ? "hover:text-upbeat" : "text-upbeat";
     case "chill":
-      return isHover ? "hover:text-[#9cf440]" : "text-[#9cf440]";
+      return isHover ? "hover:text-chill" : "text-chill";
     case "relaxed":
-      return isHover ? "hover:text-[#2e70ff]" : "text-[#2e70ff]";
+      return isHover ? "hover:text-relaxed" : "text-relaxed";
     case "melancholic":
-      return isHover ? "hover:text-[#6e00d0]" : "text-[#6e00d0]";
+      return isHover ? "hover:text-melancholic" : "text-melancholic";
     default:
-      return isHover ? "hover:text-[#01FF00]" : "text-[#01FF00]";
+      return isHover ? "hover:text-primary" : "text-primary";
   }
 };
 

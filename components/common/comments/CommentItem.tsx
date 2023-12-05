@@ -16,12 +16,10 @@ import {
   postLikeComment,
 } from "@/libs/utils/client/fetchers";
 import { useMutation } from "@tanstack/react-query";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import { useRouter } from "next/navigation";
-import CommonModal from "@/components/common/modal/CommonModal";
-import CommentDeleteModal from "@/components/common/comments/CommentDeleteModal";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const CommentItem = ({
   commentProps,
@@ -34,9 +32,8 @@ const CommentItem = ({
   userId?: string;
   refetch: () => void;
 }) => {
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLikedByDropdownOpen, setIsLikedByDropdownOpen] = useState(false);
+  const { setModal, setModalOpenState } = useSetModal();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -73,7 +70,7 @@ const CommentItem = ({
     mutationFn: () => postDeleteComment({ commentId, userId: userId || "" }),
     onSuccess: () => {
       refetch();
-      setIsDeleteModalOpen(false);
+      setModalOpenState(false);
     },
     onError: (error) => {
       console.log(error);
@@ -87,7 +84,7 @@ const CommentItem = ({
     }
 
     if (!userId) {
-      setLoginModalOpen(true);
+      setModal(MODAL_TYPE.LOGIN);
       return;
     }
     likeCommentMutate();
@@ -95,7 +92,7 @@ const CommentItem = ({
   };
 
   const handleDelete = () => {
-    setIsDeleteModalOpen(true);
+    setModal(MODAL_TYPE.DELETE, { mutate: deleteCommentMutate });
   };
 
   const handleClickOutside = () => {
@@ -231,17 +228,6 @@ const CommentItem = ({
           </div>
         )}
       </div>
-      {isDeleteModalOpen && (
-        <CommonModal
-          isModalOpen={isDeleteModalOpen}
-          setIsModalOpen={setIsDeleteModalOpen}
-        >
-          <CommentDeleteModal
-            setIsModalOpen={setIsDeleteModalOpen}
-            mutate={deleteCommentMutate}
-          />
-        </CommonModal>
-      )}
     </>
   );
 };

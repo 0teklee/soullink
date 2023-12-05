@@ -2,7 +2,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import Title from "@/components/common/module/Title";
-import { PlaylistType } from "@/libs/types/song&playlistType";
 import PlayListSlider from "@/components/common/playlist/PlayListSlider";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,11 +10,9 @@ import {
 } from "@/libs/utils/client/fetchers";
 
 const MainRecentPlayed = ({
-  propsData,
   userId,
   userNickname,
 }: {
-  propsData?: PlaylistType[];
   userId?: string;
   userNickname?: string;
 }) => {
@@ -27,7 +24,6 @@ const MainRecentPlayed = ({
     queryFn: !isLocal
       ? () => getRecentPlaylists(userId)
       : () => getLocalRecentPlaylists(recentPlayedIds),
-    initialData: propsData,
   });
 
   const isDataSuccess = isRecentSuccess && recentPlayedPlayLists;

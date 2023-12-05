@@ -9,26 +9,43 @@ import {
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { UserSessionType } from "@/libs/types/userType";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = async () => {
-  const { userId, userNickname } =
-    ((await getServerSession(authOptions)) as UserSessionType) || {};
+  const queryClient = new QueryClient();
+  const { userId, userNickname } = await getServerSession(authOptions).then(
+    (session) => (session as UserSessionType) || {},
+  );
 
-  const props = await Promise.all([
-    getMainPageTodayPlaylists(),
-    getTimelinePlaylists(userId),
-    getMainPageFriendsPlaylists(userId),
-    getRecentPlaylists(userId),
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["todayPlaylists"],
+      queryFn: getMainPageTodayPlaylists,
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["timeline_playlists", userId],
+      queryFn: () => getTimelinePlaylists(userId),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["mainPageFriendsPlaylists"],
+      queryFn: () => getMainPageFriendsPlaylists(userId),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["recentPlayed", userId],
+      queryFn: () => getRecentPlaylists(userId),
+    }),
   ]);
 
   return (
-    <MainTemplate
-      propsData={props}
-      userId={userId}
-      userNickname={userNickname}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MainTemplate userId={userId} userNickname={userNickname} />
+    </HydrationBoundary>
   );
 };
 

@@ -3,14 +3,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   PlaylistCreateRequestType,
-  PlaylistType,
   SongType,
 } from "@/libs/types/song&playlistType";
-import SongTable from "@/components/common/song/table/SongTable";
 import Image from "next/image";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
-import PlaylistSongModal from "@/components/playlist/create/PlaylistSongModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postEditPlaylist } from "@/libs/utils/client/fetchers";
 import { useRouter } from "next/navigation";
@@ -18,19 +15,23 @@ import {
   formatEditPlaylistValid,
   formatPathName,
 } from "@/libs/utils/client/formatter";
-import CommonModal from "@/components/common/modal/CommonModal";
+import { useRecoilState } from "recoil";
+import { MODAL_TYPE, PlaylistEditPropsType } from "@/libs/types/modalType";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { SongModalPropsState } from "@/libs/recoil/modalAtoms";
+import SongTable from "@/components/common/song/table/SongTable";
 
 const DetailEditModal = ({
-  userId,
-  playlistData,
-  setIsEdit,
+  editModalProps: { userId, playlistData },
 }: {
-  userId: string;
-  playlistData: PlaylistType;
-  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  editModalProps: PlaylistEditPropsType;
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [songModalProps, setSongModalProps] =
+    useRecoilState(SongModalPropsState);
+
+  const { setModal, setModalOpenState } = useSetModal();
 
   const {
     title,
@@ -43,7 +44,6 @@ const DetailEditModal = ({
   } = playlistData;
 
   const [isMaxSongList, setIsMaxSongList] = useState<boolean>(false);
-  const [isSongModalOpen, setIsSongModalOpen] = useState<boolean>(false);
   const [editPayload, setEditPayload] = useState<PlaylistCreateRequestType>({
     title,
     description,
@@ -52,10 +52,19 @@ const DetailEditModal = ({
     mood: mood.name,
     categories: category.map((item) => item.name),
   });
+
   const [songList, setSongList] = useState<SongType[]>(songs || []);
 
   const { mutate: mutatePlaylistEdit } = useMutation({
-    mutationFn: () => postEditPlaylist(editPayload, userId, playlistId),
+    mutationFn: ({
+      req_payload,
+      user_id,
+      playlist_id,
+    }: {
+      req_payload: PlaylistCreateRequestType;
+      user_id: string;
+      playlist_id: string;
+    }) => postEditPlaylist(req_payload, user_id, playlist_id),
     onSuccess: async (res) => {
       if (res.playlistTitle === title) {
         await queryClient.refetchQueries({
@@ -64,13 +73,14 @@ const DetailEditModal = ({
         return;
       }
       router.push(`/playlist/${formatPathName(res.playlistTitle)}`);
-      setIsEdit(false);
+      setModalOpenState(false);
     },
   });
 
-  const isValid = useMemo(() => {
-    return formatEditPlaylistValid(editPayload, songList, userId, playlistId);
-  }, [editPayload, songList, userId, playlistId]);
+  const isValid = useMemo(
+    () => formatEditPlaylistValid(editPayload, songList, userId, playlistId),
+    [editPayload, songList, userId, playlistId],
+  );
 
   const handlePayloadImgUpload = (imgUrl: string) => {
     setEditPayload((prev) => ({
@@ -90,8 +100,22 @@ const DetailEditModal = ({
     if (!playlist_id) {
       throw Error("need playlist id");
     }
-    mutatePlaylistEdit();
+    mutatePlaylistEdit({ req_payload: payload, user_id, playlist_id });
   };
+
+  useEffect(() => {
+    if (!!songModalProps?.modalSong) {
+      setSongList((prev) => {
+        if (prev.some((item) => item.id === songModalProps.modalSong?.id)) {
+          return prev;
+        }
+        return [...prev, songModalProps.modalSong as SongType];
+      });
+
+      setSongModalProps(null);
+      return;
+    }
+  }, [songModalProps?.modalSong]);
 
   useEffect(() => {
     setEditPayload((prev) => ({
@@ -170,15 +194,13 @@ const DetailEditModal = ({
         <label htmlFor={`songs`} className={`text-sm font-medium`}>
           Songs
         </label>
-        {songs && (
-          <SongTable
-            songList={songList}
-            setSongList={setSongList}
-            setIsModalOpen={setIsEdit}
-            userId={userId}
-            isCreate={true}
-          />
-        )}
+        <SongTable
+          songList={songList}
+          setSongList={setSongList}
+          setIsModalOpen={setModalOpenState}
+          userId={userId}
+          isCreate={true}
+        />
         <p
           className={`${
             isMaxSongList ? "text-pink-600" : "text-gray-300"
@@ -193,7 +215,9 @@ const DetailEditModal = ({
               setIsMaxSongList(true);
               return;
             }
-            setIsSongModalOpen(true);
+            setModal(MODAL_TYPE.SONG, {
+              isEdit: true,
+            });
           }}
         >
           <Image
@@ -207,17 +231,17 @@ const DetailEditModal = ({
       </div>
       <div className={`flex items-center justify-center gap-3 w-full`}>
         <button
-          className={`flex items-center justify-center gap-3 px-4 py-2 text-sm font-medium text-pink-700 bg-white ring-1 ring-pink-700 rounded-md hover:bg-pink-700 hover:text-white`}
+          className={`flex items-center justify-center gap-3 px-4 py-2 text-sm font-medium text-pink-700 bg-white ring-1 ring-pink-700 rounded-md hover:bg-red-500 hover:text-white`}
           onClick={() => {
-            setIsEdit(false);
+            setModalOpenState(false);
           }}
         >
-          <p className={``}>Cancel</p>
+          <p>Cancel</p>
         </button>
         <button
           disabled={!isValid}
           onClick={() => {
-            setIsEdit(false);
+            setModalOpenState(false);
             handleSubmit(editPayload, playlistId, userId);
           }}
           className={`flex items-center justify-center gap-3 px-4 py-2 text-primary ring-1 ring-primary hover:bg-primary hover:text-white rounded-md hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -225,20 +249,6 @@ const DetailEditModal = ({
           <p className={`text-sm font-medium`}>Save</p>
         </button>
       </div>
-      {isSongModalOpen && (
-        <div className={`z-20`}>
-          <CommonModal
-            isModalOpen={isSongModalOpen}
-            setIsModalOpen={setIsSongModalOpen}
-          >
-            <PlaylistSongModal
-              setModalOpen={setIsSongModalOpen}
-              setSongList={setSongList}
-              setPayload={setEditPayload}
-            />
-          </CommonModal>
-        </div>
-      )}
     </div>
   );
 };

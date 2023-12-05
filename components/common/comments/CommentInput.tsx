@@ -3,25 +3,24 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CommentPayloadType, UserSessionType } from "@/libs/types/userType";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postComment } from "@/libs/utils/client/fetchers";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const CommentInput = ({
   postId,
-  refetch,
   isProfile,
 }: {
   postId: string;
-  refetch: () => void;
   isProfile?: boolean;
 }) => {
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { setModal: setLoginModalOpen } = useSetModal();
 
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
   const isLoggedIn = !!userId;
+  const queryClient = useQueryClient();
 
   const [payload, setPayload] = useState<CommentPayloadType>({
     userId: userId || "",
@@ -37,11 +36,13 @@ const CommentInput = ({
     mutationFn: () => postComment(payload),
     onSuccess: () => {
       setPayload((prev) => ({ ...prev, comment: "", isPrivate: false }));
-      refetch();
+      queryClient.invalidateQueries({
+        refetchType: "all",
+      });
     },
     onError: (error) => {
-      console.log(error);
       confirm("Error occured. Please try again.");
+      throw new Error(error.message);
     },
   });
 
@@ -52,7 +53,7 @@ const CommentInput = ({
   const handlePostComment = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isLoggedIn || !payload.userId) {
-      setLoginModalOpen(true);
+      setLoginModalOpen(MODAL_TYPE.LOGIN);
       return;
     }
 
@@ -83,6 +84,7 @@ const CommentInput = ({
               comment.length > 0 ? "h-24" : "h-full"
             } p-2 bg-white border border-gray-300 hover:border-primary outline-none resize-none rounded`}
             onChange={handleTextareaChange}
+            value={payload.comment}
             maxLength={200}
           />
           <div
@@ -104,7 +106,7 @@ const CommentInput = ({
               }}
               checked={isPrivate}
             />
-            <span className={``}>private</span>
+            <span>private</span>
           </div>
           <button
             className={`p-4 hover:text-primary`}

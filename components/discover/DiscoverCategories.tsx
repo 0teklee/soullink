@@ -2,29 +2,19 @@
 
 import React from "react";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
-import { UserSessionType } from "@/libs/types/userType";
-import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { getCategoriesPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersList from "@/components/common/playlist/module/FiltersList";
 import { filterCategoryPlaylist } from "@/libs/utils/client/commonUtils";
-import { PlaylistType } from "@/libs/types/song&playlistType";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const DiscoverCategories = ({
-  propsData,
-}: {
-  propsData?: { categoryPlaylists: PlaylistType[]; categories: string[] };
-}) => {
-  const { data: session } = useSession() as { data: UserSessionType };
-  const { userId } = session || {};
-
+const DiscoverCategories = ({ userId }: { userId?: string }) => {
   const [selectedCategory, setSelectedCategory] = React.useState<string>("");
 
   const { data } = useQuery({
     queryKey: ["categoryPlaylists", userId],
     queryFn: () => getCategoriesPlaylists(userId),
-    initialData: propsData,
   });
 
   const { categoryPlaylists, categories } = data || {
@@ -49,11 +39,14 @@ const DiscoverCategories = ({
         }}
         selectedFilter={selectedCategory}
       />
+
       {!!categoryPlaylists && categoryPlaylists.length > 0 && (
-        <PlaylistListContainer
-          key={`discover_categories`}
-          playlists={selectedCategoryPlaylists}
-        />
+        <ReactQueryErrorBoundary>
+          <PlaylistListContainer
+            key={`discover_categories`}
+            playlists={selectedCategoryPlaylists}
+          />
+        </ReactQueryErrorBoundary>
       )}
     </div>
   );

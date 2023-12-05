@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   DAYS_FILTER,
   DAYS_FILTER_ARR,
@@ -12,10 +12,11 @@ import { getMoodLists, getMoodPlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
-import { PlaylistMoodType, PlaylistType } from "@/libs/types/song&playlistType";
+import { PlaylistMoodType } from "@/libs/types/song&playlistType";
 import { formatMoodBgColor } from "@/libs/utils/client/formatter";
+import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const TrendingMood = ({ initData }: { initData: PlaylistType[] }) => {
+const TrendingMood = () => {
   const [period, setPeriod] = useState<DAYS_FILTER>(DAYS_FILTER.ALL_TIME);
   const [selectedMood, setSelectedMood] = useState<null | PlaylistMoodType>(
     null,
@@ -25,32 +26,25 @@ const TrendingMood = ({ initData }: { initData: PlaylistType[] }) => {
     queries: [
       {
         queryKey: ["trendingMood", period, selectedMood],
-        queryFn: () => getMoodPlaylists(selectedMood, `${period}`),
-        initialData: initData,
+        queryFn: () => getMoodPlaylists(selectedMood, period),
         gcTime: QUERY_CACHE_TIME,
         staleTime: QUERY_STALE_TIME,
       },
       {
         queryKey: ["filteredMood", period],
-        queryFn: () => getMoodLists(`${period}`),
+        queryFn: () => getMoodLists(period),
         gcTime: QUERY_CACHE_TIME,
         staleTime: QUERY_STALE_TIME,
       },
     ],
   });
 
-  const { data: moodPlaylistData, refetch: trendingRefetch } =
-    moodPlaylistQuery;
-  const { data: moodFilterData, refetch: filterRefetch } = moodListQuery;
+  const { data: moodPlaylistData } = moodPlaylistQuery;
+  const { data: moodFilterData } = moodListQuery;
 
   const handleDropdownChange = (val: DAYS_FILTER) => {
     setPeriod(val);
   };
-
-  useEffect(() => {
-    trendingRefetch();
-    filterRefetch();
-  }, [period]);
 
   return (
     <section className={`flex flex-col gap-3 w-full`}>
@@ -94,11 +88,13 @@ const TrendingMood = ({ initData }: { initData: PlaylistType[] }) => {
             ))}
           </div>
         </div>
-        <PlaylistListContainer
-          playlists={moodPlaylistData}
-          isLarge={true}
-          isIndex={true}
-        />
+        <ReactQueryErrorBoundary>
+          <PlaylistListContainer
+            playlists={moodPlaylistData}
+            isLarge={true}
+            isIndex={true}
+          />
+        </ReactQueryErrorBoundary>
       </div>
     </section>
   );

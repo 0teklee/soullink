@@ -1,20 +1,22 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import Title from "@/components/common/module/Title";
+import { DeleteModalPropsType } from "@/libs/types/modalType";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
 
 const CommentDeleteModal = ({
-  setIsModalOpen,
-  mutate,
+  deleteModalProps: { mutate },
 }: {
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  mutate: () => void;
+  deleteModalProps: DeleteModalPropsType;
 }) => {
+  const { setModalOpenState } = useSetModal();
+
   return (
     <div className={`flex flex-col gap-3`}>
       <Title size={`h3`} text={`Are you sure to delete your comment?`} />
       <div className="flex justify-end">
         <button
           className="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setModalOpenState(false)}
         >
           Cancel
         </button>

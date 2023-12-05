@@ -14,7 +14,7 @@ import {
 import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
 
 const UseSelectedPlaylistPlay = (
-  playlistData: PlaylistType,
+  playlistData?: PlaylistType,
   userId?: string,
 ) => {
   const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
@@ -40,7 +40,7 @@ const UseSelectedPlaylistPlay = (
   });
 
   const handleRecentPlayed = () => {
-    if (userId) {
+    if (!!userId && !!playlistData) {
       mutateRecentPlayed({
         curUserId: userId,
         recentPlaylistId: playlistData.id,
@@ -49,6 +49,8 @@ const UseSelectedPlaylistPlay = (
   };
 
   const handleChangePlaylistState = (playlist: PlaylistType) => {
+    if (!playlistData) return;
+
     const now = dayjs();
     const isMoreThan5Mins = isNowMoreThanTargetTime(
       startedAt,
@@ -85,7 +87,7 @@ const UseSelectedPlaylistPlay = (
   return {
     handleChangePlaylistState,
     playing:
-      selectedPlaylist && selectedPlaylist.id === playlistData.id && playing,
+      selectedPlaylist && selectedPlaylist.id === playlistData?.id && playing,
   };
 };
 

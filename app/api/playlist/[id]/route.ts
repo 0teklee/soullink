@@ -55,6 +55,16 @@ export async function GET(req: Request) {
       },
     });
 
+    if (!playlist) {
+      return new NextResponse(
+        JSON.stringify({ message: "playlist not found", errorCode: 404 }),
+        {
+          status: 404,
+          statusText: "Not Found",
+        },
+      );
+    }
+
     return NextResponse.json(
       {
         data: playlist,
@@ -67,7 +77,7 @@ export async function GET(req: Request) {
   } catch (err) {
     console.log("post playlistDetail error: ", err);
     return new NextResponse(
-      JSON.stringify({ message: "fail", errorCode: 404 }),
+      JSON.stringify({ message: "fail to get playlist", errorCode: 500 }),
       {
         status: 500,
         statusText: "Internal Server Error",
