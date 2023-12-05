@@ -136,7 +136,7 @@ export const getRecommendedPlaylists = async (
 /* Trending Fetchers */
 
 export const getTrendingMainPlaylists = async (
-  period: string,
+  period: DAYS_FILTER,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent/trending?recent=${period}`,
@@ -160,7 +160,7 @@ export const getCategoriesPlaylists = async (
 };
 
 export const getTrendingCategoriesPlaylists = async (
-  period: string,
+  period: DAYS_FILTER,
 ): Promise<{
   recentMostPlayedCategoryPlaylist: PlaylistType[];
   categories: string[];
@@ -177,7 +177,7 @@ export const getTrendingCategoriesPlaylists = async (
 };
 
 export const getFilteredCategoriesPlaylists = async (
-  period: string,
+  period: DAYS_FILTER,
   categories: string[],
 ): Promise<{
   filteredCategoriesList: PlaylistType[];
@@ -198,7 +198,7 @@ export const getFilteredCategoriesPlaylists = async (
 
 export const getMoodPlaylists = async (
   param: PlaylistMoodType | null | undefined,
-  period = "0",
+  period: DAYS_FILTER,
   userId?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
@@ -213,7 +213,7 @@ export const getMoodPlaylists = async (
 };
 
 export const getMoodLists = async (
-  period = "0",
+  period: DAYS_FILTER,
 ): Promise<{ name: string; count: number }[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/count?recent=${period}`,
@@ -389,12 +389,17 @@ export const getSingleUserProfile = async (id: string): Promise<UserType> => {
 };
 
 export const getComments = async (
-  id: string,
+  postId: string,
   visitorId?: string,
   isProfile?: boolean,
+  id?: string,
 ): Promise<CommentType[]> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/comment/${id}?userId=${visitorId}&isProfile=${isProfile}`,
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${
+      id ? id : ""
+    }`,
   );
 
   const resData: Promise<CommentType[]> = await res
