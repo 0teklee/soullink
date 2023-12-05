@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatSongOrder } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -65,9 +66,23 @@ export async function GET(req: Request) {
       );
     }
 
+    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+      where: {
+        playlist: {
+          id: playlist.id,
+        },
+      },
+      select: {
+        songId: true,
+        songIndex: true,
+      },
+    });
+
+    const playlistOrdered = formatSongOrder(playlist.songs, playlistSongOrder);
+
     return NextResponse.json(
       {
-        data: playlist,
+        data: { ...playlist, songs: playlistOrdered },
       },
       {
         status: 200,
