@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
-import { CommentType } from "@/libs/types/userType";
-import CommentItem from "@/components/common/comments/CommentItem";
-import CommentInput from "@/components/common/comments/CommentInput";
+
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { getComments } from "@/libs/utils/client/fetchers";
-import { useQuery } from "@tanstack/react-query";
+import CommentItem from "@/components/common/comments/CommentItem";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import Loading from "@/components/common/module/Loading";
 
 const CommentContainer = ({
   postId,
@@ -15,44 +16,71 @@ const CommentContainer = ({
   userId?: string;
   isProfile?: boolean;
 }) => {
+  const lastCursor = useRef<string | undefined>();
+  const [isLast, setIsLast] = useState<boolean>(false);
+
+  const { ref: lastPageRef, inView } = useInView();
+
   const {
     data: commentsData,
     refetch,
     isLoading,
-  } = useQuery({
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useSuspenseInfiniteQuery({
     queryKey: ["commentList", postId, userId],
-    queryFn: () => getComments(postId, userId, isProfile),
-    enabled: !!postId && !!userId,
+    queryFn: async () => {
+      const res = await getComments(
+        postId,
+        userId,
+        isProfile,
+        lastCursor.current,
+      );
+      if (res?.length < 10) {
+        setIsLast(true);
+      }
+      return res;
+    },
+    initialPageParam: undefined,
+    refetchInterval: false,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage || lastPage?.length < 10) {
+        return undefined;
+      }
+      lastCursor.current = lastPage[lastPage?.length - 1].id;
+      return lastPage[lastPage?.length - 1].id as string;
+    },
   });
 
   useEffect(() => {
-    refetch();
-  }, [userId]);
+    if (inView && !isLoading && !isFetchingNextPage && !isLast) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   return (
-    <div
-      className={`flex flex-col justify-start items-start w-full gap-y-3 px-4`}
-    >
-      <CommentInput postId={postId} isProfile={isProfile} refetch={refetch} />
-      {!isLoading &&
-        commentsData &&
-        commentsData.length > 0 &&
-        commentsData.map((comment: CommentType, index) => (
-          <CommentItem
-            postId={postId}
-            userId={userId}
-            commentProps={comment}
-            key={`comment_${comment.id}_${index}`}
-            refetch={refetch}
-          />
-        ))}{" "}
-      {!isLoading && commentsData && commentsData.length === 0 && (
-        <p className={`text-gray-300 text-lg font-normal`}>No comments yet.</p>
-      )}
-      {isLoading && (
-        <p className={`text-gray-300 text-lg font-normal`}>Loading...</p>
-      )}
-    </div>
+    <>
+      <Suspense fallback={<Loading />}>
+        {commentsData?.pages?.length > 0 &&
+          commentsData.pages.map((page, index) => {
+            return page?.map((comment) => (
+              <CommentItem
+                postId={postId}
+                userId={userId}
+                commentProps={comment}
+                key={`comment_${comment.id}_${index}`}
+                refetch={refetch}
+              />
+            ));
+          })}
+        {!!commentsData?.pages?.length && commentsData?.pages?.length === 0 && (
+          <p className={`text-gray-300 text-lg font-normal`}>
+            No comments yet.
+          </p>
+        )}
+      </Suspense>
+      {!isLast && <div className={`w-full py-2 opacity-0`} ref={lastPageRef} />}
+    </>
   );
 };
 
