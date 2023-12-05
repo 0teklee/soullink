@@ -10,8 +10,6 @@ import {
   postUserEdit,
   postUserFollow,
 } from "@/libs/utils/client/fetchers";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
 import CommonModal from "@/components/common/modal/CommonModal";
 import UserFollowModal from "@/components/user/module/UserFollowModal";
 import {
@@ -25,6 +23,8 @@ import useTimer from "@/libs/utils/hooks/useTimer";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import { useRouter } from "next/navigation";
 import DomPurifiedText from "@/components/common/module/DOMPurifiedText";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const UserHeader = ({
   userProfile,
@@ -34,7 +34,7 @@ const UserHeader = ({
   userId?: string;
 }) => {
   const queryClient = useQueryClient();
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { setModal: setLoginModalOpen } = useSetModal();
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,7 +120,7 @@ const UserHeader = ({
     }
 
     if (!userId) {
-      setLoginModalOpen(true);
+      setLoginModalOpen(MODAL_TYPE.LOGIN);
       return;
     }
     followMutate();
@@ -294,7 +294,7 @@ const UserHeader = ({
                         <button
                           className={`w-full px-2 py-1 ${
                             isEdit
-                              ? `text-pink-700 rounded border border-pink-700 hover:text-white hover:bg-pink-700`
+                              ? `text-pink-700 rounded border border-pink-700 hover:text-white hover:bg-red-400`
                               : `hidden`
                           }`}
                           onClick={() => {
