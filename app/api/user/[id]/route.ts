@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -140,11 +141,59 @@ export async function GET(req: Request) {
       },
     });
 
+    const likedPlaylists =
+      userDb?.likedPlayLists.map((playlist) => playlist.playlist) || [];
+
+    const createdPlaylists = userDb?.createdPlaylists || [];
+
+    const likedPlaylistSongOrder = likedPlaylists
+      ? await prisma.playlistSongIndex.findMany({
+          where: {
+            playlist: {
+              id: {
+                in: likedPlaylists.map((playlist) => playlist.id),
+              },
+            },
+          },
+          select: {
+            playlistId: true,
+            songId: true,
+            songIndex: true,
+          },
+        })
+      : [];
+
+    const createdPlaylistSongOrder = createdPlaylists
+      ? await prisma.playlistSongIndex.findMany({
+          where: {
+            playlist: {
+              id: {
+                in: createdPlaylists.map((playlist) => playlist.id),
+              },
+            },
+          },
+          select: {
+            playlistId: true,
+            songId: true,
+            songIndex: true,
+          },
+        })
+      : [];
+
+    const userLikedPlaylistsOrdered = formatPlaylistsSongOrder(
+      likedPlaylists,
+      likedPlaylistSongOrder,
+    );
+
+    const userCreatedPlaylistsOrdered = formatPlaylistsSongOrder(
+      createdPlaylists,
+      createdPlaylistSongOrder,
+    );
+
     const user = {
       ...userDb,
-      likedPlaylists: userDb
-        ? userDb.likedPlayLists.map((playlist) => playlist.playlist)
-        : [],
+      createdPlaylists: userCreatedPlaylistsOrdered,
+      likedPlaylists: userLikedPlaylistsOrdered,
       likedSong: {
         title: `Liked Songs`,
         id: `${userDb?.nickname} liked songs`,
@@ -168,7 +217,7 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("post playlistDetail error: ", err);
+    console.log("get user detail error: ", err);
     return new NextResponse(
       JSON.stringify({ message: "fail", errorCode: 404 }),
       {
