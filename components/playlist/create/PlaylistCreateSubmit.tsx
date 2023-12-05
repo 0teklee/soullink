@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { postCreatePlaylist } from "@/libs/utils/client/fetchers";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { useSetRecoilState } from "recoil";
-import { CommonLoginModalState } from "@/libs/recoil/atoms";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const PlaylistCreateSubmit = ({
   payload,
@@ -17,7 +17,7 @@ const PlaylistCreateSubmit = ({
   userId?: string;
 }) => {
   const router = useRouter();
-  const setLoginModalOpen = useSetRecoilState(CommonLoginModalState);
+  const { setModal } = useSetModal();
 
   const { mutate } = useMutation({
     mutationFn: () => {
@@ -38,7 +38,7 @@ const PlaylistCreateSubmit = ({
         disabled={!isPayloadValid}
         onClick={() => {
           if (!userId) {
-            setLoginModalOpen(true);
+            setModal(MODAL_TYPE.LOGIN);
             return;
           }
           mutate();
