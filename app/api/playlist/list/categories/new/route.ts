@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -61,6 +62,26 @@ export async function GET(req: Request) {
         },
       });
 
+      const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+        where: {
+          playlist: {
+            id: {
+              in: nonLoginSuggestions.map((playlist) => playlist.id),
+            },
+          },
+        },
+        select: {
+          playlistId: true,
+          songId: true,
+          songIndex: true,
+        },
+      });
+
+      const filteredPlaylistsSongOrdered = formatPlaylistsSongOrder(
+        nonLoginSuggestions,
+        playlistSongOrder,
+      );
+
       const categoriesRes = await prisma.category.findMany({
         select: {
           name: true,
@@ -72,7 +93,7 @@ export async function GET(req: Request) {
       return new NextResponse(
         JSON.stringify({
           message: "success",
-          categoryPlaylists: nonLoginSuggestions,
+          categoryPlaylists: filteredPlaylistsSongOrdered,
           categories,
         }),
         {
@@ -164,11 +185,31 @@ export async function GET(req: Request) {
       },
     });
 
+    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
+      where: {
+        playlist: {
+          id: {
+            in: categoryPlaylists.map((playlist) => playlist.id),
+          },
+        },
+      },
+      select: {
+        playlistId: true,
+        songId: true,
+        songIndex: true,
+      },
+    });
+
+    const userFavoriteCategoryOrdered = formatPlaylistsSongOrder(
+      categoryPlaylists,
+      playlistSongOrder,
+    );
+
     return new NextResponse(
       JSON.stringify({
         message: "success",
         categoryPlaylists,
-        categories: userFavoriteCategories,
+        categories: userFavoriteCategoryOrdered,
       }),
       {
         status: 200,
