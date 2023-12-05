@@ -9,25 +9,41 @@ import DiscoverTemplate from "@/components/discover/DiscoverTemplate";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { UserSessionType } from "@/libs/types/userType";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 const Page = async () => {
+  const queryClient = new QueryClient();
   const { userId, userNickname } = await getServerSession(authOptions).then(
     (session) => (session as UserSessionType) || {},
   );
 
-  const propsData = await Promise.all([
-    await getEditorPlaylists(),
-    await getDiscoverMoodPlaylists(),
-    await getCategoriesPlaylists(userId),
-    await getRecommendedPlaylists(userId || ""),
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["editorPlaylists"],
+      queryFn: getEditorPlaylists,
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["moodPlaylists"],
+      queryFn: () => getDiscoverMoodPlaylists(userId),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["categoryPlaylists", userId],
+      queryFn: () => getCategoriesPlaylists(userId),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["recommendedPlaylists", userId],
+      queryFn: () => getRecommendedPlaylists(userId || ""),
+    }),
   ]);
 
   return (
-    <DiscoverTemplate
-      propsData={propsData}
-      userId={userId}
-      userNickname={userNickname}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <DiscoverTemplate userId={userId} userNickname={userNickname} />
+    </HydrationBoundary>
   );
 };
 
