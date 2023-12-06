@@ -9,7 +9,6 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useSetPlaylistFromSongTable } from "@/libs/utils/hooks/useSetPlaylistFromSongTable";
-import { useRouter } from "next/navigation";
 
 const TableItem = ({
   song,
@@ -20,6 +19,8 @@ const TableItem = ({
   setSongList,
   playlist,
   userId,
+  handleDragStart,
+  handleDragDrop,
 }: {
   song: SongType;
   index: number;
@@ -29,6 +30,8 @@ const TableItem = ({
   setSongList?: React.Dispatch<React.SetStateAction<SongType[]>>;
   playlist?: PlaylistType;
   userId?: string;
+  handleDragStart: (item: SongType) => void;
+  handleDragDrop: (targetIndex: number) => void;
 }) => {
   const playSongItemHook = useSetPlaylistFromSongTable(
     "id" in song ? song.id : "",
@@ -61,6 +64,21 @@ const TableItem = ({
 
   return (
     <tr
+      draggable={isCreate}
+      onDragStart={
+        isCreate
+          ? () => {
+              handleDragStart(song);
+            }
+          : undefined
+      }
+      onDrop={
+        isCreate
+          ? () => {
+              handleDragDrop(index);
+            }
+          : undefined
+      }
       key={`song_item_${song.title}_${index}`}
       className={`text-gray-500 text-base xs:text-sm border-b-[1px] border-gray-200 hover:text-white hover:bg-black hover:bg-opacity-30 cursor-pointer`}
     >
