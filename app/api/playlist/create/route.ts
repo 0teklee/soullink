@@ -7,6 +7,7 @@ export async function POST(req: Request) {
     const request: PlaylistCreateRequestType & { userId: string } = await req
       .json()
       .then((data) => data);
+
     const playlist = await prisma.playlist.create({
       data: {
         title: request.title,
@@ -14,17 +15,6 @@ export async function POST(req: Request) {
         coverImage: request.coverImage || "",
         author: {
           connect: { id: request.userId },
-        },
-        songs: {
-          connectOrCreate: request.songs.map((song) => ({
-            where: { url: song.url },
-            create: {
-              artist: song.artist,
-              title: song.title,
-              url: song.url,
-              thumbnail: song?.thumbnail,
-            },
-          })),
         },
         mood: {
           connectOrCreate: {
@@ -46,21 +36,38 @@ export async function POST(req: Request) {
       select: {
         id: true,
         title: true,
-        songs: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
       },
     });
 
-    await prisma.playlistSongIndex.createMany({
-      data: playlist.songs.map((song) => ({
-        playlistId: playlist.id,
-        songId: song.id,
-        songIndex: request.songs.findIndex((s) => s.url === song.url),
+    await prisma.song.createMany({
+      data: request.songs.map((song, index) => ({
+        title: song.title,
+        artist: song.artist,
+        url: song.url,
       })),
+      skipDuplicates: true,
+    });
+
+    const songIds = await prisma.song.findMany({
+      where: {
+        url: {
+          in: request.songs.map((song) => song.url),
+        },
+      },
+      select: {
+        id: true,
+        url: true,
+      },
+    });
+
+    const indexWithSongIds = request.songs.map((reqSong, index) => ({
+      playlistId: playlist.id,
+      songIndex: index,
+      songId: songIds.find((song) => song.url === reqSong.url)?.id || "",
+    }));
+
+    await prisma.playlistSong.createMany({
+      data: indexWithSongIds,
     });
 
     return new NextResponse(

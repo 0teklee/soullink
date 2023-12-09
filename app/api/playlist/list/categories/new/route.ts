@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -41,12 +41,20 @@ export async function GET(req: Request) {
             },
           },
           songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
             select: {
-              id: true,
-              title: true,
-              artist: true,
-              url: true,
-              likedCount: true,
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                },
+              },
             },
           },
           mood: {
@@ -62,26 +70,6 @@ export async function GET(req: Request) {
         },
       });
 
-      const playlistSongOrder = await prisma.playlistSongIndex.findMany({
-        where: {
-          playlist: {
-            id: {
-              in: nonLoginSuggestions.map((playlist) => playlist.id),
-            },
-          },
-        },
-        select: {
-          playlistId: true,
-          songId: true,
-          songIndex: true,
-        },
-      });
-
-      const filteredPlaylistsSongOrdered = formatPlaylistsSongOrder(
-        nonLoginSuggestions,
-        playlistSongOrder,
-      );
-
       const categoriesRes = await prisma.category.findMany({
         select: {
           name: true,
@@ -93,7 +81,7 @@ export async function GET(req: Request) {
       return new NextResponse(
         JSON.stringify({
           message: "success",
-          categoryPlaylists: filteredPlaylistsSongOrdered,
+          categoryPlaylists: nonLoginSuggestions,
           categories,
         }),
         {
@@ -128,88 +116,87 @@ export async function GET(req: Request) {
       })
       .flat();
 
-    const categoryPlaylists = await prisma.playlist.findMany({
-      where: {
-        category: {
-          every: {
-            name: {
-              in: userFavoriteCategories,
-            },
-          },
-        },
-      },
-      orderBy: {
-        likedCount: "desc",
-      },
-      select: {
-        id: true,
-        title: true,
-        coverImage: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-            isEditor: true,
-          },
-        },
-        category: {
-          select: {
-            name: true,
-          },
-        },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-          },
-        },
-        playedCount: true,
-        likedBy: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                id: true,
-                nickname: true,
-                profilePic: true,
-                isEditor: true,
+    const categoryPlaylists = await prisma.playlist
+      .findMany({
+        where: {
+          category: {
+            every: {
+              name: {
+                in: userFavoriteCategories,
               },
             },
           },
         },
-      },
-    });
-
-    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
-      where: {
-        playlist: {
-          id: {
-            in: categoryPlaylists.map((playlist) => playlist.id),
+        orderBy: {
+          likedCount: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          coverImage: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+              isEditor: true,
+            },
+          },
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          playedCount: true,
+          likedBy: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  id: true,
+                  nickname: true,
+                  profilePic: true,
+                  isEditor: true,
+                },
+              },
+            },
           },
         },
-      },
-      select: {
-        playlistId: true,
-        songId: true,
-        songIndex: true,
-      },
-    });
-
-    const userFavoriteCategoryOrdered = formatPlaylistsSongOrder(
-      categoryPlaylists,
-      playlistSongOrder,
-    );
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     return new NextResponse(
       JSON.stringify({
         message: "success",
         categoryPlaylists,
-        categories: userFavoriteCategoryOrdered,
+        categories: userFavoriteCategories,
       }),
       {
         status: 200,

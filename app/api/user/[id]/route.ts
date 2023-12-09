@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params: { id: nickname } }: { params: { id: string } },
+) {
   try {
-    const pathname = new URL(req.url).pathname.split("/");
-    const nickname = decodeURIComponent(pathname[pathname.length - 1]);
+    const userLikedPlaylists = await prisma.playlist.findMany({
+      where: {
+        likedBy: {
+          some: {
+            userId: nickname,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
 
     const userDb = await prisma.user.findUnique({
       where: {
@@ -44,6 +56,13 @@ export async function GET(req: Request) {
           },
         },
         likedPlayLists: {
+          where: {
+            playlist: {
+              id: {
+                in: userLikedPlaylists.map((playlist) => playlist.id),
+              },
+            },
+          },
           select: {
             playlist: {
               select: {
@@ -72,14 +91,25 @@ export async function GET(req: Request) {
                   },
                 },
                 songs: {
+                  where: {
+                    playlist: {
+                      id: {
+                        in: userLikedPlaylists.map((playlist) => playlist.id),
+                      },
+                    },
+                  },
                   select: {
-                    id: true,
-                    title: true,
-                    artist: true,
-                    url: true,
-                    thumbnail: true,
-                    playedCount: true,
-                    likedUsers: true,
+                    song: {
+                      select: {
+                        id: true,
+                        title: true,
+                        artist: true,
+                        url: true,
+                        thumbnail: true,
+                        playedCount: true,
+                        likedUsers: true,
+                      },
+                    },
                   },
                 },
               },
@@ -87,6 +117,11 @@ export async function GET(req: Request) {
           },
         },
         createdPlaylists: {
+          where: {
+            author: {
+              nickname,
+            },
+          },
           select: {
             id: true,
             author: {
@@ -105,13 +140,24 @@ export async function GET(req: Request) {
               },
             },
             songs: {
+              orderBy: {
+                songIndex: "asc",
+              },
               select: {
-                id: true,
-                title: true,
-                artist: true,
-                thumbnail: true,
-                playedCount: true,
-                likedUsers: true,
+                songIndex: true,
+                song: {
+                  select: {
+                    id: true,
+                    title: true,
+                    artist: true,
+                    url: true,
+                    likedUsers: {
+                      select: {
+                        userId: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -132,6 +178,7 @@ export async function GET(req: Request) {
         title: true,
         artist: true,
         thumbnail: true,
+        url: true,
         playedCount: true,
         likedUsers: {
           select: {
@@ -142,58 +189,20 @@ export async function GET(req: Request) {
     });
 
     const likedPlaylists =
-      userDb?.likedPlayLists.map((playlist) => playlist.playlist) || [];
+      userDb?.likedPlayLists?.map((playlist) => playlist.playlist) || [];
 
-    const createdPlaylists = userDb?.createdPlaylists || [];
-
-    const likedPlaylistSongOrder = likedPlaylists
-      ? await prisma.playlistSongIndex.findMany({
-          where: {
-            playlist: {
-              id: {
-                in: likedPlaylists.map((playlist) => playlist.id),
-              },
-            },
-          },
-          select: {
-            playlistId: true,
-            songId: true,
-            songIndex: true,
-          },
-        })
-      : [];
-
-    const createdPlaylistSongOrder = createdPlaylists
-      ? await prisma.playlistSongIndex.findMany({
-          where: {
-            playlist: {
-              id: {
-                in: createdPlaylists.map((playlist) => playlist.id),
-              },
-            },
-          },
-          select: {
-            playlistId: true,
-            songId: true,
-            songIndex: true,
-          },
-        })
-      : [];
-
-    const userLikedPlaylistsOrdered = formatPlaylistsSongOrder(
-      likedPlaylists,
-      likedPlaylistSongOrder,
-    );
-
-    const userCreatedPlaylistsOrdered = formatPlaylistsSongOrder(
-      createdPlaylists,
-      createdPlaylistSongOrder,
-    );
+    const createdPlaylists =
+      userDb?.createdPlaylists?.map((playlist) => {
+        return {
+          ...playlist,
+          songs: playlist.songs.map((song) => song.song),
+        };
+      }) || [];
 
     const user = {
       ...userDb,
-      createdPlaylists: userCreatedPlaylistsOrdered,
-      likedPlaylists: userLikedPlaylistsOrdered,
+      createdPlaylists,
+      likedPlaylists,
       likedSong: {
         title: `Liked Songs`,
         id: `${userDb?.nickname} liked songs`,

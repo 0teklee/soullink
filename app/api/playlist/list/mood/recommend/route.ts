@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import dayjs from "dayjs";
-import { formatPlaylistsSongOrder } from "@/libs/utils/server/formatter";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -152,48 +152,47 @@ export async function GET(req: Request) {
             },
           },
           songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
             select: {
-              id: true,
-              title: true,
-              artist: true,
-              url: true,
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  playedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
       })
       .then((playlists) =>
-        playlists.filter(
-          (playlist, index, self) =>
-            index === self.findIndex((p) => p.id === playlist.id) &&
-            playlist.songs.length > 0 &&
-            playlist.title,
-        ),
+        playlists
+          .filter(
+            (playlist, index, self) =>
+              index === self.findIndex((p) => p.id === playlist.id) &&
+              playlist.songs.length > 0 &&
+              playlist.title,
+          )
+          .map((playlist) => ({
+            ...playlist,
+            songs: formatSongResponse(playlist.songs),
+          })),
       );
-
-    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
-      where: {
-        playlist: {
-          id: {
-            in: moodPlayLists.map((playlist) => playlist.id),
-          },
-        },
-      },
-      select: {
-        playlistId: true,
-        songId: true,
-        songIndex: true,
-      },
-    });
-
-    const moodPlayListsOrdered = formatPlaylistsSongOrder(
-      moodPlayLists,
-      playlistSongOrder,
-    );
 
     return new NextResponse(
       JSON.stringify({
         message: "success",
-        moodPlayLists: moodPlayListsOrdered,
+        moodPlayLists,
       }),
       {
         status: 200,

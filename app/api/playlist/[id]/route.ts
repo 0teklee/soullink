@@ -1,60 +1,80 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { formatSongOrder } from "@/libs/utils/server/formatter";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params: { id } }: { params: { id: string } },
+) {
   try {
-    const pathname = new URL(req.url).pathname.split("/");
-    const title = decodeURIComponent(pathname[pathname.length - 1]);
+    const title = decodeURIComponent(id);
 
-    const playlist = await prisma.playlist.findUnique({
-      where: {
-        title,
-      },
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-          },
+    const playlist = await prisma.playlist
+      .findUnique({
+        where: {
+          title,
         },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            thumbnail: true,
-            url: true,
-            playedCount: true,
-            likedUsers: {
-              select: {
-                userId: true,
+        select: {
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+          title: true,
+          description: true,
+          coverImage: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+            },
+          },
+          songs: {
+            where: {
+              playlist: {
+                title,
+              },
+            },
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  playedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
               },
             },
           },
-        },
-        likedBy: true,
-        playedCount: true,
-        mood: {
-          select: {
-            name: true,
+          likedBy: true,
+          playedCount: true,
+          mood: {
+            select: {
+              name: true,
+            },
+          },
+          category: {
+            select: {
+              name: true,
+            },
           },
         },
-        category: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+      })
+      .then((data) => ({
+        ...data,
+        songs: formatSongResponse(data?.songs),
+      }));
 
     if (!playlist) {
       return new NextResponse(
@@ -66,23 +86,9 @@ export async function GET(req: Request) {
       );
     }
 
-    const playlistSongOrder = await prisma.playlistSongIndex.findMany({
-      where: {
-        playlist: {
-          id: playlist.id,
-        },
-      },
-      select: {
-        songId: true,
-        songIndex: true,
-      },
-    });
-
-    const playlistOrdered = formatSongOrder(playlist.songs, playlistSongOrder);
-
     return NextResponse.json(
       {
-        data: { ...playlist, songs: playlistOrdered },
+        data: playlist,
       },
       {
         status: 200,
