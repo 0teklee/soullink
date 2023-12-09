@@ -10,9 +10,9 @@ import useSetModal from "@/libs/utils/hooks/useSetModal";
 const CommonErrorModal = () => {
   const router = useRouter();
   const { setModalOpenState, useModalState } = useSetModal();
-  const [errorModalProps, setErrorModalProps] = useModalState<
-    UseModalStateMap[MODAL_TYPE.ERROR]
-  >(MODAL_TYPE.ERROR);
+  const [errorModalProps] = useModalState<UseModalStateMap[MODAL_TYPE.ERROR]>(
+    MODAL_TYPE.ERROR,
+  );
   const { error, resetErrorBoundary } = errorModalProps || {};
   const errorMessage =
     error && error.message ? error.message : "An Error occurred.";

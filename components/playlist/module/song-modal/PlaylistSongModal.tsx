@@ -6,11 +6,7 @@ import {
   SONG_DEFAULT_VALUE,
 } from "@/libs/utils/client/commonValues";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  MODAL_TYPE,
-  SongModalPropsType,
-  UseModalStateMap,
-} from "@/libs/types/modalType";
+import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import SubmitPage from "@/components/playlist/module/song-modal/SubmitPage";
 import YoutubeSearchPage from "@/components/playlist/module/song-modal/YoutubeSearchPage";
@@ -21,7 +17,7 @@ const PlaylistSongModal = () => {
     UseModalStateMap[MODAL_TYPE.SONG]
   >(MODAL_TYPE.SONG);
 
-  const [playlistEditProps, setPlaylistEditProps] = useModalState<
+  const [playlistEditProps] = useModalState<
     UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
   >(MODAL_TYPE.PLAYLIST_EDIT);
 

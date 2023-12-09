@@ -25,7 +25,7 @@ const DetailEditModal = () => {
   const router = useRouter();
 
   const { setModal, setModalOpenState, useModalState } = useSetModal();
-  const [playlistEditModalState, setPlaylistEditModalState] = useModalState<
+  const [playlistEditModalState] = useModalState<
     UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
   >(MODAL_TYPE.PLAYLIST_EDIT);
 
