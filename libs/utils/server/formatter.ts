@@ -139,38 +139,23 @@ export const formatSearchOrderBy = (
   return {};
 };
 
-export const formatSongOrder = (
-  songs: { id: string }[],
-  playlistSongOrder: { songId: string; songIndex: number }[],
-) => {
-  return songs.sort((a, b) => {
-    const aIndex = playlistSongOrder.find((song) => song.songId === a.id)
-      ?.songIndex;
-    const bIndex = playlistSongOrder.find((song) => song.songId === b.id)
-      ?.songIndex;
-
-    if (aIndex === undefined || bIndex === undefined) {
-      return 0;
-    }
-    return aIndex - bIndex;
-  });
-};
-
-export const formatPlaylistsSongOrder = (
-  playlists: { id: string; songs: { id: string }[] }[],
-  songOrders: { playlistId: string; songId: string; songIndex: number }[],
-) => {
-  if (songOrders.length === 0) {
-    return playlists;
-  }
-
-  return playlists.map((playlist) => {
-    return {
-      ...playlist,
-      songs: formatSongOrder(
-        playlist.songs,
-        songOrders.filter((songOrder) => songOrder.playlistId === playlist.id),
-      ),
+export const formatSongResponse = (
+  songs?: {
+    songIndex: number;
+    song: {
+      id: string;
+      likedCount?: number;
+      playedCount?: number | null;
+      title: string;
+      artist: string;
+      url: string;
+      likedUsers: { userId: string }[];
     };
-  });
+  }[],
+) => {
+  if (!songs) return [];
+  return songs.map((song) => ({
+    ...song.song,
+    songIndex: song.songIndex || 0,
+  }));
 };
