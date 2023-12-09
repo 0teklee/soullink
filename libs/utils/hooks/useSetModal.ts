@@ -5,7 +5,7 @@ import {
   PlaylistEditPropsType,
   SongModalPropsType,
 } from "@/libs/types/modalType";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import {
   CommonModalState,
@@ -19,10 +19,32 @@ import {
 const useSetModal = () => {
   const setModalOpenState = useSetRecoilState(CommonModalState);
   const setModalTypeState = useSetRecoilState(CommonModalTypeState);
-  const setPlaylistEditProps = useSetRecoilState(PlaylistEditPropsState);
-  const setSongModalProps = useSetRecoilState(SongModalPropsState);
-  const setDeleteModalProps = useSetRecoilState(DeleteModalPropsState);
-  const setErrorModalProps = useSetRecoilState(ErrorModalPropsState);
+  const [playlistEditModalState, setPlaylistEditProps] = useRecoilState(
+    PlaylistEditPropsState,
+  );
+
+  const [songCreateEditModalState, setSongModalProps] =
+    useRecoilState(SongModalPropsState);
+  const [deleteModalState, setDeleteModalProps] = useRecoilState(
+    DeleteModalPropsState,
+  );
+  const [errorModalState, setErrorModalProps] =
+    useRecoilState(ErrorModalPropsState);
+
+  const useModalState = <T>(type: MODAL_TYPE): T => {
+    switch (type) {
+      case MODAL_TYPE.PLAYLIST_EDIT:
+        return [playlistEditModalState, setPlaylistEditProps] as T;
+      case MODAL_TYPE.SONG:
+        return [songCreateEditModalState, setSongModalProps] as T;
+      case MODAL_TYPE.DELETE:
+        return [deleteModalState, setDeleteModalProps] as T;
+      case MODAL_TYPE.ERROR:
+        return [errorModalState, setErrorModalProps] as T;
+      default:
+        return [null, null] as T;
+    }
+  };
 
   const setModal = (
     type_input: MODAL_TYPE,
@@ -57,7 +79,7 @@ const useSetModal = () => {
     }
   };
 
-  return { setModal, setModalOpenState };
+  return { setModal, setModalOpenState, useModalState };
 };
 
 export default useSetModal;

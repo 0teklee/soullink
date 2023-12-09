@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -51,12 +52,20 @@ export async function GET(req: Request) {
             },
           },
           songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
             select: {
-              id: true,
-              title: true,
-              artist: true,
-              url: true,
-              likedCount: true,
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                },
+              },
             },
           },
           mood: {
@@ -66,6 +75,7 @@ export async function GET(req: Request) {
           },
         },
       });
+
       return new NextResponse(
         JSON.stringify({
           message: "success",
@@ -146,108 +156,127 @@ export async function GET(req: Request) {
 
     const { likeCategories, likeMoods } = userLikeCategoriesMood;
 
-    const userFavoritePlaylist = await prisma.playlist.findMany({
-      where: {
-        OR: [
-          {
-            author: {
-              followers: {
+    const userFavoritePlaylist = await prisma.playlist
+      .findMany({
+        where: {
+          OR: [
+            {
+              author: {
+                followers: {
+                  some: {
+                    followerId: userId,
+                  },
+                },
+              },
+            },
+            {
+              likedBy: {
                 some: {
-                  followerId: userId,
+                  user: {
+                    followers: {
+                      some: {
+                        followerId: userId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              mood: {
+                name: {
+                  in: likeMoods,
+                },
+              },
+            },
+            {
+              category: {
+                some: {
+                  name: {
+                    in: likeCategories,
+                  },
+                },
+              },
+            },
+          ],
+        },
+        take: 10,
+        orderBy: [
+          { createdAt: "desc" },
+          {
+            recentPlay: {
+              _count: "desc",
+            },
+          },
+          {
+            playedTime: "desc",
+          },
+          {
+            likedCount: "desc",
+          },
+        ],
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          coverImage: true,
+          createdAt: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+              isEditor: true,
+            },
+          },
+          likedBy: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  id: true,
+                  nickname: true,
+                  profilePic: true,
+                  isEditor: true,
                 },
               },
             },
           },
-          {
-            likedBy: {
-              some: {
-                user: {
-                  followers: {
-                    some: {
-                      followerId: userId,
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
                     },
                   },
                 },
               },
             },
           },
-          {
-            mood: {
-              name: {
-                in: likeMoods,
-              },
-            },
-          },
-          {
-            category: {
-              some: {
-                name: {
-                  in: likeCategories,
-                },
-              },
-            },
-          },
-        ],
-      },
-      take: 10,
-      orderBy: [
-        { createdAt: "desc" },
-        {
-          recentPlay: {
-            _count: "desc",
-          },
-        },
-        {
-          playedTime: "desc",
-        },
-        {
-          likedCount: "desc",
-        },
-      ],
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        createdAt: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-            isEditor: true,
-          },
-        },
-        likedBy: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                id: true,
-                nickname: true,
-                profilePic: true,
-                isEditor: true,
-              },
+          mood: {
+            select: {
+              name: true,
             },
           },
         },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-          },
-        },
-        mood: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     return new NextResponse(
       JSON.stringify({

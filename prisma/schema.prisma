@@ -54,9 +54,9 @@ model Playlist {
   description String                 @db.MediumText
   author      User                   @relation(fields: [authorId], references: [id])
   authorId    String
-  bannerColor String?                @db.LongText()
+  songs       PlaylistSong[]
   bgColor     String?                @db.LongText()
-  songs       Song[]
+  fontColor   String?                @db.LongText()
   comments    Comment[]
   likedBy     PlaylistLikedByUsers[]
   likedCount  Int                    @default(0)
@@ -104,18 +104,26 @@ model PlaylistLikedByUsers {
 }
 
 model Song {
-  id          String             @id @default(uuid())
-  title       String
-  artist      String
-  url         String             @unique
-  playlist    Playlist           @relation(fields: [playlistId], references: [id])
-  playlistId  String
-  likedUsers  SongLikedByUsers[]
-  likedCount  Int                @default(0)
-  playedCount Int?               @default(0)
-  thumbnail   String?
+  id           String             @id @default(uuid())
+  title        String
+  artist       String
+  url          String             @unique
+  likedUsers   SongLikedByUsers[]
+  likedCount   Int                @default(0)
+  playedCount  Int?               @default(0)
+  thumbnail    String?
+  PlaylistSong PlaylistSong[]
 
   @@fulltext([title, artist])
+}
+
+model PlaylistSong {
+  id         String   @id @default(uuid())
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+  playlistId String
+  song       Song     @relation(fields: [songId], references: [id])
+  songId     String
+  songIndex  Int
 }
 
 model SongLikedByUsers {

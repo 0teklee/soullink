@@ -15,24 +15,21 @@ import {
   formatEditPlaylistValid,
   formatPathName,
 } from "@/libs/utils/client/formatter";
-import { useRecoilState } from "recoil";
-import { MODAL_TYPE, PlaylistEditPropsType } from "@/libs/types/modalType";
+import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
-import { SongModalPropsState } from "@/libs/recoil/modalAtoms";
 import SongTable from "@/components/common/song/table/SongTable";
+import { playlistDefault } from "@/libs/utils/client/commonValues";
 
-const DetailEditModal = ({
-  editModalProps: { userId, playlistData },
-}: {
-  editModalProps: PlaylistEditPropsType;
-}) => {
+const DetailEditModal = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [songModalProps, setSongModalProps] =
-    useRecoilState(SongModalPropsState);
 
-  const { setModal, setModalOpenState } = useSetModal();
+  const { setModal, setModalOpenState, useModalState } = useSetModal();
+  const [playlistEditModalState] = useModalState<
+    UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
+  >(MODAL_TYPE.PLAYLIST_EDIT);
 
+  const { userId, playlistData } = playlistEditModalState || {};
   const {
     title,
     description,
@@ -41,8 +38,9 @@ const DetailEditModal = ({
     id: playlistId,
     mood,
     category,
-  } = playlistData;
+  } = playlistData || playlistDefault;
 
+  const [songList, setSongList] = useState<SongType[]>(songs ?? []);
   const [isMaxSongList, setIsMaxSongList] = useState<boolean>(false);
   const [editPayload, setEditPayload] = useState<PlaylistCreateRequestType>({
     title,
@@ -52,8 +50,6 @@ const DetailEditModal = ({
     mood: mood.name,
     categories: category.map((item) => item.name),
   });
-
-  const [songList, setSongList] = useState<SongType[]>(songs || []);
 
   const { mutate: mutatePlaylistEdit } = useMutation({
     mutationFn: ({
@@ -91,8 +87,8 @@ const DetailEditModal = ({
 
   const handleSubmit = (
     payload: PlaylistCreateRequestType,
-    playlist_id: string,
-    user_id: string,
+    playlist_id?: string,
+    user_id?: string,
   ) => {
     if (!user_id) {
       throw Error("need login");
@@ -104,25 +100,18 @@ const DetailEditModal = ({
   };
 
   useEffect(() => {
-    if (!!songModalProps?.modalSong) {
-      setSongList((prev) => {
-        if (prev.some((item) => item.id === songModalProps.modalSong?.id)) {
-          return prev;
-        }
-        return [...prev, songModalProps.modalSong as SongType];
-      });
-
-      setSongModalProps(null);
-      return;
-    }
-  }, [songModalProps?.modalSong]);
-
-  useEffect(() => {
     setEditPayload((prev) => ({
       ...prev,
       songs: songList,
     }));
   }, [songList]);
+
+  useEffect(() => {
+    if (!playlistEditModalState || !playlistEditModalState?.addedSongList) {
+      return;
+    }
+    setSongList(playlistEditModalState.addedSongList);
+  }, []);
 
   return (
     <div

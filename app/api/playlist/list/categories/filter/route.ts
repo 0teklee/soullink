@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import { formatDateFilter } from "@/libs/utils/server/formatter";
+import {
+  formatDateFilter,
+  formatSongResponse,
+} from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -9,87 +12,101 @@ export async function GET(req: Request) {
   const categoryList = JSON.parse(categories);
 
   try {
-    const filteredCategoriesList = await prisma.playlist.findMany({
-      take: 20,
-      where: {
-        AND: [
-          {
-            createdAt: {
-              gte: recentDate,
+    const filteredCategoriesList = await prisma.playlist
+      .findMany({
+        take: 20,
+        where: {
+          AND: [
+            {
+              createdAt: {
+                gte: recentDate,
+              },
             },
+            {
+              category: {
+                some: {
+                  name: {
+                    in: categoryList,
+                  },
+                },
+              },
+            },
+          ],
+        },
+        orderBy: [
+          {
+            createdAt: "desc",
           },
           {
-            category: {
-              some: {
-                name: {
-                  in: categoryList,
+            likedCount: "desc",
+          },
+          {
+            playedTime: "desc",
+          },
+        ],
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          coverImage: true,
+          createdAt: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+            },
+          },
+          authorId: true,
+          playedCount: true,
+          playedTime: true,
+          mood: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
                 },
               },
             },
           },
-        ],
-      },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-        {
-          likedCount: "desc",
-        },
-        {
-          playedTime: "desc",
-        },
-      ],
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        createdAt: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-          },
-        },
-        authorId: true,
-        playedCount: true,
-        playedTime: true,
-        mood: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-            likedUsers: {
-              select: {
-                userId: true,
-              },
+          likedBy: {
+            select: {
+              userId: true,
             },
           },
         },
-        likedBy: {
-          select: {
-            userId: true,
-          },
-        },
-      },
-    });
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     return new NextResponse(
       JSON.stringify({

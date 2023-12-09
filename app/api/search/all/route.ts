@@ -3,6 +3,7 @@ import { prisma } from "@/prisma/client";
 import {
   formatDateFilter,
   formatSearchOrderBy,
+  formatSongResponse,
 } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
@@ -39,102 +40,116 @@ export async function GET(req: Request) {
       },
     });
 
-    const playlists = await prisma.playlist.findMany({
-      take: 20,
-      where: {
-        AND: [
-          {
-            likedBy: {},
-          },
-          {
-            OR: [
-              {
-                title: {
-                  contains: keyword,
+    const playlists = await prisma.playlist
+      .findMany({
+        take: 20,
+        where: {
+          AND: [
+            {
+              likedBy: {},
+            },
+            {
+              OR: [
+                {
+                  title: {
+                    contains: keyword,
+                  },
                 },
-              },
-              {
-                description: {
-                  contains: keyword,
+                {
+                  description: {
+                    contains: keyword,
+                  },
                 },
+                {},
+              ],
+            },
+            {
+              createdAt: {
+                gte: recentDate,
               },
-              {},
-            ],
-          },
+            },
+          ],
+        },
+        orderBy: [
           {
-            createdAt: {
-              gte: recentDate,
+            _relevance: {
+              fields: ["title", "description"],
+              search: keyword,
+              sort: "desc",
             },
           },
+          order,
         ],
-      },
-      orderBy: [
-        {
-          _relevance: {
-            fields: ["title", "description"],
-            search: keyword,
-            sort: "desc",
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          coverImage: true,
+          createdAt: true,
+          likedCount: true,
+          playedTime: true,
+          mood: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
-        },
-        order,
-      ],
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        createdAt: true,
-        likedCount: true,
-        playedTime: true,
-        mood: {
-          select: {
-            id: true,
-            name: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+            },
           },
-        },
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
+          authorId: true,
+          playedCount: true,
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  playedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
+              },
+            },
           },
-        },
-        authorId: true,
-        playedCount: true,
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-            playedCount: true,
-            likedUsers: {
-              select: {
-                userId: true,
+          likedBy: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  nickname: true,
+                  profilePic: true,
+                },
               },
             },
           },
         },
-        likedBy: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                nickname: true,
-                profilePic: true,
-              },
-            },
-          },
-        },
-      },
-    });
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     const users = await prisma.user.findMany({
       where: {

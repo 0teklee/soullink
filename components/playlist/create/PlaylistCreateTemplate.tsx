@@ -51,8 +51,6 @@ const PlaylistCreateTemplate = () => {
     useRecoilState(SongModalPropsState);
   const { setModal } = useSetModal();
 
-  const { modalSong } = songModalState || {};
-
   const { title, description, songs, mood: currentMood, categories } = payload;
 
   const { data: userData } = useQuery({
@@ -113,16 +111,25 @@ const PlaylistCreateTemplate = () => {
   };
 
   useEffect(() => {
-    if (!!modalSong) {
-      setSongList((prev) => {
-        if (prev.find((song) => song.id === modalSong.id)) {
-          return prev;
-        }
-        return [...prev, modalSong];
-      });
-      setSongModalProps(null);
+    if (!songModalState?.modalSong) {
+      return;
     }
-  }, [modalSong]);
+
+    setSongList((prev) => {
+      if (prev.find((song) => song.url === songModalState?.modalSong?.url)) {
+        return prev;
+      }
+      return [...prev, songModalState?.modalSong as SongType];
+    });
+    setSongModalProps(null);
+  }, [songModalState?.modalSong]);
+
+  useEffect(() => {
+    setPayload((prev) => ({
+      ...prev,
+      songs: songList,
+    }));
+  }, [songList]);
 
   useEffect(() => {
     if (session && !userId) {
@@ -360,14 +367,6 @@ const PlaylistCreateTemplate = () => {
           payload={payload}
           userId={userId}
         />
-
-        {/*<CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>*/}
-        {/*  <PlaylistSongModal*/}
-        {/*    setIsModalOpen={setIsModalOpen}*/}
-        {/*    setSongList={setSongList}*/}
-        {/*    setPayload={setPayload}*/}
-        {/*  />*/}
-        {/*</CommonModal>*/}
       </div>
     </section>
   );

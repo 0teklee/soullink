@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import dayjs from "dayjs";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -80,54 +81,68 @@ export async function GET(req: Request) {
         }
       : {};
 
-    const friendsList = await prisma.playlist.findMany({
-      take: 20,
-      where: userIdWhere,
-      orderBy: [
-        { playedCount: "desc" },
-        {
-          recentPlay: {
-            _count: "desc",
+    const friendsList = await prisma.playlist
+      .findMany({
+        take: 20,
+        where: userIdWhere,
+        orderBy: [
+          { playedCount: "desc" },
+          {
+            recentPlay: {
+              _count: "desc",
+            },
           },
-        },
-        { likedCount: "desc" },
-      ],
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        createdAt: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
+          { likedCount: "desc" },
+        ],
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          coverImage: true,
+          createdAt: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+            },
           },
-        },
-        authorId: true,
-        playedCount: true,
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-            likedUsers: {
-              select: {
-                userId: true,
+          authorId: true,
+          playedCount: true,
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
               },
             },
           },
-        },
-        likedBy: {
-          select: {
-            userId: true,
+          likedBy: {
+            select: {
+              userId: true,
+            },
           },
         },
-      },
-    });
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     return new NextResponse(
       JSON.stringify({

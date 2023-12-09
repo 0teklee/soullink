@@ -138,3 +138,24 @@ export const formatSearchOrderBy = (
 
   return {};
 };
+
+export const formatSongResponse = (
+  songs?: {
+    songIndex: number;
+    song: {
+      id: string;
+      likedCount?: number;
+      playedCount?: number | null;
+      title: string;
+      artist: string;
+      url: string;
+      likedUsers: { userId: string }[];
+    };
+  }[],
+) => {
+  if (!songs) return [];
+  return songs.map((song) => ({
+    ...song.song,
+    songIndex: song.songIndex || 0,
+  }));
+};

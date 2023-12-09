@@ -2,11 +2,11 @@
 
 import React, { useEffect } from "react";
 import CommonLoginModal from "@/components/common/modal/CommonLoginModal";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import DetailEditModal from "@/components/playlist/detail/module/DetailEditModal";
 import CommonModal from "@/components/common/modal/CommonModal";
-import PlaylistSongModal from "@/components/playlist/create/PlaylistSongModal";
+import PlaylistSongModal from "@/components/playlist/module/song-modal/PlaylistSongModal";
 import CommentDeleteModal from "@/components/common/comments/CommentDeleteModal";
 import {
   CommonModalState,
@@ -21,25 +21,16 @@ import CommonErrorModal from "@/components/common/modal/CommonErrorModal";
 const CommonModalProvider = () => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(CommonModalState);
   const modalTypeState = useRecoilValue(CommonModalTypeState);
-  const [playlistEditModalProps, setPlaylistEditModalProps] = useRecoilState(
-    PlaylistEditPropsState,
-  );
-  const [songModalProps, setSongModalProps] =
-    useRecoilState(SongModalPropsState);
-  const [deleteModalProps, setDeleteModalProps] = useRecoilState(
-    DeleteModalPropsState,
-  );
-  const [errorModalProps, setErrorModalProps] =
-    useRecoilState(ErrorModalPropsState);
+  const setPlaylistEditModalProps = useSetRecoilState(PlaylistEditPropsState);
+  const setSongModalProps = useSetRecoilState(SongModalPropsState);
+  const setDeleteModalProps = useSetRecoilState(DeleteModalPropsState);
+  const setErrorModalProps = useSetRecoilState(ErrorModalPropsState);
 
   const isLoginModal = modalTypeState === MODAL_TYPE.LOGIN;
-
-  const isPlaylistEditModal =
-    modalTypeState === MODAL_TYPE.PLAYLIST_EDIT && !!playlistEditModalProps;
-  const isSongModal = modalTypeState === MODAL_TYPE.SONG && !!songModalProps;
-  const isDeleteModal =
-    modalTypeState === MODAL_TYPE.DELETE && !!deleteModalProps;
-  const isErrorModal = modalTypeState === MODAL_TYPE.ERROR && !!errorModalProps;
+  const isPlaylistEditModal = modalTypeState === MODAL_TYPE.PLAYLIST_EDIT;
+  const isSongModal = modalTypeState === MODAL_TYPE.SONG;
+  const isDeleteModal = modalTypeState === MODAL_TYPE.DELETE;
+  const isErrorModal = modalTypeState === MODAL_TYPE.ERROR;
 
   useEffect(() => {
     if (!isModalOpen && isPlaylistEditModal) {
@@ -59,19 +50,10 @@ const CommonModalProvider = () => {
   return (
     <CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
       {isLoginModal && <CommonLoginModal />}
-      {isPlaylistEditModal && (
-        <DetailEditModal editModalProps={playlistEditModalProps} />
-      )}
-      {isSongModal && <PlaylistSongModal songModalProps={songModalProps} />}
-      {isDeleteModal && (
-        <CommentDeleteModal deleteModalProps={deleteModalProps} />
-      )}
-      {isErrorModal && (
-        <CommonErrorModal
-          error={errorModalProps.error}
-          resetErrorBoundary={errorModalProps?.resetErrorBoundary}
-        />
-      )}
+      {isPlaylistEditModal && <DetailEditModal />}
+      {isSongModal && <PlaylistSongModal />}
+      {isDeleteModal && <CommentDeleteModal />}
+      {isErrorModal && <CommonErrorModal />}
     </CommonModal>
   );
 };

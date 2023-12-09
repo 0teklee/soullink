@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 
 import TableItem from "@/components/common/song/table/TableItem";
@@ -25,12 +25,30 @@ const SongTable = ({
   playlist?: PlaylistType;
   userId?: string;
 }) => {
+  const [draggedItem, setDraggedItem] = useState<SongType | null>(null);
   const { setModal } = useSetModal();
 
   const isNotCreate = !isCreate;
   const isLogin = !!userId;
 
   const { songLikeMutate } = useSongLike();
+
+  const handleDragStart = (item: SongType) => {
+    if (isCreate) {
+      setDraggedItem(item);
+    }
+  };
+
+  const handleDrop = (targetIndex: number) => {
+    if (draggedItem && songList && setSongList) {
+      const newList = [...songList];
+      const draggedIndex = newList.findIndex((i) => i.id === draggedItem.id);
+      newList.splice(draggedIndex, 1);
+      newList.splice(targetIndex, 0, draggedItem);
+      setSongList(newList);
+      setDraggedItem(null);
+    }
+  };
 
   const handleLikeSong = async (songId: string, userId?: string) => {
     if (!userId || !isLogin) {
@@ -86,7 +104,7 @@ const SongTable = ({
               )}
             </tr>
           </thead>
-          <tbody>
+          <tbody onDragOver={(e) => e.preventDefault()}>
             {!!songList &&
               songList.length > 0 &&
               songList?.map((song, index) => {
@@ -101,6 +119,8 @@ const SongTable = ({
                     playlist={playlist}
                     setSongList={setSongList}
                     handleLikeSong={handleLikeSong}
+                    handleDragStart={handleDragStart}
+                    handleDragDrop={handleDrop}
                   />
                 );
               })}

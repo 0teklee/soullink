@@ -1,15 +1,18 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
-import { DeleteModalPropsType } from "@/libs/types/modalType";
+import {
+  DeleteModalPropsType,
+  MODAL_TYPE,
+  UseModalStateMap,
+} from "@/libs/types/modalType";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 
-const CommentDeleteModal = ({
-  deleteModalProps: { mutate },
-}: {
-  deleteModalProps: DeleteModalPropsType;
-}) => {
-  const { setModalOpenState } = useSetModal();
-
+const CommentDeleteModal = () => {
+  const { setModalOpenState, useModalState } = useSetModal();
+  const [deleteModalProps] = useModalState<UseModalStateMap[MODAL_TYPE.DELETE]>(
+    MODAL_TYPE.DELETE,
+  );
+  const { mutate } = deleteModalProps as DeleteModalPropsType;
   return (
     <div className={`flex flex-col gap-3`}>
       <Title size={`h3`} text={`Are you sure to delete your comment?`} />

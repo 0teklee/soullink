@@ -1,5 +1,6 @@
 import { prisma } from "@/prisma/client";
 import { NextResponse } from "next/server";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(request: Request) {
   try {
@@ -46,12 +47,28 @@ export async function GET(request: Request) {
               },
             },
             songs: {
+              orderBy: {
+                songIndex: "asc",
+              },
               select: {
-                id: true,
-                title: true,
-                artist: true,
-                url: true,
-                playedCount: true,
+                songIndex: true,
+                song: {
+                  select: {
+                    id: true,
+                    title: true,
+                    artist: true,
+                    url: true,
+                    playedCount: true,
+                    likedCount: true,
+                    likedUsers: {
+                      select: {
+                        userId: true,
+                      },
+                    },
+                  },
+                },
+                songId: true,
+                playlistId: true,
               },
             },
             likedBy: {
@@ -77,7 +94,11 @@ export async function GET(request: Request) {
       .filter(
         (item, index, self) =>
           index === self.findIndex((t) => t.id === item.id),
-      );
+      )
+      .map((playlist) => ({
+        ...playlist,
+        songs: formatSongResponse(playlist.songs),
+      }));
 
     return new NextResponse(
       JSON.stringify({

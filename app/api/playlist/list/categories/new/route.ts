@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
+import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   try {
@@ -40,12 +41,20 @@ export async function GET(req: Request) {
             },
           },
           songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
             select: {
-              id: true,
-              title: true,
-              artist: true,
-              url: true,
-              likedCount: true,
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                },
+              },
             },
           },
           mood: {
@@ -107,62 +116,81 @@ export async function GET(req: Request) {
       })
       .flat();
 
-    const categoryPlaylists = await prisma.playlist.findMany({
-      where: {
-        category: {
-          every: {
-            name: {
-              in: userFavoriteCategories,
-            },
-          },
-        },
-      },
-      orderBy: {
-        likedCount: "desc",
-      },
-      select: {
-        id: true,
-        title: true,
-        coverImage: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-            isEditor: true,
-          },
-        },
-        category: {
-          select: {
-            name: true,
-          },
-        },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-            likedCount: true,
-          },
-        },
-        playedCount: true,
-        likedBy: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                id: true,
-                nickname: true,
-                profilePic: true,
-                isEditor: true,
+    const categoryPlaylists = await prisma.playlist
+      .findMany({
+        where: {
+          category: {
+            every: {
+              name: {
+                in: userFavoriteCategories,
               },
             },
           },
         },
-      },
-    });
+        orderBy: {
+          likedCount: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          coverImage: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+              isEditor: true,
+            },
+          },
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedCount: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          playedCount: true,
+          likedBy: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  id: true,
+                  nickname: true,
+                  profilePic: true,
+                  isEditor: true,
+                },
+              },
+            },
+          },
+        },
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     return new NextResponse(
       JSON.stringify({

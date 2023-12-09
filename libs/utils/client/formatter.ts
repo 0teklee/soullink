@@ -192,7 +192,7 @@ export const formatEditUserPayload = (payload: EditProfilePayload) => {
 
 export const formatEditPlaylistValid = (
   payload: PlaylistCreateRequestType,
-  songList: SongType[],
+  songList?: SongType[],
   userId?: string,
   playlistId?: string,
 ) => {
@@ -207,7 +207,8 @@ export const formatEditPlaylistValid = (
     !!payload?.songs &&
     payload?.songs.length > 0 &&
     payload?.songs.length <= 20 &&
-    songList.length > 0 &&
+    songList &&
+    songList?.length > 0 &&
     !!userId &&
     !!playlistId
   );

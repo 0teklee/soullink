@@ -1,7 +1,7 @@
 # WORK IN PROGRESS #
 
 ## Plans ##
-**2023-11-19 ~ 12-04**
+**2023-11-19 ~ 12-06**
 - ~~Main Page Revision - add personalized timeline feature~~
 - ~~Trending Page Revision - Move Hot tracks to trending page~~
 - ~~Recent Played Table apis & client side api calls~~
@@ -16,11 +16,14 @@
 - ~~**Add Modal provider & modal logic abstract**~~
 - **~~Manage Modal with global state & move it to RootLayout~~**
 - ~~**Add Suspense boundary (on necessary)**~~
+- ~~**Add index on Playlist songs**~~
+- ~~**Edit playlist song order feature**~~
 
 ### SOON TO BE ADDED ###
 **2023-11-27 ~**
-- **Add index on Playlist songs**
 - **Add optimistic update**
 - Add "Frequency" filter to common filters (search, table list)
 - Add Search on header (search modal)
-- Code Refactoring
+- Bugfix: player state
+- Code Refactoring 
+- - minimize rerendering when song is playing

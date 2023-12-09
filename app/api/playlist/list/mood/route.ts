@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { PlaylistMoodType } from "@/libs/types/song&playlistType";
-import { formatDateFilter } from "@/libs/utils/server/formatter";
+import {
+  formatDateFilter,
+  formatSongResponse,
+} from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -32,59 +35,78 @@ export async function GET(req: Request) {
       ];
 
   try {
-    const moodPlayLists = await prisma.playlist.findMany({
-      where: {
-        AND: moodSearch,
-      },
-      take: 10,
-      orderBy: {
-        likedCount: "desc",
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        coverImage: true,
-        createdAt: true,
-        likedCount: true,
-        author: {
-          select: {
-            id: true,
-            nickname: true,
-            profilePic: true,
-          },
+    const moodPlayLists = await prisma.playlist
+      .findMany({
+        where: {
+          AND: moodSearch,
         },
-        likedBy: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                nickname: true,
-                profilePic: true,
+        take: 10,
+        orderBy: {
+          likedCount: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          coverImage: true,
+          createdAt: true,
+          likedCount: true,
+          author: {
+            select: {
+              id: true,
+              nickname: true,
+              profilePic: true,
+            },
+          },
+          likedBy: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  nickname: true,
+                  profilePic: true,
+                },
+              },
+            },
+          },
+          mood: {
+            select: {
+              name: true,
+            },
+          },
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          songs: {
+            orderBy: {
+              songIndex: "asc",
+            },
+            select: {
+              songIndex: true,
+              song: {
+                select: {
+                  id: true,
+                  title: true,
+                  artist: true,
+                  url: true,
+                  likedUsers: {
+                    select: {
+                      userId: true,
+                    },
+                  },
+                },
               },
             },
           },
         },
-        mood: {
-          select: {
-            name: true,
-          },
-        },
-        category: {
-          select: {
-            name: true,
-          },
-        },
-        songs: {
-          select: {
-            id: true,
-            title: true,
-            artist: true,
-            url: true,
-          },
-        },
-      },
-    });
+      })
+      .then((playlists) =>
+        playlists.map((playlist) => {
+          return { ...playlist, songs: formatSongResponse(playlist.songs) };
+        }),
+      );
 
     return new NextResponse(
       JSON.stringify({
