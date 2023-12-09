@@ -15,13 +15,9 @@ import useSetModal from "@/libs/utils/hooks/useSetModal";
 import SubmitPage from "@/components/playlist/module/song-modal/SubmitPage";
 import YoutubeSearchPage from "@/components/playlist/module/song-modal/YoutubeSearchPage";
 
-const PlaylistSongModal = ({
-  songModalProps: { isEdit },
-}: {
-  songModalProps: SongModalPropsType;
-}) => {
+const PlaylistSongModal = () => {
   const { setModal, setModalOpenState, useModalState } = useSetModal();
-  const [_, setSongModalProps] = useModalState<
+  const [songModalProps, setSongModalProps] = useModalState<
     UseModalStateMap[MODAL_TYPE.SONG]
   >(MODAL_TYPE.SONG);
 
@@ -29,6 +25,7 @@ const PlaylistSongModal = ({
     UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
   >(MODAL_TYPE.PLAYLIST_EDIT);
 
+  const { isEdit } = songModalProps || {};
   const { userId, playlistData } = playlistEditProps || {};
 
   const [page, setPage] = useState("submit");
