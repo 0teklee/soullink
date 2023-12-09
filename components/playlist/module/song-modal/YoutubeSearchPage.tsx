@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getYoutubeSearchResult } from "@/libs/utils/client/fetchers";
@@ -31,6 +31,7 @@ const YoutubeSearchPage = ({
 }: SearchPageProps) => {
   const queryClient = useQueryClient();
   const { ref: infiniteQueryRef, inView } = useInView();
+  const pageToken = useRef<string>("");
 
   const [isTypingDone, setIsTypingDone] = useState<boolean>(false);
   const [searchWord, setSearchWord] = useState<string>("");
@@ -50,7 +51,7 @@ const YoutubeSearchPage = ({
   } = useInfiniteQuery({
     queryKey: ["youtube", searchWord],
     queryFn: async () => {
-      const res = await getYoutubeSearchResult(searchWord, "");
+      const res = await getYoutubeSearchResult(searchWord, pageToken.current);
 
       if (!res) {
         setIsYoutubeError(true);
@@ -59,6 +60,7 @@ const YoutubeSearchPage = ({
       return res;
     },
     getNextPageParam: (lastPage) => {
+      pageToken.current = lastPage.nextPageToken;
       return lastPage.nextPageToken;
     },
     initialPageParam: "",
@@ -176,6 +178,7 @@ const YoutubeSearchPage = ({
                 ref={infiniteQueryRef}
               />
             )}
+          {isFetchingNextPage && <Loading size={40} />}
         </div>
       </ReactQueryErrorBoundary>
       {isYoutubeError && (
