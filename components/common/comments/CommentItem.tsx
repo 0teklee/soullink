@@ -15,7 +15,7 @@ import {
   postDeleteComment,
   postLikeComment,
 } from "@/libs/utils/client/fetchers";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
@@ -25,12 +25,10 @@ const CommentItem = ({
   commentProps,
   postId,
   userId,
-  refetch,
 }: {
   commentProps: CommentType;
   postId: string;
   userId?: string;
-  refetch: () => void;
 }) => {
   const [isLikedByDropdownOpen, setIsLikedByDropdownOpen] = useState(false);
   const { setModal, setModalOpenState } = useSetModal();
@@ -48,6 +46,7 @@ const CommentItem = ({
   } = commentProps;
 
   const { nickname, profilePic } = author;
+  const queryClient = useQueryClient();
 
   const hasLiked = likedBy.filter((user) => user.user.id === userId).length > 0;
   const isMutual = formatIsMutualClient(author, userId, postId);
@@ -58,7 +57,9 @@ const CommentItem = ({
   const { mutate: likeCommentMutate } = useMutation({
     mutationFn: () => postLikeComment({ commentId, userId: userId || "" }),
     onSuccess: () => {
-      refetch();
+      queryClient.invalidateQueries({
+        queryKey: ["commentList"],
+      });
     },
     onError: (error) => {
       console.log(error);
@@ -69,7 +70,9 @@ const CommentItem = ({
   const { mutate: deleteCommentMutate } = useMutation({
     mutationFn: () => postDeleteComment({ commentId, userId: userId || "" }),
     onSuccess: () => {
-      refetch();
+      queryClient.invalidateQueries({
+        queryKey: ["commentList"],
+      });
       setModalOpenState(false);
     },
     onError: (error) => {
@@ -88,7 +91,6 @@ const CommentItem = ({
       return;
     }
     likeCommentMutate();
-    refetch();
   };
 
   const handleDelete = () => {
