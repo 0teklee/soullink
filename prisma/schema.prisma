@@ -48,27 +48,26 @@ model Follow {
 }
 
 model Playlist {
-  id                String                 @id @default(uuid())
-  title             String                 @unique @db.VarChar(40)
-  coverImage        String?                @db.Text()
-  description       String                 @db.MediumText
-  author            User                   @relation(fields: [authorId], references: [id])
-  authorId          String
-  bannerColor       String?                @db.LongText()
-  bgColor           String?                @db.LongText()
-  songs             Song[]
-  comments          Comment[]
-  likedBy           PlaylistLikedByUsers[]
-  likedCount        Int                    @default(0)
-  playedCount       Int                    @default(0)
-  playedTime        Int                    @default(0)
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
-  category          Category[]
-  recentPlay        RecentPlay[]
-  mood              Mood                   @relation(fields: [moodId], references: [id])
-  moodId            String
-  PlaylistSongIndex PlaylistSongIndex[]
+  id          String                 @id @default(uuid())
+  title       String                 @unique @db.VarChar(40)
+  coverImage  String?                @db.Text()
+  description String                 @db.MediumText
+  author      User                   @relation(fields: [authorId], references: [id])
+  authorId    String
+  songs       PlaylistSong[]
+  bgColor     String?                @db.LongText()
+  fontColor   String?                @db.LongText()
+  comments    Comment[]
+  likedBy     PlaylistLikedByUsers[]
+  likedCount  Int                    @default(0)
+  playedCount Int                    @default(0)
+  playedTime  Int                    @default(0)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  category    Category[]
+  recentPlay  RecentPlay[]
+  mood        Mood                   @relation(fields: [moodId], references: [id])
+  moodId      String
 
   @@fulltext([title, description])
 }
@@ -105,22 +104,20 @@ model PlaylistLikedByUsers {
 }
 
 model Song {
-  id                String              @id @default(uuid())
-  title             String
-  artist            String
-  url               String              @unique
-  playlist          Playlist            @relation(fields: [playlistId], references: [id])
-  playlistId        String
-  likedUsers        SongLikedByUsers[]
-  likedCount        Int                 @default(0)
-  playedCount       Int?                @default(0)
-  thumbnail         String?
-  PlaylistSongIndex PlaylistSongIndex[]
+  id           String             @id @default(uuid())
+  title        String
+  artist       String
+  url          String             @unique
+  likedUsers   SongLikedByUsers[]
+  likedCount   Int                @default(0)
+  playedCount  Int?               @default(0)
+  thumbnail    String?
+  PlaylistSong PlaylistSong[]
 
   @@fulltext([title, artist])
 }
 
-model PlaylistSongIndex {
+model PlaylistSong {
   id         String   @id @default(uuid())
   playlist   Playlist @relation(fields: [playlistId], references: [id])
   playlistId String
