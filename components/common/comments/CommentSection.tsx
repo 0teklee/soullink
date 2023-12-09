@@ -1,8 +1,11 @@
-import React, { Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import CommentInput from "@/components/common/comments/CommentInput";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import Loading from "@/components/common/module/Loading";
-import CommentContainer from "@/components/common/comments/CommentContainer";
+
+const CommentContainer = lazy(
+  () => import("@/components/common/comments/CommentContainer"),
+);
 
 const CommentSection = ({
   postId,
@@ -20,11 +23,13 @@ const CommentSection = ({
       <CommentInput postId={postId} isProfile={isProfile} />
       <ReactQueryErrorBoundary>
         <Suspense fallback={<Loading />}>
-          <CommentContainer
-            postId={postId}
-            userId={userId}
-            isProfile={isProfile}
-          />
+          {!!postId && (
+            <CommentContainer
+              postId={postId}
+              userId={userId}
+              isProfile={isProfile}
+            />
+          )}
         </Suspense>
       </ReactQueryErrorBoundary>
     </div>
