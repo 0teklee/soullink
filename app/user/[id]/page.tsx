@@ -18,9 +18,9 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const queryClient = new QueryClient();
 
   const [{ userId }] = await Promise.all([
-    getServerSession(authOptions).then(
-      (session) => (session as UserSessionType) || {},
-    ),
+    getServerSession(authOptions)
+      .then((session) => (session as UserSessionType) || { userId: "" })
+      .catch(() => ({ userId: "" })),
     queryClient.prefetchQuery({
       queryKey: ["user", id],
       queryFn: () => getSingleUserProfile(id),

@@ -16,9 +16,9 @@ import {
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const queryClient = new QueryClient();
 
-  const { userId } = await getServerSession(authOptions).then((session) => {
-    return (session as UserSessionType) || {};
-  });
+  const { userId } = await getServerSession(authOptions)
+    .then((session) => (session as UserSessionType) || { userId: "" })
+    .catch(() => ({ userId: "" }));
 
   await queryClient.prefetchQuery({
     queryKey: ["playlist", id],
