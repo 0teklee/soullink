@@ -3,6 +3,7 @@ import {
   ErrorModalPropsType,
   MODAL_TYPE,
   PlaylistEditPropsType,
+  ShareDownloadModalPropsType,
   SongModalPropsType,
 } from "@/libs/types/modalType";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -13,6 +14,7 @@ import {
   DeleteModalPropsState,
   ErrorModalPropsState,
   PlaylistEditPropsState,
+  PlaylistShareDownloadPropsState,
   SongModalPropsState,
 } from "@/libs/recoil/modalAtoms";
 
@@ -22,7 +24,9 @@ const useSetModal = () => {
   const [playlistEditModalState, setPlaylistEditProps] = useRecoilState(
     PlaylistEditPropsState,
   );
-
+  const [playlistDownloadModalState, setPlaylistDownloadProps] = useRecoilState(
+    PlaylistShareDownloadPropsState,
+  );
   const [songCreateEditModalState, setSongModalProps] =
     useRecoilState(SongModalPropsState);
   const [deleteModalState, setDeleteModalProps] = useRecoilState(
@@ -41,6 +45,8 @@ const useSetModal = () => {
         return [deleteModalState, setDeleteModalProps] as T;
       case MODAL_TYPE.ERROR:
         return [errorModalState, setErrorModalProps] as T;
+      case MODAL_TYPE.PLAYLIST_DOWNLOAD:
+        return [playlistDownloadModalState, setPlaylistDownloadProps] as T;
       default:
         return [null, null] as T;
     }
@@ -50,6 +56,7 @@ const useSetModal = () => {
     type_input: MODAL_TYPE,
     setModalProps?:
       | PlaylistEditPropsType
+      | ShareDownloadModalPropsType
       | SongModalPropsType
       | DeleteModalPropsType
       | ErrorModalPropsType,
@@ -64,6 +71,9 @@ const useSetModal = () => {
     switch (type_input) {
       case MODAL_TYPE.PLAYLIST_EDIT:
         setPlaylistEditProps(setModalProps as PlaylistEditPropsType);
+        break;
+      case MODAL_TYPE.PLAYLIST_DOWNLOAD:
+        setPlaylistDownloadProps(setModalProps as ShareDownloadModalPropsType);
         break;
       case MODAL_TYPE.SONG:
         setSongModalProps(setModalProps as SongModalPropsType);
