@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import {
@@ -24,7 +24,11 @@ const TableItem = ({
 }: {
   song: SongType;
   index: number;
-  handleLikeSong?: (songId: string, userId?: string) => void;
+  handleLikeSong?: (
+    songId: string,
+    userId?: string,
+    optimisticUpdate?: Dispatch<SetStateAction<boolean>>,
+  ) => void;
   isCreate?: boolean;
   isCreateFavorite?: boolean;
   setSongList?: React.Dispatch<React.SetStateAction<SongType[]>>;
@@ -104,7 +108,7 @@ const TableItem = ({
                       if (!handleLikeSong) {
                         return;
                       }
-                      handleLikeSong(song.id, userId);
+                      handleLikeSong(song.id, userId, setIsUserLikedSong);
                     }}
                   />
                 ) : (
@@ -114,7 +118,7 @@ const TableItem = ({
                       if (!handleLikeSong) {
                         return;
                       }
-                      handleLikeSong(song.id, userId);
+                      handleLikeSong(song.id, userId, setIsUserLikedSong);
                     }}
                   />
                 )}
