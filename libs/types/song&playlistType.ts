@@ -47,6 +47,8 @@ export interface PlaylistCreateRequestType {
   mood: PlaylistMoodType;
   coverImage?: string;
   songs: SongType[];
+  fontColor?: string;
+  bgColor?: string;
 }
 
 export interface PlaylistType {
@@ -76,6 +78,8 @@ export interface PlaylistType {
   isSongTable?: boolean;
   likedCount?: number;
   mood: { name: PlaylistMoodType };
+  bgColor?: string;
+  fontColor?: string;
 }
 
 export interface TrendingSongType
