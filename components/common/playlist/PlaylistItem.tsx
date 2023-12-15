@@ -32,14 +32,16 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
     likedBy,
   } = playlistItem;
 
-  const isUserLikedPlaylist =
-    likedBy &&
-    likedBy.filter((likeItem) => likeItem.userId === userId).length > 0;
-
+  const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
+    !!userId &&
+      !!likedBy &&
+      likedBy.length > 0 &&
+      likedBy.filter((likeItem) => likeItem.userId === userId).length > 0,
+  );
   const { playlistLikeMutate } = useMutatePlaylistLike();
 
   const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId);
+    playlistLikeMutate(playlistId, userId, setIsUserLikedPlaylist);
   };
 
   return (
