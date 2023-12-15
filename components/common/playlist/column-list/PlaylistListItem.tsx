@@ -68,7 +68,7 @@ const PlaylistListItem = ({
   const cover = coverImage || `/image/common/default_cover_image.svg`;
 
   const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId);
+    playlistLikeMutate(playlistId, userId, setIsUserLikedPlaylist);
   };
 
   const handleClickOutside = () => {
