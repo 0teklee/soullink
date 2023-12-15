@@ -14,11 +14,7 @@ const MainTodayList = () => {
   });
 
   return (
-    <section
-      className={`flex flex-col items-start gap-3 w-full ${
-        data && data.length > 0 && "mb-[340px]"
-      } `}
-    >
+    <section className={`flex flex-col items-start gap-3 w-full`}>
       <Title size={`h1`} text={`Today's Playlists`} />
       <ReactQueryErrorBoundary>
         {data && data.length > 0 && <TopListContainter playlists={data} />}
