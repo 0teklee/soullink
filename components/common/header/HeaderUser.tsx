@@ -46,7 +46,7 @@ const HeaderUser = () => {
     <>
       <div
         ref={listRef}
-        className={`flex items-center font-medium gap-6 xs:hidden`}
+        className={`flex-1 flex items-center w-full font-medium gap-6 xs:hidden`}
       >
         {!isLoading && !isLogin && (
           <>
@@ -75,7 +75,9 @@ const HeaderUser = () => {
           </>
         )}
         {!isLoading && isLogin && (
-          <div className={`relative flex items-center`}>
+          <div
+            className={`relative flex items-center w-8 h-8 rounded-full border-[1px] border-gray-300`}
+          >
             <button
               className={`flex items-center`}
               onClick={() => {
@@ -83,13 +85,12 @@ const HeaderUser = () => {
               }}
             >
               <Image
-                className={`rounded-full`}
+                className={`object-cover rounded-full`}
                 src={`${
                   userSession?.userImage || `/image/common/default_profile.svg`
                 }`}
                 alt={`profile`}
-                width={36}
-                height={36}
+                fill={true}
               />
             </button>
             {isListClicked && (
