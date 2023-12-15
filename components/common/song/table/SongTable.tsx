@@ -50,13 +50,17 @@ const SongTable = ({
     }
   };
 
-  const handleLikeSong = async (songId: string, userId?: string) => {
+  const handleLikeSong = async (
+    songId: string,
+    userId?: string,
+    optimisticUpdate?: Dispatch<SetStateAction<boolean>>,
+  ) => {
     if (!userId || !isLogin) {
       setModal(MODAL_TYPE.LOGIN);
       return;
     }
 
-    songLikeMutate(songId, userId);
+    songLikeMutate(songId, userId, optimisticUpdate);
 
     if (setIsModalOpen) {
       setIsModalOpen(false);
