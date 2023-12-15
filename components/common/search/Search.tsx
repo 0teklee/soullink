@@ -21,6 +21,7 @@ import {
 import useTimer from "@/libs/utils/hooks/useTimer";
 import useSearchQueries from "@/libs/utils/hooks/useSearchQueries";
 import SearchResult from "@/components/common/search/SearchResult";
+import Title from "@/components/common/module/Title";
 
 const Search = ({
   isHeader,
@@ -31,7 +32,6 @@ const Search = ({
   isCategory?: boolean;
   params?: string | null;
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [keyword, setKeyword] = useState<string>("");
   const [searchType, setSearchType] = useState<SEARCH_TYPE>(SEARCH_TYPE.ALL);
   const [recentFilter, setRecentFilter] = useState(DAYS_FILTER.ALL_TIME);
@@ -86,33 +86,29 @@ const Search = ({
   }, [searchType]);
 
   return (
-    <div className={`flex flex-col items-start gap-10`}>
-      <div className={`flex flex-col gap-2 xs:w-full`}>
+    <div
+      className={`flex flex-col items-start ${
+        isHeader ? "w-full gap-3" : "gap-10"
+      }`}
+    >
+      {isHeader && <Title size={`h2`} text={`Search`} />}
+      <div
+        className={`flex flex-col gap-2 xs:w-full ${isHeader ? "w-full" : ""}`}
+      >
         {!isCategory && (
           <div
             className={`relative ${
-              isHeader ? "" : "flex items-center gap-3 "
+              isHeader ? "w-full" : "flex items-center gap-3 "
             } xs:w-full`}
           >
-            <button
-              onClick={() => {
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-            >
-              <MagnifyingGlassIcon
-                className={`w-5 h-5 text-gray-700 hover:text-primary`}
-              />
-            </button>
-            <div
-              className={`${
-                isHeader && isDropdownOpen ? "absolute top-8 left-0" : ""
-              } w-full z-10 ease-out duration-75`}
-            >
+            <div className={`relative w-full z-10 ease-out duration-75`}>
               <input
                 value={keyword}
                 onChange={handleSearch}
                 type={`text`}
-                className={`w-full min-w-sm max-w-lg pl-2 pr-3 py-2 text-sm text-gray-700 bg-white rounded border border-gray-300  outline-none
+                className={`w-full min-w-sm ${
+                  isHeader ? "" : "max-w-lg"
+                } pl-2 pr-3 py-2 text-sm text-gray-700 bg-white rounded border border-gray-300  outline-none
           focus:border-primary focus:ring-1 focus:ring-primary focus:ring-opacity-50 
            `}
               />
