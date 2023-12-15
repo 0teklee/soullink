@@ -79,9 +79,7 @@ const SearchResult = ({
 
   return (
     <div
-      className={`${
-        isHeader ? "absolute top-8 left-0 z-10" : ""
-      } flex flex-col items-start gap-16 w-full z-0 ease-out duration-75`}
+      className={`flex flex-col items-start gap-16 w-full z-0 ease-out duration-75`}
     >
       {(isAllResult || isPlaylistResult) && isPlaylistMoreThanOne && (
         <div className={`flex flex-col items-start gap-5 w-full`}>
