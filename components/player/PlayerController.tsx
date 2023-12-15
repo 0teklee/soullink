@@ -111,7 +111,7 @@ const PlayerController = ({
   };
 
   const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId);
+    playlistLikeMutate(playlistId, userId, setIsPlaylistLiked);
   };
 
   const handleLikeSong = async () => {
