@@ -1,14 +1,10 @@
 import dayjs, { Dayjs, QUnitType } from "dayjs";
-import {
-  PlayerProps,
-  PlaylistMoodType,
-  PlaylistType,
-} from "@/libs/types/song&playlistType";
+import { PlaylistMoodType, PlaylistType } from "@/libs/types/song&playlistType";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
 import { fetcherImagePost } from "@/libs/utils/client/fetchers";
-import React, { RefObject } from "react";
+import { RefObject } from "react";
+import { toPng } from "html-to-image";
 import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/playerType";
 
 export const isNowMoreThanTargetTime = (
   startedAt: Dayjs | null | Date,
@@ -120,42 +116,34 @@ export const handleImageUpload = (callback: (imageVal: string) => void) => {
   };
 };
 
-export const handlePlayerKeyPress = (
-  e: React.KeyboardEvent<Document> | KeyboardEvent,
-  targetRef: RefObject<PlayerProps>,
-  setState?: SetterOrUpdater<PlayerType>,
+export const downloadPlaylistPng = async (
+  imageName: string,
+  componentRef: RefObject<HTMLElement>,
+  setModalOpenState: SetterOrUpdater<boolean>,
 ) => {
-  if (!setState) {
+  if (componentRef.current === null) {
     return;
   }
 
-  if (
-    e.target instanceof Element &&
-    (e?.target?.tagName === "INPUT" || e?.target?.tagName === "TEXTAREA")
-  ) {
-    return;
-  }
+  await toPng(componentRef.current, {
+    includeQueryParams: true,
+    cacheBust: true,
+  })
+    .then((dataUrl) => {
+      const link = document.createElement("a");
+      link.download = `${imageName}.png`;
+      link.href = dataUrl;
+      link.click();
+      link.remove();
+      setModalOpenState(false);
+    })
+    .catch((err: unknown) => {
+      console.error(err);
+    });
+};
 
-  switch (e.key) {
-    case " ":
-      e.preventDefault();
-      setState((prev) => ({ ...prev, playing: !prev.playing }));
-      break;
-    case "ArrowLeft":
-      e.preventDefault();
-      targetRef?.current?.seekTo(targetRef?.current?.getCurrentTime() - 3);
-      break;
-    case "ArrowRight":
-      e.preventDefault();
-      targetRef?.current?.seekTo(targetRef?.current?.getCurrentTime() + 3);
-      break;
-    case "ArrowUp":
-      e.preventDefault();
-      setState((prev) => ({ ...prev, volume: prev.volume + 0.1 }));
-      break;
-    case "ArrowDown":
-      e.preventDefault();
-      setState((prev) => ({ ...prev, volume: prev.volume - 0.1 }));
-      break;
-  }
+export const formatStyleProps = (style: string) => {
+  return {
+    style,
+  };
 };

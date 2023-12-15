@@ -20,9 +20,11 @@ const Page = async () => {
   const queryClient = new QueryClient();
 
   const [{ userId }] = await Promise.all([
-    getServerSession(authOptions).then(
-      (session) => session as UserSessionType,
-    ) || {},
+    getServerSession(authOptions)
+      .then((session) =>
+        session ? (session as UserSessionType) : { userId: "" },
+      )
+      .catch(() => ({ userId: "" })),
     queryClient.prefetchQuery({
       queryKey: ["trendingMain", DAYS_FILTER.ALL_TIME],
       queryFn: () => getTrendingMainPlaylists(DAYS_FILTER.ALL_TIME),

@@ -33,6 +33,8 @@ export async function GET(
         instagram: true,
         twitter: true,
         website: true,
+        bgColor: true,
+        fontColor: true,
         followers: {
           select: {
             follower: {
@@ -168,8 +170,10 @@ export async function GET(
     const songLiked = await prisma.song.findMany({
       where: {
         likedUsers: {
-          every: {
-            userId: userDb?.id,
+          some: {
+            user: {
+              nickname,
+            },
           },
         },
       },

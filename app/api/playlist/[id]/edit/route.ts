@@ -6,16 +6,19 @@ export async function PATCH(
   req: Request,
   { params: { id } }: { params: { id: string } },
 ) {
+  const request: PlaylistCreateRequestType & { userId: string } = await req
+    .json()
+    .then((data) => data);
+
   try {
-    const request: PlaylistCreateRequestType & { userId: string } = await req
-      .json()
-      .then((data) => data);
     const playlistUpdate = await prisma.playlist.update({
       where: { id },
       data: {
         title: request.title,
         description: request.description,
         coverImage: request.coverImage || "",
+        fontColor: request?.fontColor,
+        bgColor: request?.bgColor,
       },
       select: {
         id: true,
@@ -82,14 +85,37 @@ export async function PATCH(
       },
     });
 
-    const indexWithSongIds = request.songs.map((reqSong, index) => ({
-      playlistId: playlistUpdate.id,
-      songIndex: index,
-      songId: songIds.find((song) => song.url === reqSong.url)?.id || "",
-    }));
+    const indexWithSongIds = request.songs
+      .filter((song) => songIds.find((songId) => songId.url === song.url))
+      .map((reqSong, index) => ({
+        playlistId: playlistUpdate.id,
+        songIndex: index,
+        songId: songIds.find((song) => song.url === reqSong.url)?.id || "",
+      }));
+
+    const duplicateSongIds = playlistSongIds
+      .filter((playlistSongId) => {
+        return indexWithSongIds.find((indexWithSongId) => {
+          return (
+            playlistSongId.songId === indexWithSongId.songId &&
+            playlistSongId.songIndex === indexWithSongId.songIndex
+          );
+        });
+      })
+      .map((playlistSongId) => playlistSongId.songId);
+
+    // upsert PlaylistSong except the ones in duplicateSongIds
 
     await prisma.playlistSong.createMany({
-      data: indexWithSongIds,
+      data: indexWithSongIds
+        .filter((indexWithSongId) => {
+          return !duplicateSongIds.includes(indexWithSongId.songId);
+        })
+        .map((indexWithSongId) => ({
+          playlistId: indexWithSongId.playlistId,
+          songIndex: indexWithSongId.songIndex,
+          songId: indexWithSongId.songId,
+        })),
       skipDuplicates: true,
     });
 
@@ -109,9 +135,12 @@ export async function PATCH(
     // Rollback the transaction on error
     await prisma.$executeRaw`ROLLBACK;`;
 
-    return new NextResponse(JSON.stringify({ message: "fail" }), {
-      status: 500,
-      statusText: "Internal Server Error",
-    });
+    return new NextResponse(
+      JSON.stringify({ message: "fail", playlistTitle: request.title }),
+      {
+        status: 500,
+        statusText: "Internal Server Error",
+      },
+    );
   }
 }

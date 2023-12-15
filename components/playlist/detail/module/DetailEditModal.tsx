@@ -3,10 +3,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   PlaylistCreateRequestType,
+  PlaylistType,
   SongType,
 } from "@/libs/types/song&playlistType";
 import Image from "next/image";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import {
+  ClipboardIcon,
+  PencilIcon,
+  PhotoIcon,
+} from "@heroicons/react/24/solid";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postEditPlaylist } from "@/libs/utils/client/fetchers";
@@ -19,13 +24,14 @@ import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import SongTable from "@/components/common/song/table/SongTable";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
+import ColorPicker from "@/components/common/module/ColorPicker";
 
 const DetailEditModal = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const { setModal, setModalOpenState, useModalState } = useSetModal();
-  const [playlistEditModalState] = useModalState<
+  const [playlistEditModalState, setPlaylistEditState] = useModalState<
     UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
   >(MODAL_TYPE.PLAYLIST_EDIT);
 
@@ -38,10 +44,20 @@ const DetailEditModal = () => {
     id: playlistId,
     mood,
     category,
+    fontColor,
+    bgColor,
   } = playlistData || playlistDefault;
 
   const [songList, setSongList] = useState<SongType[]>(songs ?? []);
   const [isMaxSongList, setIsMaxSongList] = useState<boolean>(false);
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+  const [customColorType, setCustomColorType] = useState<"font" | "bg">("font");
+  const [customFontColor, setCustomFontColor] = useState(
+    bgColor ? bgColor : "",
+  );
+  const [customBgColor, setCustomBgColor] = useState(
+    fontColor ? fontColor : "",
+  );
   const [editPayload, setEditPayload] = useState<PlaylistCreateRequestType>({
     title,
     description,
@@ -64,7 +80,7 @@ const DetailEditModal = () => {
     onSuccess: async (res) => {
       if (res.playlistTitle === title) {
         await queryClient.refetchQueries({
-          stale: true,
+          queryKey: ["playlist", playlistId],
         });
         return;
       }
@@ -107,9 +123,34 @@ const DetailEditModal = () => {
   }, [songList]);
 
   useEffect(() => {
+    if (customFontColor) {
+      setEditPayload((prev) => ({
+        ...prev,
+        fontColor: customFontColor,
+      }));
+    }
+
+    if (customBgColor) {
+      setEditPayload((prev) => ({
+        ...prev,
+        bgColor: customBgColor,
+      }));
+    }
+  }, [customFontColor, customBgColor]);
+
+  useEffect(() => {
     if (!playlistEditModalState || !playlistEditModalState?.addedSongList) {
       return;
     }
+
+    if (fontColor) {
+      setCustomFontColor(fontColor);
+    }
+
+    if (bgColor) {
+      setCustomBgColor(bgColor);
+    }
+
     setSongList(playlistEditModalState.addedSongList);
   }, []);
 
@@ -204,6 +245,19 @@ const DetailEditModal = () => {
               setIsMaxSongList(true);
               return;
             }
+            setPlaylistEditState({
+              addedSongList: songList,
+              playlistData: {
+                ...playlistData,
+                title: editPayload.title,
+                description: editPayload.description,
+                coverImage: editPayload?.coverImage || "",
+                fontColor: customFontColor,
+                bgColor: customBgColor,
+              } as PlaylistType,
+              userId: userId || "",
+            });
+
             setModal(MODAL_TYPE.SONG, {
               isEdit: true,
             });
@@ -218,6 +272,57 @@ const DetailEditModal = () => {
           <span className={`text-gray-400`}>add</span>
         </button>
       </div>
+      <div className={`flex items-center gap-3 w-full`}>
+        <div className={`flex flex-col gap-1`}>
+          <button
+            className={`flex items-center justify-between gap-1`}
+            onClick={() => {
+              setCustomColorType("font");
+              setIsColorPickerOpen((prev) => !prev);
+            }}
+          >
+            <PencilIcon className={`w-4 h-4 text-gray-400`} />
+            <span className={`text-xs text-gray-400`}>Change font color</span>
+          </button>
+          <div
+            className={`w-4 h-4 rounded`}
+            style={{ backgroundColor: customFontColor }}
+          />
+        </div>
+        <div className={`flex flex-col gap-1`}>
+          <button
+            className={`flex items-center justify-between gap-1`}
+            onClick={() => {
+              setCustomColorType("bg");
+              setIsColorPickerOpen((prev) => !prev);
+            }}
+          >
+            <ClipboardIcon className={`w-4 h-4 text-gray-400`} />
+            <span className={`text-xs text-gray-400`}>
+              Change Background color
+            </span>
+          </button>
+          <div
+            className={`w-4 h-4 rounded`}
+            style={{ backgroundColor: customBgColor }}
+          />
+        </div>
+        {customColorType === "font" && isColorPickerOpen && (
+          <ColorPicker
+            customFontColor={customFontColor}
+            setCustomFontColor={setCustomFontColor}
+            setIsColorPickerOpen={setIsColorPickerOpen}
+          />
+        )}
+        {customColorType === "bg" && isColorPickerOpen && (
+          <ColorPicker
+            customFontColor={customBgColor}
+            setCustomFontColor={setCustomBgColor}
+            setIsColorPickerOpen={setIsColorPickerOpen}
+          />
+        )}
+      </div>
+
       <div className={`flex items-center justify-center gap-3 w-full`}>
         <button
           className={`flex items-center justify-center gap-3 px-4 py-2 text-sm font-medium text-pink-700 bg-white ring-1 ring-pink-700 rounded-md hover:bg-red-500 hover:text-white`}

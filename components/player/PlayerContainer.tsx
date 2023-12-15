@@ -7,8 +7,9 @@ import { PlayerProps } from "@/libs/types/song&playlistType";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useSongCountUpdater from "@/libs/utils/hooks/useSongCountUpdater";
 import dayjs from "dayjs";
-import { handlePlayerKeyPress } from "@/libs/utils/client/commonUtils";
 import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
+
+import handlePlayerKeyPress from "@/components/player/utils";
 
 const Player = dynamic(() => import("@/components/player/Player"), {
   ssr: false,
@@ -58,15 +59,15 @@ const PlayerContainer = () => {
   }, [selectedPlayList]);
 
   useEffect(() => {
-    document.addEventListener("keydown", (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       handlePlayerKeyPress(e, playerRef, setPlayerState);
-    });
-    return () => {
-      document.removeEventListener("keydown", (e: KeyboardEvent) => {
-        handlePlayerKeyPress(e, playerRef, setPlayerState);
-      });
     };
-  }, []);
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setPlayerState, playerRef]);
 
   return (
     <div className={`fixed bottom-0 z-50`}>

@@ -15,7 +15,7 @@ const DiscoverTemplate = ({
     <section className={`flex flex-col gap-12 py-6`}>
       <DiscoverEditorSelection />
       <DiscoverMoodLists userId={userId} />
-      <DiscoverCategories />
+      <DiscoverCategories userId={userId} />
       <DiscoverSuggestion userNickname={userNickname} userId={userId} />
     </section>
   );

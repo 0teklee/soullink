@@ -8,7 +8,13 @@ import SongTable from "@/components/common/song/table/SongTable";
 import CommentSection from "@/components/common/comments/CommentSection";
 import process from "process";
 import { playlistDefault } from "@/libs/utils/client/commonValues";
-import { HeartIcon, PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownTrayIcon,
+  HeartIcon,
+  PauseIcon,
+  PlayIcon,
+  ShareIcon,
+} from "@heroicons/react/24/outline";
 import {
   HeartIcon as HeartIconSolid,
   PencilIcon,
@@ -22,6 +28,7 @@ import { getSinglePlaylist } from "@/libs/utils/client/fetchers";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
+import UseCustomizeStyle from "@/libs/utils/hooks/useCustomizeStyle";
 
 const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   const router = useRouter();
@@ -52,6 +59,8 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
     id: playlistId,
     likedBy,
     playedCount,
+    bgColor,
+    fontColor,
   } = playlistData || {};
 
   const {
@@ -74,12 +83,29 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
     playlistLikeMutate(playlistId, userId);
   };
 
+  const handleDownloadModal = () => {
+    setModal(MODAL_TYPE.PLAYLIST_DOWNLOAD, {
+      title,
+      author,
+      coverImage,
+      songs,
+      bgColor,
+      fontColor,
+    });
+  };
+
+  UseCustomizeStyle(bgColor, fontColor);
+
   return (
     <section
-      className={`flex flex-col justify-center items-center gap-10 py-6`}
+      className={`flex flex-col justify-center items-center gap-10 py-6 `}
     >
       <div className={`flex items-center justify-between w-full`}>
-        <p className={`text-base font-medium text-gray-900`}>
+        <p
+          className={`text-base font-medium ${
+            fontColor ? "" : "text-gray-900"
+          }`}
+        >
           {dayjs(createdAt).format(`YYYY.MM.DD`)}
         </p>
         <div className={`flex items-center gap-4`}>
@@ -98,41 +124,48 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
               }}
               className={`flex items-center gap-2 cursor-pointer`}
             >
-              <PencilIcon className={`w-5 h-5 text-gray-900`} />
-              <p className={`text-sm text-gray-500`}>Edit playlist</p>
+              <PencilIcon
+                className={`w-5 h-5 ${fontColor ? "" : "text-gray-900"}`}
+              />
+              <p className={`text-sm ${fontColor ? "" : "text-gray-500"}`}>
+                Edit playlist
+              </p>
             </div>
           )}
           <button className={`relative w-5 h-5`}>
-            <Image src={`/image/common/share.svg`} alt={`share`} fill={true} />
+            <ShareIcon
+              className={`w-5 h-5 ${fontColor || "text-gray-700"} font-medium`}
+            />
           </button>
-          <button className={`relative w-5 h-5`}>
-            <Image
-              src={`/image/common/download.svg`}
-              alt={`download`}
-              fill={true}
+          <button className={`relative w-5 h-5`} onClick={handleDownloadModal}>
+            <ArrowDownTrayIcon
+              className={`w-5 h-5 ${fontColor || "text-gray-700"} font-medium`}
             />
           </button>
         </div>
       </div>
       <div className={`flex flex-col items-center justify-center gap-2`}>
-        <Title size={`h1`} text={title || ""} />
+        <Title size={`h1`} text={title || ""} customColor={fontColor} />
         {author && (
           <div className={`flex items-center gap-3`}>
             <button
-              className={`font-normal text-black hover:underline`}
+              className={`font-normal ${
+                fontColor || "text-black"
+              } hover:underline`}
               onClick={() => {
                 router.push(`/user/${formatPathName(author.nickname)}`);
               }}
             >
               by {authorName}
             </button>
-            <Image
-              className={`rounded-full`}
-              src={profilePic || "/image/common/default_profile.svg"}
-              alt={`user_profile`}
-              width={30}
-              height={30}
-            />
+            <div className={`relative w-6 h-6 rounded-full bg-white`}>
+              <Image
+                className={`object-cover rounded-full`}
+                src={profilePic || "/image/common/default_profile.svg"}
+                alt={`user_profile`}
+                fill={true}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -191,16 +224,24 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
                   height={32}
                 />
               ) : (
-                <HeartIcon className={`text-gray-300`} width={32} height={32} />
+                <HeartIcon
+                  className={`${fontColor ? "" : "text-gray-300"}`}
+                  width={32}
+                  height={32}
+                />
               )}
             </div>
             <p
-              className={`text-gray-900 text-xl font-normal`}
+              className={`${
+                fontColor ? "" : "text-gray-900"
+              } text-xl font-normal`}
             >{`LIKE THIS PLAYLIST`}</p>
           </button>
         </div>
         <div
-          className={`flex items-center text-sm text-gray-900 font-medium  gap-8`}
+          className={`flex items-center text-sm ${
+            fontColor ? "" : "text-gray-900"
+          } font-medium  gap-8`}
         >
           <p>{`${playedCount || 0} played`}</p>
           <p>{`${!!likedBy ? likedBy?.length : 0} likes`}</p>
@@ -220,15 +261,19 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
       <div
         className={`flex flex-col items-start w-full gap-6 text-base font-normal`}
       >
-        <Title size={`h2`} text={`Description`} />
+        <Title size={`h2`} text={`Description`} customColor={fontColor} />
         {description ? (
-          <p className={` text-gray-900`}>{description}</p>
+          <p className={` ${fontColor ? "" : "text-gray-900"}`}>
+            {description}
+          </p>
         ) : (
-          <p className={`text-gray-300`}>No description :/</p>
+          <p className={`${fontColor ? "" : "text-gray-300"}`}>
+            No description :/
+          </p>
         )}
       </div>
       <div className={`flex flex-col items-start w-full gap-6`}>
-        <Title size={`h2`} text={`Comments`} />
+        <Title size={`h2`} text={`Comments`} customColor={fontColor} />
         {playlistId && (
           <CommentSection
             postId={playlistId}

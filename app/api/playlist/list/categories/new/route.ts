@@ -7,68 +7,80 @@ export async function GET(req: Request) {
     const userId = new URL(req.url).searchParams.get("userId") || "";
 
     if (!userId) {
-      const nonLoginSuggestions = await prisma.playlist.findMany({
-        take: 10,
-        orderBy: {
-          createdAt: "desc",
-        },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          coverImage: true,
-          createdAt: true,
-          likedCount: true,
-          author: {
-            select: {
-              id: true,
-              nickname: true,
-              profilePic: true,
-              isEditor: true,
-            },
+      const nonLoginSuggestions = await prisma.playlist
+        .findMany({
+          take: 10,
+          orderBy: {
+            createdAt: "desc",
           },
-          likedBy: {
-            select: {
-              userId: true,
-              user: {
-                select: {
-                  id: true,
-                  nickname: true,
-                  profilePic: true,
-                  isEditor: true,
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            coverImage: true,
+            createdAt: true,
+            likedCount: true,
+            author: {
+              select: {
+                id: true,
+                nickname: true,
+                profilePic: true,
+                isEditor: true,
+              },
+            },
+            likedBy: {
+              select: {
+                userId: true,
+                user: {
+                  select: {
+                    id: true,
+                    nickname: true,
+                    profilePic: true,
+                    isEditor: true,
+                  },
                 },
               },
             },
-          },
-          songs: {
-            orderBy: {
-              songIndex: "asc",
-            },
-            select: {
-              songIndex: true,
-              song: {
-                select: {
-                  id: true,
-                  title: true,
-                  artist: true,
-                  url: true,
-                  likedCount: true,
+            songs: {
+              orderBy: {
+                songIndex: "asc",
+              },
+              select: {
+                songIndex: true,
+                song: {
+                  select: {
+                    id: true,
+                    title: true,
+                    artist: true,
+                    url: true,
+                    likedCount: true,
+                    playedCount: true,
+                    likedUsers: {
+                      select: {
+                        userId: true,
+                      },
+                    },
+                  },
                 },
               },
             },
-          },
-          mood: {
-            select: {
-              name: true,
+            mood: {
+              select: {
+                name: true,
+              },
+            },
+            category: {
+              select: {
+                name: true,
+              },
             },
           },
-          category: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      });
+        })
+        .then((playlists) =>
+          playlists.map((playlist) => {
+            return { ...playlist, songs: formatSongResponse(playlist.songs) };
+          }),
+        );
 
       const categoriesRes = await prisma.category.findMany({
         select: {

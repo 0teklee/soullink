@@ -32,11 +32,9 @@ const TopListContainter = ({ playlists }: { playlists: PlaylistType[] }) => {
 
   return (
     <div className={`relative w-full h-full`}>
-      <div className={`absolute left-0 w-full`}>
-        <motion.div animate={controls}>
-          <TopListItem playlist={playlists[currentIndex]} />
-        </motion.div>
-      </div>
+      <motion.div animate={controls}>
+        <TopListItem playlist={playlists[currentIndex]} />
+      </motion.div>
     </div>
   );
 };

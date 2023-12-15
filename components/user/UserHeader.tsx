@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditProfilePayload, UserType } from "@/libs/types/userType";
 import Image from "next/image";
-import BgColorExtract from "@/components/common/module/BgColorExtract";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   postNicknameDuplicate,
@@ -18,13 +17,19 @@ import {
   PlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import {
+  ClipboardIcon,
+  PencilIcon,
+  PhotoIcon,
+} from "@heroicons/react/24/solid";
 import useTimer from "@/libs/utils/hooks/useTimer";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import { useRouter } from "next/navigation";
 import DomPurifiedText from "@/components/common/module/DOMPurifiedText";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+
+import ColorPicker from "@/components/common/module/ColorPicker";
 
 const UserHeader = ({
   userProfile,
@@ -37,19 +42,6 @@ const UserHeader = ({
   const { setModal: setLoginModalOpen } = useSetModal();
   const router = useRouter();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFollowerModal, setIsFollowerModal] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isDuplicated, setIsDuplicated] = useState<boolean | undefined>(
-    undefined,
-  );
-  const [editPayload, setEditPayload] = useState<EditProfilePayload>({
-    userId: userId || "",
-    nickname: userProfile.nickname,
-    profilePic: userProfile?.profilePic,
-    bio: userProfile?.bio,
-  });
-
   const {
     nickname,
     profilePic,
@@ -58,7 +50,30 @@ const UserHeader = ({
     bio,
     playedCount,
     id: targetId,
+    bgColor,
+    fontColor,
+    createdPlaylists,
   } = userProfile;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFollowerModal, setIsFollowerModal] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDuplicated, setIsDuplicated] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+  const [customColorType, setCustomColorType] = useState<"font" | "bg">("font");
+  const [customFontColor, setCustomFontColor] = useState(fontColor || "");
+  const [customBgColor, setCustomBgColor] = useState(bgColor || "");
+
+  const [editPayload, setEditPayload] = useState<EditProfilePayload>({
+    userId: userId || "",
+    nickname: userProfile.nickname,
+    profilePic: userProfile?.profilePic,
+    bio: userProfile?.bio,
+    bgColor: customBgColor,
+    fontColor: customFontColor,
+  });
 
   const isProfileOwner = userId === targetId;
   const isFollowing = followers?.some((user) => user.follower.id === userId);
@@ -133,208 +148,290 @@ const UserHeader = ({
     editProfileMutate(editPayload);
   };
 
+  useEffect(() => {
+    if (customFontColor) {
+      setEditPayload((prev) => ({
+        ...prev,
+        fontColor: customFontColor,
+      }));
+    }
+
+    if (customBgColor) {
+      setEditPayload((prev) => ({
+        ...prev,
+        bgColor: customBgColor,
+      }));
+    }
+  }, [customFontColor, customBgColor]);
+
   return (
     <>
-      <div className={`absolute left-0 w-screen `}>
-        <div className={`relative w-full`}>
-          <BgColorExtract
-            imageUrl={profilePic || "/image/common/default_cover_image.svg"}
-          />
+      <div
+        className={`relative w-screen xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] text-gray-700`}
+        style={{
+          backgroundColor: customBgColor,
+          color: customFontColor,
+        }}
+      >
+        <div
+          className={`flex items-start justify-start gap-5 w-full xs:my-3 pt-12 pb-4 xs:py-2 xs:px-4  bg-transparent xs:flex-col xs:items-center xs:justify-center `}
+        >
           <div
-            className={`relative left-0 flex items-start justify-start w-screen mt-10 xs:my-10 pt-12 pb-4 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] gap-x-[60px] bg-transparent xs:flex-col xs:items-center xs:justify-center`}
+            className={`profile-card relative flex flex-col items-center gap-y-3 z-10`}
           >
-            <div
-              className={`profile-card relative flex flex-col items-center gap-y-3 z-10`}
-            >
-              <div className={`group xs:relative`}>
-                {!isProfileOwner && (
-                  <div
-                    onClick={handleFollow}
-                    className={`absolute -top-8 flex items-center justify-center gap-2 w-full cursor-pointer xs:h-full xs:top-0 xs:bg-black xs:bg-opacity-50 xs:opacity-0 xs:group-hover:opacity-100 xs:transition-opacity z-20`}
-                  >
-                    <p className={`text-xl`}>
-                      {isFollowing ? `Unfollow` : `Follow`}
-                    </p>
-                    {!!isFollowing ? (
-                      <MinusIcon
-                        className={`z-1 text-bg-difference`}
-                        width={24}
-                        height={24}
-                      />
-                    ) : (
-                      <PlusIcon
-                        className={`z-1 text-bg-difference`}
-                        width={24}
-                        height={24}
-                      />
-                    )}
-                  </div>
-                )}
-                <div className={`relative w-[250px] h-[250px]`}>
-                  {isEdit && (
-                    <button
-                      onClick={() => {
-                        handleImageUpload(handlePayloadImgUpload);
-                      }}
-                      className={`absolute w-full h-full cursor-pointer z-10`}
-                    >
-                      <PhotoIcon
-                        className={`absolute top-0 right-0 z-10 text-white`}
-                        width={24}
-                        height={24}
-                      />
-                    </button>
+            <div className={`group xs:relative`}>
+              {!isProfileOwner && (
+                <div
+                  onClick={handleFollow}
+                  className={`absolute -top-8 flex items-center justify-center gap-2 w-full cursor-pointer xs:h-full xs:top-0 xs:bg-black xs:bg-opacity-50 xs:opacity-0 xs:group-hover:opacity-100 xs:transition-opacity z-20`}
+                >
+                  <p className={`text-xl`}>
+                    {isFollowing ? `Unfollow` : `Follow`}
+                  </p>
+                  {!!isFollowing ? (
+                    <MinusIcon
+                      className={`z-1 text-bg-difference`}
+                      width={24}
+                      height={24}
+                    />
+                  ) : (
+                    <PlusIcon
+                      className={`z-1 text-bg-difference`}
+                      width={24}
+                      height={24}
+                    />
                   )}
-                  <Image
-                    className={`object-cover`}
-                    src={
-                      isEdit
-                        ? editPayload?.profilePic ||
-                          "/image/common/default_cover_image.svg"
-                        : profilePic || "/image/common/default_cover_image.svg"
-                    }
-                    alt={nickname}
-                    fill={true}
-                  />
+                </div>
+              )}
+              <div className={`relative w-[250px] h-[250px]`}>
+                {isEdit && (
+                  <button
+                    onClick={() => {
+                      handleImageUpload(handlePayloadImgUpload);
+                    }}
+                    className={`absolute w-full h-full cursor-pointer z-10`}
+                  >
+                    <PhotoIcon
+                      className={`absolute top-0 right-0 z-10 text-bg-difference`}
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                )}
+                <Image
+                  className={`object-cover`}
+                  src={
+                    isEdit
+                      ? editPayload?.profilePic ||
+                        "/image/common/default_cover_image.svg"
+                      : profilePic || "/image/common/default_cover_image.svg"
+                  }
+                  alt={nickname}
+                  fill={true}
+                />
+              </div>
+            </div>
+            <div className={`flex flex-col items-center gap-1`}>
+              <div className={`bg-transparent`}>
+                <div className={`mb-1`}>
+                  {isProfileOwner && (
+                    <div className={`flex justify-between gap-2 my-3 text-sm`}>
+                      <button
+                        className={`w-full px-2 py-1  ${
+                          isEdit
+                            ? `text-primary rounded border border-primary hover:text-white hover:bg-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-primary`
+                            : ``
+                        }`}
+                        disabled={
+                          isEdit && (isDuplicated || isDuplicateLoading)
+                        }
+                        onClick={() => {
+                          if (isEdit) {
+                            handleEditProfile();
+                          }
+
+                          if (!isEdit) {
+                            setEditPayload((prev) => ({
+                              ...prev,
+                              nickname: userProfile.nickname,
+                              profilePic: userProfile?.profilePic,
+                              bio: userProfile?.bio,
+                            }));
+                          }
+                          setIsEdit((prev) => !prev);
+                        }}
+                      >
+                        {isEdit ? `Complete` : `Edit Profile`}
+                      </button>
+                      <button
+                        className={`w-full px-2 py-1 ${
+                          isEdit
+                            ? `text-pink-700 rounded border border-pink-700 hover:text-white hover:bg-red-400`
+                            : `hidden`
+                        }`}
+                        onClick={() => {
+                          setIsEdit(false);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className={`flex flex-col items-center gap-1`}>
-                <div className={`flex items-center justify-center`}>
-                  {!isEdit && (
-                    <p className={`text-2xl font-semibold `}>{nickname}</p>
-                  )}
-                  {isEdit && (
-                    <div className={`relative`}>
-                      <input
-                        type="text"
-                        className={`appearance-none text-center text-2xl font-semibold text-bg-difference bg-transparent border-b-2 border-[text-bg-difference] focus:outline-none focus:border-primary`}
-                        onChange={handleNickNameChange}
-                        onKeyUp={() => resetTimer(timer)}
-                        value={editPayload.nickname}
-                      />
-                      {isDuplicated !== undefined && (
-                        <div className={`w-full mt-0.5`}>
-                          {isDuplicated && (
-                            <div
-                              className={`flex items-center gap-1 text-pink-700`}
-                            >
-                              <XMarkIcon className={`w-4 h-4`} />
-                              <p className={`text-xs`}>nickname already used</p>
-                            </div>
-                          )}
-                          {isDuplicated === false && (
-                            <div
-                              className={`flex items-center gap-1 text-primary`}
-                            >
-                              <CheckIcon className={`w-4 h-4`} />
-                              <p className={`text-xs`}>available</p>
-                            </div>
-                          )}
+            </div>
+          </div>
+          <div
+            className={`pt-12 flex flex-col items-start gap-4 w-full xs:items-center xs:pt-1`}
+          >
+            <div
+              className={`flex flex-col items-start justify-center gap-1 xs:items-center`}
+            >
+              {!isEdit && (
+                <p className={`text-2xl font-semibold `}>{nickname}</p>
+              )}
+              {isEdit && (
+                <div className={`relative`}>
+                  <input
+                    type="text"
+                    className={`appearance-none text-center text-2xl font-semibold  bg-transparent border-b-2  focus:outline-none focus:border-primary`}
+                    onChange={handleNickNameChange}
+                    onKeyUp={() => resetTimer(timer)}
+                    value={editPayload.nickname}
+                  />
+                  {isDuplicated !== undefined && (
+                    <div className={`w-full mt-0.5`}>
+                      {isDuplicated && (
+                        <div
+                          className={`flex items-center gap-1 text-pink-700`}
+                        >
+                          <XMarkIcon className={`w-4 h-4`} />
+                          <p className={`text-xs`}>nickname already used</p>
+                        </div>
+                      )}
+                      {isDuplicated === false && (
+                        <div className={`flex items-center gap-1 text-primary`}>
+                          <CheckIcon className={`w-4 h-4`} />
+                          <p className={`text-xs`}>available</p>
                         </div>
                       )}
                     </div>
                   )}
                 </div>
-                <div className={`bg-transparent`}>
-                  <div className={`mb-1`}>
-                    <p className={`text-center text-sm font-normal `}>
-                      {playedCount} played
-                    </p>
-                    <div
-                      className={`flex items-center justify-between max-w-full text-normal font-medium gap-3 `}
+              )}
+              {isEdit && (
+                <div className={`flex items-center gap-3 w-full`}>
+                  <div className={`flex flex-col gap-1`}>
+                    <button
+                      className={`flex items-center justify-between gap-1`}
+                      onClick={() => {
+                        setCustomColorType("font");
+                        setIsColorPickerOpen((prev) => !prev);
+                      }}
                     >
-                      <button
-                        onClick={() => {
-                          setIsFollowerModal(false);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        following {following?.length}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsFollowerModal(true);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        follower {followers?.length}
-                      </button>
-                    </div>
-                    {isProfileOwner && (
-                      <div
-                        className={`flex justify-between gap-2 my-3 text-sm`}
-                      >
-                        <button
-                          className={`w-full px-2 py-1  ${
-                            isEdit
-                              ? `text-primary rounded border border-primary hover:text-white hover:bg-primary disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-primary`
-                              : ``
-                          }`}
-                          disabled={
-                            isEdit && (isDuplicated || isDuplicateLoading)
-                          }
-                          onClick={() => {
-                            if (isEdit) {
-                              handleEditProfile();
-                            }
-
-                            if (!isEdit) {
-                              setEditPayload((prev) => ({
-                                ...prev,
-                                nickname: userProfile.nickname,
-                                profilePic: userProfile?.profilePic,
-                                bio: userProfile?.bio,
-                              }));
-                            }
-                            setIsEdit((prev) => !prev);
-                          }}
-                        >
-                          {isEdit ? `Complete` : `Edit Profile`}
-                        </button>
-                        <button
-                          className={`w-full px-2 py-1 ${
-                            isEdit
-                              ? `text-pink-700 rounded border border-pink-700 hover:text-white hover:bg-red-400`
-                              : `hidden`
-                          }`}
-                          onClick={() => {
-                            setIsEdit(false);
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
+                      <PencilIcon className={`w-4 h-4 text-gray-400`} />
+                      <span className={`text-xs text-gray-400`}>
+                        Change font color
+                      </span>
+                    </button>
+                    <div
+                      className={`w-4 h-4 rounded`}
+                      style={{ backgroundColor: customFontColor }}
+                    />
+                  </div>
+                  <div className={`flex flex-col gap-1`}>
+                    <button
+                      className={`flex items-center justify-between gap-1`}
+                      onClick={() => {
+                        setCustomColorType("bg");
+                        setIsColorPickerOpen((prev) => !prev);
+                      }}
+                    >
+                      <ClipboardIcon className={`w-4 h-4 text-gray-400`} />
+                      <span className={`text-xs text-gray-400`}>
+                        Change Background color
+                      </span>
+                    </button>
+                    <div
+                      className={`w-4 h-4 rounded`}
+                      style={{ backgroundColor: customBgColor }}
+                    />
+                  </div>
+                  {customColorType === "font" && isColorPickerOpen && (
+                    <ColorPicker
+                      customFontColor={customFontColor}
+                      setCustomFontColor={setCustomFontColor}
+                      setIsColorPickerOpen={setIsColorPickerOpen}
+                    />
+                  )}
+                  {customColorType === "bg" && isColorPickerOpen && (
+                    <ColorPicker
+                      customFontColor={customBgColor}
+                      setCustomFontColor={setCustomBgColor}
+                      setIsColorPickerOpen={setIsColorPickerOpen}
+                    />
+                  )}
+                </div>
+              )}
+              <div
+                className={`flex items-center justify-between max-w-full text-xs font-medium gap-3 `}
+              >
+                <button
+                  onClick={() => {
+                    setIsFollowerModal(false);
+                    setIsModalOpen(true);
+                  }}
+                >
+                  following {following?.length}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsFollowerModal(true);
+                    setIsModalOpen(true);
+                  }}
+                >
+                  follower {followers?.length}
+                </button>
+              </div>
+            </div>
+            <div className={`w-full line-clamp-[12] overflow-ellipsis`}>
+              {!!bio && !isEdit && (
+                <div className={`flex flex-col items-start gap-3`}>
+                  <div className={`text-lg`}>
+                    <DomPurifiedText text={bio} />
+                  </div>
+                  <div className={`flex flex-col items-start gap-1`}>
+                    {createdPlaylists && (
+                      <p className={`text-center text-md font-normal `}>
+                        created {createdPlaylists.length} playlists
+                      </p>
+                    )}
+                    {playedCount && (
+                      <p className={`text-center text-sm font-normal `}>
+                        {playedCount} played
+                      </p>
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className={`w-full`}>
-              <div className={`w-full line-clamp-[12] overflow-ellipsis`}>
-                {!!bio && !isEdit && (
-                  <div className={`text-base `}>
-                    <DomPurifiedText text={bio} />
-                  </div>
-                )}
-                {isEdit && (
-                  <div className={`w-full`}>
-                    <textarea
-                      className={`appearance-none w-full text-base font-normal text-bg-difference bg-transparent border-b-2 border-[text-bg-difference] focus:outline-none focus:border-primary`}
-                      onChange={(e) =>
-                        setEditPayload((prev) => ({
-                          ...prev,
-                          bio: e.target.value,
-                        }))
-                      }
-                      value={editPayload.bio}
-                      maxLength={120}
-                    />
-                    <p className={`text-sm text-bg-difference`}>
-                      {editPayload?.bio ? editPayload?.bio?.length : 0}/120
-                    </p>
-                  </div>
-                )}
-              </div>
+              )}
+              {isEdit && (
+                <div className={`w-full`}>
+                  <textarea
+                    className={`appearance-none w-full p-2 font-normal bg-transparent border-2 focus:outline-none focus:border-primary resize-y`}
+                    onChange={(e) =>
+                      setEditPayload((prev) => ({
+                        ...prev,
+                        bio: e.target.value,
+                      }))
+                    }
+                    value={editPayload.bio}
+                    maxLength={120}
+                  />
+                  <p className={`text-sm`}>
+                    {editPayload?.bio ? editPayload?.bio?.length : 0}/120
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

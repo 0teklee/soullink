@@ -22,6 +22,8 @@ export async function GET(
           description: true,
           coverImage: true,
           likedCount: true,
+          bgColor: true,
+          fontColor: true,
           author: {
             select: {
               id: true,

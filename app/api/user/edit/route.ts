@@ -6,6 +6,10 @@ export async function PATCH(req: Request) {
   try {
     const request: EditProfilePayload = await req.json();
     const { userId, ...updateData } = request;
+    const bgColorUpdate = request?.bgColor ? { bgColor: request?.bgColor } : {};
+    const fontColorUpdate = request?.fontColor
+      ? { fontColor: request?.fontColor }
+      : {};
 
     if (!userId) {
       return new NextResponse(JSON.stringify({ message: "fail. no user id" }), {
@@ -16,7 +20,11 @@ export async function PATCH(req: Request) {
 
     const userClient = await prisma.user.update({
       where: { id: userId },
-      data: updateData,
+      data: {
+        ...updateData,
+        ...bgColorUpdate,
+        ...fontColorUpdate,
+      },
       select: {
         id: true,
         nickname: true,

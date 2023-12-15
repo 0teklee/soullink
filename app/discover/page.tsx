@@ -17,9 +17,12 @@ import {
 
 const Page = async () => {
   const queryClient = new QueryClient();
-  const { userId, userNickname } = await getServerSession(authOptions).then(
-    (session) => (session as UserSessionType) || {},
-  );
+  const { userId, userNickname } = await getServerSession(authOptions)
+    .then(
+      (session) =>
+        (session as UserSessionType) || { userId: "", userNickname: "" },
+    )
+    .catch(() => ({ userId: "", userNickname: "" }));
 
   await Promise.all([
     queryClient.prefetchQuery({

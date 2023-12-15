@@ -18,6 +18,7 @@ import {
   QUERY_STALE_TIME,
 } from "@/libs/utils/client/commonValues";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
+import UseCustomizeStyle from "@/libs/utils/hooks/useCustomizeStyle";
 
 const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   const [userDataQuery, recentQuery] = useQueries({
@@ -46,10 +47,14 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
     id: profileId,
     likedSong,
     likedPlaylists,
+    bgColor,
+    fontColor,
   } = userData || {};
 
   const isCreatedPlaylistsEmpty = createdPlaylists?.length === 0;
   const isRecentPlayedEmpty = recentPlayedPlayLists?.length === 0;
+
+  UseCustomizeStyle(bgColor, fontColor);
 
   return (
     <section className={`flex flex-col items-center gap-10 pb-10`}>
@@ -58,22 +63,24 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           <UserHeader userProfile={userData} userId={userId} />
         </ReactQueryErrorBoundary>
       )}
-      <div
-        className={`flex flex-col gap-3 items-start w-full text-gray-900 mt-[520px]`}
-      >
-        <Title size={`h1`} text={`Playlists by ${nickname}`} />
+      <div className={`flex flex-col gap-3 items-start w-full`}>
+        <Title
+          size={`h1`}
+          text={`Playlists by ${nickname}`}
+          customColor={fontColor}
+        />
         {createdPlaylists && !isCreatedPlaylistsEmpty && (
           <ReactQueryErrorBoundary>
             <PlayListSlider playlists={createdPlaylists} />
           </ReactQueryErrorBoundary>
         )}
         {createdPlaylists && isCreatedPlaylistsEmpty && (
-          <Title size={`h1`} text={`No Playlists`} />
+          <Title size={`h1`} text={`No Playlists`} customColor={fontColor} />
         )}
       </div>
       {likedPlaylists && likedPlaylists.length > 0 && (
         <div className={`flex flex-col gap-3 w-full`}>
-          <Title size={`h1`} text={`Liked Playlists`} />
+          <Title size={`h1`} text={`Liked Playlists`} customColor={fontColor} />
           <ReactQueryErrorBoundary>
             <PlaylistListContainer playlists={likedPlaylists} isLarge={true} />
           </ReactQueryErrorBoundary>
@@ -81,14 +88,14 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
       )}
       {recentPlayedPlayLists && !isRecentPlayedEmpty && (
         <div className={`flex flex-col gap-3 items-start w-full text-gray-900`}>
-          <Title size={`h1`} text={`Recent played`} />
+          <Title size={`h1`} text={`Recent played`} customColor={fontColor} />
           <ReactQueryErrorBoundary>
             <PlaylistListContainer playlists={recentPlayedPlayLists} />
           </ReactQueryErrorBoundary>
         </div>
       )}
       <div className={`flex flex-col gap-3 w-full`}>
-        <Title size={`h1`} text={`Liked Songs`} />
+        <Title size={`h1`} text={`Liked Songs`} customColor={fontColor} />
         {likedSong && (
           <ReactQueryErrorBoundary>
             <SongTable
@@ -100,8 +107,8 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           </ReactQueryErrorBoundary>
         )}
       </div>
-      <div className={`flex flex-col gap-3 items-start w-full text-gray-900`}>
-        <Title size={`h2`} text={`Guestbook`} />
+      <div className={`flex flex-col gap-3 items-start w-full`}>
+        <Title size={`h2`} text={`Guestbook`} customColor={fontColor} />
         {profileId && (
           <CommentSection postId={profileId} userId={userId} isProfile={true} />
         )}

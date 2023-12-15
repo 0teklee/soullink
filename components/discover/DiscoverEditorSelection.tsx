@@ -20,18 +20,22 @@ const DiscoverEditorSelection = () => {
   });
 
   return (
-    <div className={`mb-[260px] xs:mb-[180px]`}>
-      <div className={`flex flex-col gap-4 h-full min-h-[200px]`}>
-        <div className={`flex items-center justify-start gap-2`}>
-          <Title size={`h1`} text={`Featured Playlists`} />
+    <>
+      {data && data.length > 0 && (
+        <div className={`mb-[260px] xs:mb-[180px]`}>
+          <div className={`flex flex-col gap-4 h-full min-h-[200px]`}>
+            <div className={`flex items-center justify-start gap-2`}>
+              <Title size={`h1`} text={`Featured Playlists`} />
+            </div>
+            <div className={`mt-12 absolute left-0 bg-white`}>
+              <ReactQueryErrorBoundary>
+                <FullImageCardContainer playlists={data} />
+              </ReactQueryErrorBoundary>
+            </div>
+          </div>
         </div>
-        <div className={`mt-12 absolute left-0 bg-white`}>
-          <ReactQueryErrorBoundary>
-            <FullImageCardContainer playlists={data} />
-          </ReactQueryErrorBoundary>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
