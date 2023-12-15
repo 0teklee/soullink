@@ -15,8 +15,8 @@ model User {
   nickname            String                 @unique @db.Char(20)
   bio                 String                 @db.Char(120)
   profilePic          String?                @db.LongText()
-  profileColor        String?                @db.LongText()
-  profileBgColor      String?                @db.LongText()
+  fontColor           String?                @db.LongText()
+  bgColor             String?                @db.LongText()
   isBlocked           Boolean
   isEditor            Boolean                @default(false)
   blockReason         String                 @default("NULL")
