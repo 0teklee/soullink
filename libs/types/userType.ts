@@ -26,6 +26,8 @@ export interface UserType {
   profileComments: CommentType[];
   playedCount: number;
   isEditor?: boolean;
+  bgColor?: string;
+  fontColor?: string;
 }
 
 export interface CommentType {
@@ -117,6 +119,8 @@ export interface EditProfilePayload {
     instagram?: string;
     twitter?: string;
   };
+  bgColor?: string;
+  fontColor?: string;
 }
 
 export interface PostFollowType {
