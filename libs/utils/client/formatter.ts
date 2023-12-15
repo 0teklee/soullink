@@ -186,7 +186,16 @@ export const formatEditUserPayload = (payload: EditProfilePayload) => {
         formatted.nickname.trim(),
       );
     }
+
+    if (key === "bgColor" && !formatted?.bgColor) {
+      delete formatted.bgColor;
+    }
+
+    if (key === "fontColor" && !formatted?.fontColor) {
+      delete formatted.fontColor;
+    }
   }
+
   return formatted;
 };
 
