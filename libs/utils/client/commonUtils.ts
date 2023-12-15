@@ -142,8 +142,91 @@ export const downloadPlaylistPng = async (
     });
 };
 
-export const formatStyleProps = (style: string) => {
+export const formatPlaylistOptimisticSetter = (
+  userId: string,
+  playlistId: string,
+  playlist: PlaylistType,
+) => {
+  const isLiked = playlist.likedBy && playlist.likedBy.length > 0;
+  const isUserLiked =
+    playlist.likedBy &&
+    playlist.likedBy.filter((user) => user.userId === userId).length > 0;
+
+  if (!isLiked && !isUserLiked) {
+    return {
+      ...playlist,
+      likedBy: [{ playlistId, userId }],
+    };
+  }
+
+  if (isLiked && isUserLiked) {
+    return {
+      ...playlist,
+      likedBy: playlist.likedBy.filter((user) => user.userId !== userId),
+    };
+  }
+
   return {
-    style,
+    ...playlist,
+    likedBy: playlist.likedBy.concat({ playlistId, userId }),
+  };
+};
+
+export const formatSongOptimisticSetter = (
+  userId: string,
+  songId: string,
+  playlist: PlaylistType,
+) => {
+  const isLiked = playlist.songs && playlist.songs.length > 0;
+  const isUserLiked =
+    playlist.songs &&
+    playlist.songs.filter(
+      (song) =>
+        song.id === songId && song.likedUsers && song.likedUsers.length > 0,
+    ).length > 0;
+
+  if (!isLiked && !isUserLiked) {
+    return {
+      ...playlist,
+      songs: playlist.songs.map((song) => {
+        if (song.id === songId) {
+          return {
+            ...song,
+            likedUsers: [{ userId, songId }],
+          };
+        }
+        return song;
+      }),
+    };
+  }
+
+  if (isLiked && isUserLiked) {
+    return {
+      ...playlist,
+      songs: playlist.songs.map((song) => {
+        if (song.id === songId) {
+          return {
+            ...song,
+            likedUsers: song.likedUsers?.filter(
+              (user) => user.userId !== userId,
+            ),
+          };
+        }
+        return song;
+      }),
+    };
+  }
+
+  return {
+    ...playlist,
+    songs: playlist.songs.map((song) => {
+      if (song.id === songId) {
+        return {
+          ...song,
+          likedUsers: song.likedUsers?.concat({ userId, songId }),
+        };
+      }
+      return song;
+    }),
   };
 };
