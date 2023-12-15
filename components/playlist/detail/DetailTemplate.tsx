@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
@@ -70,17 +70,15 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   } = author || playlistDefault.author;
 
   const isUserAuthor = !!userId && !!authorId && userId === authorId;
-  const isUserLikedPlaylist = useMemo(
-    () =>
-      !!userId &&
+  const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
+    !!userId &&
       !!likedBy &&
       likedBy.length > 0 &&
       likedBy.filter((likeItem) => likeItem.userId === userId).length > 0,
-    [userId, likedBy, playlistId],
   );
 
   const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId);
+    playlistLikeMutate(playlistId, userId, setIsUserLikedPlaylist);
   };
 
   const handleDownloadModal = () => {
