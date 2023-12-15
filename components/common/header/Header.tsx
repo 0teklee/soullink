@@ -2,21 +2,30 @@ import React from "react";
 import Image from "next/image";
 import HeaderUser from "@/components/common/header/HeaderUser";
 import Link from "next/link";
+import HeaderSearch from "@/components/common/header/HeaderSearch";
+import Title from "@/components/common/module/Title";
 
 const Header = () => {
   return (
     <div
-      className={`fixed flex items-center justify-between w-screen px-8 py-1.5 bg-gray-400 z-50 xs:py-0.5 xs:px-2 `}
+      className={`fixed flex items-center justify-between w-screen px-8 py-3 bg-white border-b-2 border-primary z-50 xs:py-0.5 xs:px-2 `}
     >
       <div className={`flex items-center w-full h-full gap-6 xs:flex-1`}>
         <Link
-          className={`flex items-center justify-center w-9 h-9 text-gray-100 hover:text-gray-50 `}
+          className={`flex items-center justify-start gap-2 text-primary hover:text-opacity-70 `}
           href={`/`}
         >
-          <Image src={`/soullink_logo.png`} alt="logo" width={36} height={36} />
+          <div className={`relative w-8 h-8`}>
+            <Image src={`/soullink_logo.png`} alt="logo" fill={true} />
+          </div>
+          <h1
+            className={`text-xl text-primary font-bold md:hidden desktop:box`}
+          >
+            Soullink
+          </h1>
         </Link>
         <div
-          className={`flex items-center justify-start gap-4 text-gray-200  whitespace-nowrap font-normal xs:hidden`}
+          className={`flex items-center justify-start gap-4 text-gray-700  whitespace-nowrap font-normal xs:hidden`}
         >
           <Link
             href={`/discover`}
@@ -43,14 +52,17 @@ const Header = () => {
             Create list
           </Link>
           <Link
-            className={`px-3 py-1 text-emerald-50  hover:text-primary rounded-lg`}
+            className={`px-3 py-1 text-gray-500  hover:text-primary rounded-lg`}
             href={`/support`}
           >
             Support
           </Link>
         </div>
       </div>
-      <HeaderUser />
+      <div className={`flex items-center gap-4`}>
+        <HeaderSearch />
+        <HeaderUser />
+      </div>
     </div>
   );
 };
