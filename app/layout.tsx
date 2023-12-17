@@ -6,11 +6,17 @@ import ReactQueryClientProvider from "@/components/common/react-query-provider/R
 import RecoilRootProvider from "@/components/common/module/RecoilRootProvider";
 import CommonModalProvider from "@/components/common/modal/CommonModalProvider";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
+import { Noto_Sans } from "next/font/google";
 
 export const metadata = {
   title: "soullink",
   description: "souls linked up",
 };
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
 
 export default function RootLayout({
   children,
@@ -18,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={notoSans.className}>
       <body>
         <RecoilRootProvider>
           <NextAuthSessionProvider>
