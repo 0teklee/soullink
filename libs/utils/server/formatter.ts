@@ -138,7 +138,7 @@ export const formatSearchOrderBy = (
 
   if (param === "RECENTPLAYED,DESC") {
     return {
-      recentPlayed: {
+      recentPlay: {
         _count: "desc",
       },
     };
@@ -146,7 +146,7 @@ export const formatSearchOrderBy = (
 
   if (param === "RECENTPLAYED,ASC") {
     return {
-      recentPlayed: {
+      recentPlay: {
         _count: "asc",
       },
     };
