@@ -76,11 +76,19 @@ const PlayerController = ({
 
   const [isVolumeDropdownOpen, setIsVolumeDropdownOpen] = useState(false);
   const [isListDropdownOpen, setIsListDropdownOpen] = useState(false);
-  const [isSongLiked, setIsSongLiked] = useState(isUserSongLiked);
+  const [isSongLiked, setIsSongLiked] = useState(!!isUserSongLiked);
   const [isPlaylistLiked, setIsPlaylistLiked] = useState(isUserPlaylistLiked);
 
-  const { playlistLikeMutate } = useMutatePlaylistLike();
-  const { songLikeMutate } = useMutateSongLike();
+  const { playlistLikeMutate } = useMutatePlaylistLike(
+    playlistId,
+    userId,
+    setIsPlaylistLiked,
+  );
+  const { songLikeMutate } = useMutateSongLike(
+    currentSong?.id,
+    userId,
+    setIsSongLiked,
+  );
 
   const handlePrev = () => {
     playerCur?.seekTo(playerCur?.getCurrentTime() - 3);
@@ -110,8 +118,8 @@ const PlayerController = ({
     }));
   };
 
-  const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId, setIsPlaylistLiked);
+  const handleLikePlaylist = () => {
+    playlistLikeMutate();
   };
 
   const handleLikeSong = async () => {
@@ -120,7 +128,7 @@ const PlayerController = ({
       return;
     }
 
-    songLikeMutate(currentSong?.id, userId);
+    songLikeMutate();
   };
 
   const handleListDropdownOutside = () => {
@@ -144,6 +152,15 @@ const PlayerController = ({
       setIsPlaylistLiked(false);
     }
   }, [playlist, router]);
+
+  useEffect(() => {
+    if (!playlist) {
+      setPlayerState((prev) => ({
+        ...prev,
+        playing: false,
+      }));
+    }
+  }, [playing]);
 
   return (
     <div
