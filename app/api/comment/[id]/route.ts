@@ -18,9 +18,8 @@ export async function GET(
 
     const profile = isProfile === "true";
 
-    const lastIdCursor = lastId
-      ? { id: lastId }
-      : (undefined as { id: string } | undefined);
+    const lastIdCursor =
+      lastId !== "0" ? { cursor: { id: lastId } } : undefined;
 
     if (profile) {
       const unprocessedComments = await prisma.comment.findMany({
@@ -31,8 +30,8 @@ export async function GET(
           createdAt: "desc",
         },
         take: 10,
-        skip: 1,
-        cursor: lastIdCursor,
+        skip: !!lastIdCursor ? 1 : 0,
+        ...lastIdCursor,
         select: {
           id: true,
           createdAt: true,
@@ -120,7 +119,7 @@ export async function GET(
       },
       take: 10,
       skip: 1,
-      cursor: lastIdCursor,
+      ...lastIdCursor,
       select: {
         id: true,
         createdAt: true,
