@@ -64,6 +64,8 @@ export async function GET() {
           },
           authorId: true,
           playedCount: true,
+          fontColor: true,
+          bgColor: true,
           songs: {
             orderBy: {
               songIndex: "asc",
