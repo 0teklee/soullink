@@ -9,11 +9,11 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useSetPlaylistFromSongTable } from "@/libs/utils/hooks/useSetPlaylistFromSongTable";
+import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
 
 const TableItem = ({
   song,
   index,
-  handleLikeSong,
   isCreate,
   isCreateFavorite,
   setSongList,
@@ -24,11 +24,6 @@ const TableItem = ({
 }: {
   song: SongType;
   index: number;
-  handleLikeSong?: (
-    songId: string,
-    userId?: string,
-    optimisticUpdate?: Dispatch<SetStateAction<boolean>>,
-  ) => void;
   isCreate?: boolean;
   isCreateFavorite?: boolean;
   setSongList?: React.Dispatch<React.SetStateAction<SongType[]>>;
@@ -51,11 +46,17 @@ const TableItem = ({
         .length > 0,
   );
 
+  const { songLikeMutate } = useSongLike(song.id, userId, setIsUserLikedSong);
+
   const handlePlaySong = () => {
     if (!playSongFromTable || !playlist) {
       return;
     }
     playSongFromTable(playlist);
+  };
+
+  const handleLikeSong = async () => {
+    songLikeMutate();
   };
 
   useEffect(() => {
@@ -105,20 +106,14 @@ const TableItem = ({
                   <HeartIconSolid
                     className={`w-full h-full text-primary hover:text-gray-500`}
                     onClick={() => {
-                      if (!handleLikeSong) {
-                        return;
-                      }
-                      handleLikeSong(song.id, userId, setIsUserLikedSong);
+                      handleLikeSong();
                     }}
                   />
                 ) : (
                   <HeartIcon
                     className={`w-full h-full text-gray-500 hover:text-primary`}
                     onClick={() => {
-                      if (!handleLikeSong) {
-                        return;
-                      }
-                      handleLikeSong(song.id, userId, setIsUserLikedSong);
+                      handleLikeSong();
                     }}
                   />
                 )}
