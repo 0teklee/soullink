@@ -28,7 +28,9 @@ export const getMainPageFriendsPlaylists = async (
   userId?: string | null,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/playlist/list/friends?userId=${userId ? userId : ""}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/friends?userId=${
+      userId ? userId : ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -36,9 +38,10 @@ export const getMainPageFriendsPlaylists = async (
 };
 
 export const getMainPageTodayPlaylists = async (): Promise<PlaylistType[]> => {
-  const res = await fetch(`/api/playlist/list/main/today`, {
-    next: { tags: ["today_playlist"], revalidate: 0 },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/today`,
+    { next: { tags: ["today_playlist"], revalidate: 0 } },
+  );
   const data = await res.json();
   return data.todayPlaylist;
 };
@@ -47,7 +50,9 @@ export const getTimelinePlaylists = async (
   id?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/playlist/list/main/timeline?userId=${id ? id : ""}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/timeline?userId=${
+      id ? id : ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.timelinePlaylists;
@@ -56,27 +61,30 @@ export const getTimelinePlaylists = async (
 export const getRecentPlaylists = async (
   id?: string,
 ): Promise<PlaylistType[]> => {
-  const res = await fetch(`/api/user/recent?userId=${id ? id : ""}`, {
-    next: { tags: ["playlist"], revalidate: 0 },
-  }).then((res) => res.json());
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/user/recent?userId=${id ? id : ""}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
   return res.recentPlayed;
 };
 
 export const getLocalRecentPlaylists = async (
   id: string,
 ): Promise<PlaylistType[]> => {
-  const res = await fetch(`/api/playlist/list/recent?id=${id}`, {
-    next: { tags: ["playlist"], revalidate: 0 },
-  }).then((res) => res.json());
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent?id=${id}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
   return res.trendingPlayLists;
 };
 
 /* Playlist Detail page */
 
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
-  const res = await fetch(`/api/playlist/${id}`, {
-    next: { tags: ["playlist"], revalidate: 0 },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/${id}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
   const resData: Promise<PlaylistType> = await res
     .json()
     .then((data) => data.data);
@@ -84,7 +92,9 @@ export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
 };
 
 export const getPlaylistsPaths = async (): Promise<string[]> => {
-  const res = await fetch(`/api/playlist/paths`);
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/paths`,
+  );
   const data = await res.json();
   const paths = data.playlistsPaths;
   return paths;
@@ -96,16 +106,19 @@ export const getDiscoverMoodPlaylists = async (
   userId?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/playlist/list/mood/recommend?userId=${userId || ""}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/recommend?userId=${
+      userId || ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.moodPlayLists;
 };
 
 export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
-  const res = await fetch(`/api/playlist/list/editor`, {
-    next: { tags: ["playlist"], revalidate: 0 },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/editor`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
   const data = await res.json();
   return data.editorPlayLists;
 };
@@ -113,9 +126,10 @@ export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
 export const getRecommendedPlaylists = async (
   userId: string,
 ): Promise<PlaylistType[]> => {
-  const res = await fetch(`/api/playlist/list/recommend?userId=${userId}`, {
-    next: { tags: ["playlist"], revalidate: 0 },
-  }).then((res) => res.json());
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recommend?userId=${userId}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  ).then((res) => res.json());
   return res.userRecommendPlaylist;
 };
 
@@ -141,7 +155,9 @@ export const getCategoriesPlaylists = async (
   userId?: string,
 ): Promise<{ categoryPlaylists: PlaylistType[]; categories: string[] }> => {
   const res = await fetch(
-    `/api/playlist/list/categories/new?userId=${userId || ""}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/categories/new?userId=${
+      userId || ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -209,9 +225,10 @@ export const getMoodPlaylists = async (
 export const getMoodLists = async (
   period: DAYS_FILTER,
 ): Promise<{ name: string; count: number }[]> => {
-  const res = await fetch(`/api/playlist/list/mood/count?recent=${period}`, {
-    next: { tags: ["playlist"], revalidate: 0 },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/count?recent=${period}`,
+    { next: { tags: ["playlist"], revalidate: 0 } },
+  );
   const data = await res.json();
   return data.moodCount;
 };
@@ -303,13 +320,16 @@ export const postPlaylistLike = async (
   }
 
   const { playlistId } = request;
-  const res = await fetch(`/api/playlist/${playlistId}/like`, {
-    method: "POST",
-    body: JSON.stringify(request),
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/${playlistId}/like`,
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   const data = (await res.json()) as PlaylistLikeResponseType;
   return data;
 };
@@ -321,7 +341,7 @@ export const getTrendingSongs = async (
   period?: DAYS_FILTER,
 ): Promise<TrendingSongPlaylistType> => {
   const res = await fetch(
-    `/api/playlist/list/trending-songs?recent=${period}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending-songs?recent=${period}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -332,13 +352,16 @@ export const getTrendingSongs = async (
 
 export const postSongLike = async (request: SongLikeType) => {
   const { songId } = request;
-  const res = await fetch(`/api/song/${songId}/like`, {
-    method: "POST",
-    body: JSON.stringify(request),
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/song/${songId}/like`,
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   const data = await res.json();
   return data;
 };
@@ -361,14 +384,14 @@ export const postSongCount = async (songId: string) => {
 /* GET */
 
 export const getUsersPaths = async (): Promise<string[]> => {
-  const res = await fetch(`/api/user/paths`);
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/paths`);
   const data = await res.json();
   const paths = data.userNicknamePaths;
   return paths;
 };
 
 export const getSingleUserProfile = async (id: string): Promise<UserType> => {
-  const res = await fetch(`/api/user/${id}`, {
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/${id}`, {
     next: { tags: ["playlist"], revalidate: 0 },
   });
   const resData = await res.json();
@@ -382,7 +405,7 @@ export const getComments = async (
   lastId?: string,
 ): Promise<CommentType[]> => {
   const res = await fetch(
-    `/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${lastId}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${lastId}`,
   );
 
   const resData: Promise<CommentType[]> = await res
@@ -394,19 +417,22 @@ export const getComments = async (
 /* POST */
 
 export const postComment = async (request: CommentPayloadType) => {
-  const res = await fetch(`/api/comment/create`, {
-    method: "POST",
-    body: JSON.stringify(request),
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/comment/create`,
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   const data = await res.json();
   return data;
 };
 
 export const postLikeComment = async (request: PayloadCommentLikeType) => {
-  const res = await fetch(`/api/comment/like`, {
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/comment/like`, {
     method: "POST",
     body: JSON.stringify(request),
     headers: {
@@ -418,19 +444,22 @@ export const postLikeComment = async (request: PayloadCommentLikeType) => {
 };
 
 export const postDeleteComment = async (request: PayloadCommentDeleteType) => {
-  const res = await fetch(`/api/comment/delete`, {
-    method: "POST",
-    body: JSON.stringify(request),
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/comment/delete`,
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   const data = await res.json();
   return data;
 };
 
 export const postUserFollow = async (request: PostFollowType) => {
-  const res = await fetch(`/api/user/follow`, {
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/follow`, {
     method: "POST",
     body: JSON.stringify(request),
     headers: {
@@ -442,20 +471,23 @@ export const postUserFollow = async (request: PostFollowType) => {
 };
 
 export const postNicknameDuplicate = async (request: { nickname: string }) => {
-  const res = await fetch(`/api/user/duplicate`, {
-    method: "POST",
-    body: JSON.stringify(request),
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/user/duplicate`,
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   const data = await res.json();
   return data.isDuplicate;
 };
 
 export const postUserEdit = async (request: EditProfilePayload) => {
   const formattedData = formatEditUserPayload(request);
-  const res = await fetch(`/api/user/edit`, {
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/edit`, {
     method: "PATCH",
     body: JSON.stringify(formattedData),
     headers: {
@@ -519,7 +551,9 @@ export const getSearchPlaylists = async (
 export const getSearchCategories = async (
   keyword: string,
 ): Promise<string[]> => {
-  const res = await fetch(`/api/search/category?keyword=${keyword}`);
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/search/category?keyword=${keyword}`,
+  );
 
   const resData: Promise<string[]> = await res
     .json()
@@ -530,7 +564,9 @@ export const getSearchCategories = async (
 export const getSearchUsers = async (
   keyword: string,
 ): Promise<{ id: string; nickname: string; profilePic?: string }[]> => {
-  const res = await fetch(`/api/search/user?keyword=${keyword}`);
+  const res = await fetch(
+    `${process.env.NEXT_APP_BASE_URL}/api/search/user?keyword=${keyword}`,
+  );
 
   const resData: Promise<
     { id: string; nickname: string; profilePic?: string }[]
@@ -609,7 +645,9 @@ export const getRecentPlayedPlaylists = async (
   userId?: string;
 }> => {
   const res = await fetch(
-    `/api/playlist/user/recent?userId=${userId ? userId : ""}`,
+    `${process.env.NEXT_APP_BASE_URL}/api/playlist/user/recent?userId=${
+      userId ? userId : ""
+    }`,
   );
   const data = await res.json();
   return data;
@@ -623,7 +661,7 @@ export const postRecentPlayed = async (
   userId?: string;
   playlistId?: string;
 }> => {
-  const res = await fetch(`/api/user/recent`, {
+  const res = await fetch(`${process.env.NEXT_APP_BASE_URL}/api/user/recent`, {
     method: "POST",
     body: JSON.stringify({
       userId,

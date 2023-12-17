@@ -190,7 +190,10 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
         >
           <Image
             className={`object-cover z-[2]`}
-            src={coverImage ?? `/image/common/default_cover_image.svg`}
+            src={
+              coverImage ??
+              `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`
+            }
             alt={`cover_image`}
             fill={true}
           />
