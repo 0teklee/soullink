@@ -15,24 +15,27 @@ const handlePlayerKeyPress = (
     return;
   }
 
-  // e.preventDefault();
-
   switch (e.key) {
     case " ":
+      e.preventDefault();
       setPlayerState((prev) => {
         return { ...prev, playing: !prev.playing };
       });
       break;
     case "ArrowLeft":
+      e.preventDefault();
       playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 3);
       break;
     case "ArrowRight":
+      e.preventDefault();
       playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 3);
       break;
     case "ArrowUp":
+      e.preventDefault();
       setPlayerState((prev) => ({ ...prev, volume: prev.volume + 0.1 }));
       break;
     case "ArrowDown":
+      e.preventDefault();
       setPlayerState((prev) => ({ ...prev, volume: prev.volume - 0.1 }));
       break;
   }
