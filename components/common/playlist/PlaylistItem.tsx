@@ -38,10 +38,14 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
       likedBy.length > 0 &&
       likedBy.filter((likeItem) => likeItem.userId === userId).length > 0,
   );
-  const { playlistLikeMutate } = useMutatePlaylistLike();
+  const { playlistLikeMutate } = useMutatePlaylistLike(
+    playlistId,
+    userId,
+    setIsUserLikedPlaylist,
+  );
 
-  const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId, setIsUserLikedPlaylist);
+  const handleLikePlaylist = () => {
+    playlistLikeMutate();
   };
 
   return (
@@ -56,7 +60,6 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
         >
           <Title text={title} size={`h4`} />
         </div>
-
         <div
           onMouseEnter={() => {
             setIsOnHover(true);
