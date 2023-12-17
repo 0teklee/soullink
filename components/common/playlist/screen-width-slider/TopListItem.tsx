@@ -14,7 +14,16 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
 
-  const { title, author, description, coverImage, songs, likedBy } = playlist;
+  const {
+    title,
+    author,
+    description,
+    coverImage,
+    songs,
+    likedBy,
+    fontColor,
+    bgColor,
+  } = playlist;
   const { nickname } = author;
   const cover = coverImage || `/image/common/default_cover_image.svg`;
   const { playing, handleChangePlaylistState } = useSelectedPlaylistPlay(
@@ -24,9 +33,15 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
   const router = useRouter();
 
   return (
-    <div className={`relative w-full h-full`}>
+    <div
+      className={`w-full h-full xs:my-2 py-4 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px]`}
+      style={{
+        backgroundColor: bgColor,
+        color: fontColor,
+      }}
+    >
       <div
-        className={`flex justify-start items-center gap-10 w-full h-[340px] px-5 xs:flex-col xs:gap-3 xs:h-full xs:py-4`}
+        className={`flex justify-start items-center gap-10 w-full h-top-list-item xs:flex-col xs:gap-3 xs:h-full`}
       >
         <div className={`flex flex-col justify-center items-start gap-3 `}>
           <div
@@ -98,7 +113,9 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
               </div>
             </div>
           </div>
-          <div className={`flex flex-col justify-start items-start gap-0.5`}>
+          <div
+            className={`flex flex-col justify-start items-start gap-0.5 xs:line-clamp-1 xs:truncate`}
+          >
             <p>{description}</p>
           </div>
         </div>
