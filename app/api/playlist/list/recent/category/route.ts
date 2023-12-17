@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import {
   formatDateFilter,
+  formatSearchOrderBy,
   formatSongResponse,
 } from "@/libs/utils/server/formatter";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const { recent } = Object.fromEntries(url.searchParams.entries());
+  const { recent, orderBy } = Object.fromEntries(url.searchParams.entries());
   const recentDate = formatDateFilter(recent);
+  const order = formatSearchOrderBy(orderBy);
 
   try {
     const mostCountCategoryList = await prisma.category.findMany({
@@ -54,6 +56,7 @@ export async function GET(req: Request) {
           {
             playedTime: "desc",
           },
+          order,
         ],
         select: {
           id: true,
