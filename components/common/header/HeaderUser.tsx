@@ -7,10 +7,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 import { formatPathName } from "@/libs/utils/client/formatter";
+import Link from "next/link";
+import { darkModeState } from "@/libs/recoil/atoms";
+import { useRecoilState } from "recoil";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
 const HeaderUser = () => {
   const { data: session, status } = useSession();
   const userSession = session as UserSessionType;
+  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [isLogin, setIsLogin] = useState(!!userSession?.userId);
   const router = useRouter();
   const listRef = useRef<HTMLDivElement>(null);
@@ -159,10 +164,10 @@ const HeaderUser = () => {
         />
         {isListClicked && !isLoading && isLogin && (
           <div
-            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={`fixed top-12 left-0 flex flex-col w-screen items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
-              className={`hover:bg-gray-200 hover:text-white`}
+              className={`px-3 py-1 hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 if (userSession?.userNickname) {
                   router.push(
@@ -175,7 +180,7 @@ const HeaderUser = () => {
               My Page
             </button>
             <button
-              className={`hover:bg-gray-200 hover:text-white`}
+              className={`px-3 py-1 hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 router.push(`/playlist/create`);
                 setIsListClicked(false);
@@ -183,8 +188,26 @@ const HeaderUser = () => {
             >
               Create Playlist
             </button>
+            <Link
+              href={`/discover`}
+              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            >
+              Discover
+            </Link>
+            <Link
+              href={`/trending`}
+              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            >
+              Trending
+            </Link>
+            <Link
+              href={`/search`}
+              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            >
+              Search
+            </Link>
             <button
-              className={`text-gray-900 dark:text-warmGray-100 hover:text-pink-500`}
+              className={`px-3 py-1 text-gray-900 dark:text-warmGray-100 hover:text-pink-500`}
               onClick={async (e) => {
                 e.stopPropagation();
                 await logout();
@@ -192,14 +215,26 @@ const HeaderUser = () => {
             >
               Logout
             </button>
+            <button
+              className={`self-end px-3 py-1 hover:bg-gray-200 hover:text-white`}
+              onClick={() => {
+                setDarkMode((prev) => !prev);
+              }}
+            >
+              {darkMode ? (
+                <SunIcon className={`w-6 h-6 text-yellow-300`} />
+              ) : (
+                <MoonIcon className={`w-6 h-6 text-blueGray-500`} />
+              )}
+            </button>
           </div>
         )}
         {isListClicked && !isLoading && !isLogin && (
           <div
-            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={`fixed top-12 left-0 flex flex-col w-screen items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
-              className={`hover:text-primary`}
+              className={`px-3 py-1 hover:text-primary`}
               onClick={async () => {
                 await login();
               }}
@@ -207,12 +242,42 @@ const HeaderUser = () => {
               Sign up
             </button>
             <button
-              className={`hover:text-primary`}
+              className={`px-3 py-1 hover:text-primary`}
               onClick={async () => {
                 await login();
               }}
             >
               Login
+            </button>
+            <Link
+              href={`/discover`}
+              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            >
+              Discover
+            </Link>
+            <Link
+              href={`/trending`}
+              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            >
+              Trending
+            </Link>
+            <Link
+              href={`/search`}
+              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+            >
+              Search
+            </Link>
+            <button
+              className={`self-end px-3 py-1 hover:bg-gray-200 hover:text-white`}
+              onClick={() => {
+                setDarkMode((prev) => !prev);
+              }}
+            >
+              {darkMode ? (
+                <SunIcon className={`w-6 h-6 text-yellow-300`} />
+              ) : (
+                <MoonIcon className={`w-6 h-6 text-blueGray-500`} />
+              )}
             </button>
           </div>
         )}
