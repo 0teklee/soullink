@@ -126,7 +126,9 @@ export const getTrendingMainPlaylists = async (
   recentPlayed?: RECENT_FILTER,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/playlist/list/recent/trending?recent=${period}&recentPlayed=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/recent/trending?recent=${period}&recentPlayed=${
       recentPlayed || ""
     }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
@@ -154,7 +156,9 @@ export const getTrendingCategoriesPlaylists = async (
   categories: string[];
 }> => {
   const res = await fetch(
-    `/api/playlist/list/recent/category?recent=${period}&recentPlayed=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/recent/category?recent=${period}&recentPlayed=${
       recentPlayed || ""
     }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
@@ -173,7 +177,9 @@ export const getFilteredCategoriesPlaylists = async (
   filteredCategoriesList: PlaylistType[];
 }> => {
   const res = await fetch(
-    `/api/playlist/list/categories/filter?recent=${period}&categories=${JSON.stringify(
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/categories/filter?recent=${period}&categories=${JSON.stringify(
       categories,
     )}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
@@ -190,7 +196,9 @@ export const getMoodPlaylists = async (
   userId?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/playlist/list/mood?param=${param}&recent=${period}&userId=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/mood?param=${param}&recent=${period}&userId=${
       userId || ""
     }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
@@ -472,7 +480,9 @@ export const getSearchAll = async (
   };
 }> => {
   const res = await fetch(
-    `/api/search/all?keyword=${keyword}&recent=${recent}&orderBy=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/all?keyword=${keyword}&recent=${recent}&orderBy=${
       orderBy ? orderBy : ""
     }`,
   );
@@ -493,7 +503,9 @@ export const getSearchPlaylists = async (
   orderBy?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/search/playlist?keyword=${keyword}&recent=${recent}&orderBy=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/playlist?keyword=${keyword}&recent=${recent}&orderBy=${
       orderBy ? orderBy : ""
     }`,
   );
@@ -533,7 +545,9 @@ export const getSearchMoodPlaylists = async (
   orderBy?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/search/mood-playlist?keyword=${keyword}&mood=${mood}&recent=${recent}&orderBy=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/mood-playlist?keyword=${keyword}&mood=${mood}&recent=${recent}&orderBy=${
       orderBy ? orderBy : ""
     }`,
   );
@@ -550,7 +564,9 @@ export const getSearchCategoryPlaylists = async (
   orderBy?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `/api/search/category-playlist?keyword=${keyword}&recent=${recent}&orderBy=${
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/search/category-playlist?keyword=${keyword}&recent=${recent}&orderBy=${
       orderBy ? orderBy : ""
     }`,
   );
