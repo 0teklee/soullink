@@ -16,6 +16,16 @@ module.exports = {
     "hover:text-chill",
     "hover:text-relaxed",
     "hover:text-melancholic",
+    "bg-primary",
+    "bg-upbeat",
+    "bg-chill",
+    "bg-relaxed",
+    "bg-melancholic",
+    "hover:bg-primary",
+    "hover:bg-upbeat",
+    "hover:bg-chill",
+    "hover:bg-relaxed",
+    "hover:bg-melancholic",
   ],
   theme: {
     screens: {
@@ -37,7 +47,12 @@ module.exports = {
       relaxed: "#1a63fe",
       melancholic: "#6e00d0",
     },
-    extend: {},
+    extend: {
+      height: {
+        "top-list-container": "375px",
+        "top-list-item": "340px",
+      },
+    },
   },
   plugins: [],
 };
