@@ -8,8 +8,13 @@ import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import { Dispatch, SetStateAction } from "react";
 import { formatSongOptimisticSetter } from "@/libs/utils/client/commonUtils";
+import useTimer from "@/libs/utils/hooks/useTimer";
 
-const useSongLike = () => {
+const useSongLike = (
+  songId?: string,
+  userId?: string,
+  optimisticSetter?: Dispatch<SetStateAction<boolean>>,
+) => {
   const queryClient = useQueryClient();
   const { setModal: setLoginModal } = useSetModal();
   const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
@@ -74,11 +79,7 @@ const useSongLike = () => {
     },
   });
 
-  const songLikeMutate = (
-    songId?: string,
-    userId?: string,
-    optimisticSetter?: Dispatch<SetStateAction<boolean>>,
-  ) => {
+  const songLikeHandler = () => {
     if (!userId) {
       setLoginModal(MODAL_TYPE.LOGIN);
       return;
@@ -89,6 +90,14 @@ const useSongLike = () => {
     }
 
     mutate({ songId, userId, optimisticSetter });
+  };
+
+  const { timer, resetTimer } = useTimer(() => {
+    songLikeHandler();
+  }, 300);
+
+  const songLikeMutate = () => {
+    resetTimer(timer);
   };
 
   return { songLikeMutate };
