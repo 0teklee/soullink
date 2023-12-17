@@ -4,8 +4,8 @@ import { prisma } from "@/prisma/client";
 
 const providers = [
   Google({
-    clientId: process.env.NEXT_APP_GOOGLE_CLIENT_ID as string,
-    clientSecret: process.env.NEXT_APP_GOOGLE_CLIENT_SECRET as string,
+    clientId: process.env.AUTH_GOOGLE_CLIENT_ID as string,
+    clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET as string,
   }),
 ];
 
