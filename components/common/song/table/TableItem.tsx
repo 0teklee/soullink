@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import {
@@ -85,7 +85,7 @@ const TableItem = ({
           : undefined
       }
       key={`song_item_${song.title}_${index}`}
-      className={`text-gray-500 text-base xs:text-sm border-b-[1px] border-gray-200 hover:text-white hover:bg-black hover:bg-opacity-30 cursor-pointer`}
+      className={`text-gray-500 dark:text-warmGray-50 text-base xs:text-sm border-b-[1px] border-gray-200 hover:text-white hover:bg-black hover:bg-opacity-30 cursor-pointer`}
     >
       <td className={`py-2 pl-2 xs:hidden`}>{index + 1}</td>
       <td className={`py-2`}>
@@ -131,11 +131,11 @@ const TableItem = ({
               >
                 {isSongPlaying ? (
                   <PauseIcon
-                    className={`w-full h-full text-gray-500 hover:text-primary`}
+                    className={`w-full h-full text-gray-500 dark:text-warmGray-50 hover:text-primary`}
                   />
                 ) : (
                   <PlayIcon
-                    className={`w-full h-full text-gray-500 hover:text-primary`}
+                    className={`w-full h-full text-gray-500 dark:text-warmGray-50 hover:text-primary`}
                   />
                 )}
               </button>
@@ -146,7 +146,7 @@ const TableItem = ({
       {isCreate && !isCreateFavorite && setSongList && (
         <td className={`flex items-center py-2 xs:hidden`}>
           <button
-            className={`relative top-0.5 text-gray-500 text-sm font-medium`}
+            className={`relative top-0.5 text-gray-500 dark:text-warmGray-50 text-sm font-medium`}
             onClick={() => {
               setSongList((prev) => prev.filter((_, idx) => idx !== index));
             }}
@@ -162,7 +162,7 @@ const TableItem = ({
       {isCreate && isCreateFavorite && setSongList && (
         <td className={`flex items-center py-2 xs:hidden`}>
           <button
-            className={`relative top-0.5 text-gray-500 text-sm font-medium`}
+            className={`relative top-0.5 text-gray-500 dark:text-warmGray-50 text-sm font-medium`}
             onClick={() => {
               setSongList((prev) => [...prev, song]);
             }}

@@ -78,7 +78,7 @@ export const fillEmptyPlaylist = (playlistArr?: PlaylistType[]) => {
 };
 
 const ImageUploadPost = async (data: FormData) => {
-  const cloudName = process.env.NEXT_IMAGE_CLOUD_NAME;
+  const cloudName = process.env.CLOUD_IMAGE_APP_NAME;
   return fetcherImagePost(
     `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
     data,

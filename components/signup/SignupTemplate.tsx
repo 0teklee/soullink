@@ -101,7 +101,7 @@ const SignupTemplate = () => {
             )}
           </div>
           <p
-            className={`absolute -bottom-5 text-gray-500 text-xs whitespace-nowrap`}
+            className={`absolute -bottom-5 text-gray-500 dark:text-warmGray-50 text-xs whitespace-nowrap`}
           >
             Add profile picture
           </p>
@@ -109,13 +109,13 @@ const SignupTemplate = () => {
         <div className={`flex flex-col items-start gap-3 w-full xs:max-w-xl`}>
           <div className={`flex flex-col items-start gap-1 w-full`}>
             <p
-              className={`text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+              className={`text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
             >
               Email
             </p>
             <input
               type={`text`}
-              className={`w-full p-2 text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={20}
               placeholder={`email`}
               value={payload.email}
@@ -136,13 +136,13 @@ const SignupTemplate = () => {
           </div>
           <div className={`flex flex-col items-start gap-1 w-full `}>
             <p
-              className={`text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+              className={`text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
             >
               Nickname
             </p>
             <input
               type={`text`}
-              className={`w-full p-2 text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={20}
               placeholder={`@nickname`}
               value={payload.nickname}
@@ -153,7 +153,7 @@ const SignupTemplate = () => {
                 }));
               }}
             />
-            <p className={`text-xs text-gray-500`}>
+            <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
               {payload.nickname.length} / {20}
             </p>
           </div>
@@ -162,7 +162,7 @@ const SignupTemplate = () => {
       <div className={`flex flex-col items-start gap-2 w-full  max-w-lg`}>
         <Title size={`h2`} text={`Bio`} />
         <textarea
-          className={`w-full max-w-4xl min-h-[100px] p-2 text-gray-500 bg-white border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+          className={`w-full max-w-4xl min-h-[100px] p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
           maxLength={120}
           value={payload.bio}
           onChange={(e) => {
@@ -172,7 +172,7 @@ const SignupTemplate = () => {
             }));
           }}
         />
-        <p className={`text-xs text-gray-500`}>
+        <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
           {payload.bio.length} / {120}
         </p>
       </div>
@@ -183,13 +183,13 @@ const SignupTemplate = () => {
         </div>
         <div className={`flex flex-col items-start gap-2 w-full max-w-sm`}>
           <p
-            className={`text-sm text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+            className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
           >
             website
           </p>
           <input
             type={`text`}
-            className={`w-full p-1.5 text-sm text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+            className={`w-full p-1.5 text-sm text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             placeholder={`https://example.com`}
             value={payload.socialLinks.website}
             onChange={(e) => {
@@ -205,13 +205,13 @@ const SignupTemplate = () => {
         </div>
         <div className={`flex flex-col items-start gap-2 w-full max-w-sm`}>
           <p
-            className={`text-sm text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+            className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
           >
             instagram
           </p>
           <input
             type={`text`}
-            className={`w-full p-1.5 text-sm text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+            className={`w-full p-1.5 text-sm text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             placeholder={`instagram id`}
             value={payload.socialLinks.instagram}
             onChange={(e) => {
@@ -227,13 +227,13 @@ const SignupTemplate = () => {
         </div>
         <div className={`flex flex-col items-start gap-2 w-full max-w-sm`}>
           <p
-            className={`text-sm text-gray-700 font-medium xs:text-xl xs:font-semibold`}
+            className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
           >
             twitter
           </p>
           <input
             type={`text`}
-            className={`w-full p-1.5 text-sm text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+            className={`w-full p-1.5 text-sm text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             placeholder={`twitter id`}
             value={payload.socialLinks.twitter}
             onChange={(e) => {

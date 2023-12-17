@@ -1,12 +1,6 @@
 import React from "react";
+import SupportTemplate from "@/components/support/SupportTemplate";
 
-const Page = () => {
-  const sample = null;
-  return (
-    <div>
-      <></>
-    </div>
-  );
-};
+const Page = () => <SupportTemplate />;
 
 export default Page;

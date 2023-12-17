@@ -73,7 +73,9 @@ const TrendingMainList = () => {
           >
             <ListBulletIcon
               className={`w-6 h-6 ${
-                !isSlider ? "text-gray-700" : "text-gray-400"
+                !isSlider
+                  ? "text-gray-700 dark:text-warmGray-50"
+                  : "text-gray-400"
               } `}
             />
           </button>
@@ -84,7 +86,9 @@ const TrendingMainList = () => {
           >
             <Squares2X2Icon
               className={`w-5 h-5 ${
-                isSlider ? "text-gray-700" : "text-gray-400"
+                isSlider
+                  ? "text-gray-700 dark:text-warmGray-50"
+                  : "text-gray-400"
               } `}
             />
           </button>

@@ -12,12 +12,12 @@ const MainTemplate = ({
   userNickname?: string;
 }) => {
   return (
-    <section className={`flex flex-col items-start py-6 gap-12 `}>
+    <div className={`flex flex-col items-start py-6 gap-12 `}>
       <MainTodayList />
       <MainTimeline userId={userId} />
       <MainFriendsPlaylists userId={userId} />
       <MainRecentPlayed userId={userId} userNickname={userNickname} />
-    </section>
+    </div>
   );
 };
 

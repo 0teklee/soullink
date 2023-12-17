@@ -46,7 +46,7 @@ const SongTable = ({
       <div className={`self-stretch px-5 xs:px-0`}>
         <table className={`w-full px-12 table-auto`}>
           <thead className={`border-b border-gray-300`}>
-            <tr className={`text-gray-500 text-lg`}>
+            <tr className={`text-gray-500 dark:text-warmGray-50 text-lg`}>
               <th
                 className={`text-start opacity-0 ${isNotCreate && "xs:hidden"}`}
               >

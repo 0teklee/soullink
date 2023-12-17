@@ -98,8 +98,8 @@ const PlaylistListItem = ({
         className={` 
       grid ${
         index ? "grid-cols-4" : "grid-cols-3"
-      } grid-rows-1  px-2 py-3 gap-y-0 gap-x-3 
-        items-center border-b border-gray-200 hover:bg-gray-100 xs:gap-x-4 lg:gap-x-24
+      } grid-rows-1  px-2 py-3 gap-y-0 gap-x-3  
+        items-center border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-400 xs:gap-x-4 lg:gap-x-24
            lg:grid-cols-3`}
       >
         <div
@@ -112,7 +112,9 @@ const PlaylistListItem = ({
               index ? "" : "hidden"
             }`}
           >
-            <p className={`text-gray-700 xs:text-xs`}>{index}</p>
+            <p className={`text-gray-700 dark:text-warmGray-50 xs:text-xs`}>
+              {index}
+            </p>
           </div>
           <div
             className={`${
@@ -144,12 +146,12 @@ const PlaylistListItem = ({
                 onClick={() => {
                   router.push(`/playlist/${formatPathName(title)}`);
                 }}
-                className={`text-lg text-gray-900 font-medium hover:text-primary xs:text-xs lg:text-start`}
+                className={`text-lg text-gray-900 dark:text-warmGray-100 font-medium hover:text-primary xs:text-xs lg:text-start`}
               >
                 {title}
               </button>
               <div
-                className={`relative flex items-center gap-2 text-xs text-gray-500 font-medium`}
+                className={`relative flex items-center gap-2 text-xs text-gray-500 dark:text-warmGray-50 font-medium`}
               >
                 <div className={`flex items-center justify-start gap-2`}>
                   {isUserLikedPlaylist ? (
@@ -218,7 +220,7 @@ const PlaylistListItem = ({
                             }}
                           >
                             <p
-                              className={`text-xs text-gray-900 font-semibold underline`}
+                              className={`text-xs text-gray-900 dark:text-warmGray-100 font-semibold underline`}
                             >
                               @{user.user?.nickname || ""}
                             </p>
@@ -230,7 +232,9 @@ const PlaylistListItem = ({
                   </div>
                 )}
               </div>
-              <p className={`text-xs text-gray-700 xs:hidden`}>
+              <p
+                className={`text-xs text-gray-700 dark:text-warmGray-50 xs:hidden`}
+              >
                 {dayjs(createdAt).format("YYYY.MM.DD")}
               </p>
             </div>
@@ -239,7 +243,7 @@ const PlaylistListItem = ({
         <div
           className={`${
             !isLarge ? "hidden" : ""
-          } flex flex-col w-fit items-start gap-2 text-gray-700 xs:hidden`}
+          } flex flex-col w-fit items-start gap-2 text-gray-700 dark:text-warmGray-50 xs:hidden`}
         >
           <button
             onClick={() => {
@@ -263,12 +267,14 @@ const PlaylistListItem = ({
           <p className={`text-sm xs:hidden`}>{description}</p>
         </div>
         <div className={`${isLarge && "hidden"} lg:hidden`}>
-          <p className={`text-xs text-gray-500`}>{songs.length} songs</p>
+          <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+            {songs.length} songs
+          </p>
         </div>
         <div
           className={`${
             isLarge ? "hidden" : ""
-          } flex items-center gap-2 text-sm text-gray-700 xs:block xs:w-full xs:text-end`}
+          } flex items-center gap-2 text-sm text-gray-700 dark:text-warmGray-50 xs:block xs:w-full xs:text-end`}
         >
           <button
             onClick={() => {
@@ -287,9 +293,7 @@ const PlaylistListItem = ({
           {mood && (
             <p className={`${formatMoodFontColor(mood.name)} `}>{mood.name}</p>
           )}
-          <div
-            className={`flex flex-wrap items-center gap-1 text-gray-500 text-xs`}
-          >
+          <div className={`flex flex-wrap items-center gap-1 text-xs`}>
             {playlist?.category && playlist.category.length > 0 && (
               <CategoriesList categories={playlist.category} />
             )}

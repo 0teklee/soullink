@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     const res = await fetch(
       `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&pageToken=${
         pageToken ? pageToken : ""
-      }&q=${search}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`,
+      }&q=${search}&key=${process.env.YOUTUBE_API_KEY}`,
     );
     const data: YoutubeSearchResponse | { error: { code: number } } =
       await res.json();

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CommentPayloadType, UserSessionType } from "@/libs/types/userType";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getComments, postComment } from "@/libs/utils/client/fetchers";
+import { postComment } from "@/libs/utils/client/fetchers";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 
@@ -38,6 +38,8 @@ const CommentInput = ({
       setPayload((prev) => ({ ...prev, comment: "", isPrivate: false }));
       await queryClient.refetchQueries({
         type: "all",
+        stale: true,
+        exact: false,
       });
     },
     onError: (error) => {
@@ -78,7 +80,7 @@ const CommentInput = ({
       className={`flex flex-col items-start justify-center gap-3 w-full my-3 border-b border-dashed border-gray-300`}
     >
       <div className={`flex flex-col items-start justify-center gap-1 w-full`}>
-        <div className={`relative w-full text-gray-700`}>
+        <div className={`relative w-full text-gray-700 dark:text-warmGray-50`}>
           <textarea
             className={`w-full ${
               comment.length > 0 ? "h-24" : "h-full"
@@ -88,14 +90,14 @@ const CommentInput = ({
             maxLength={200}
           />
           <div
-            className={`absolute bottom-2.5 right-2 flex items-center gap-2 text-sm text-gray-700`}
+            className={`absolute bottom-2.5 right-2 flex items-center gap-2 text-sm text-gray-700 dark:text-warmGray-50`}
           >
             <p>{payload.comment.length} / </p>
             <p>200</p>
           </div>
         </div>
         <div
-          className={`flex items-center justify-between w-full text-sm text-gray-700 font-medium`}
+          className={`flex items-center justify-between w-full text-sm text-gray-700 dark:text-warmGray-50 font-medium`}
         >
           <div className={`flex items-center justify-between gap-2`}>
             <input

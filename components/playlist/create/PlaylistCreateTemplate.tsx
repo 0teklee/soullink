@@ -193,7 +193,9 @@ const PlaylistCreateTemplate = () => {
               </div>
             )}
           </div>
-          <p className={`mb-3 text-gray-500 text-base font-normal`}>
+          <p
+            className={`mb-3 text-gray-500 dark:text-warmGray-50 text-base font-normal`}
+          >
             add cover
           </p>
           <div
@@ -251,7 +253,7 @@ const PlaylistCreateTemplate = () => {
           </p>
           <div className={`relative`}>
             <input
-              className={`w-[300px] mt-3 p-2 text-gray-900 bg-white border border-gray-300 resize-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-[300px] mt-3 p-2 text-gray-900 dark:text-warmGray-100 bg-white border border-gray-300 resize-none rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               type={`text`}
               placeholder={`press enter to add category`}
               onKeyDown={handleCategories}
@@ -325,7 +327,7 @@ const PlaylistCreateTemplate = () => {
           <div className={`relative w-full max-w-4xl`}>
             <input
               placeholder={`playlist title`}
-              className={`w-full h-full mt-3 px-5 py-2 text-gray-900 bg-white border border-gray-300 resize-none rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full h-full mt-3 px-5 py-2 text-gray-900 dark:text-warmGray-100 bg-white border border-gray-300 resize-none rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={40}
               onChange={(e) => {
                 setPayload((prev) => ({
@@ -348,7 +350,7 @@ const PlaylistCreateTemplate = () => {
           <div className={`relative w-full max-w-4xl`}>
             <textarea
               placeholder={`..for playlist`}
-              className={`w-full h-full min-h-[200px] mt-3 px-5 pt-2 text-gray-900 bg-white border border-gray-300 resize-none rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full h-full min-h-[200px] mt-3 px-5 pt-2 text-gray-900 dark:text-warmGray-100 bg-white border border-gray-300 resize-none rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={300}
               onChange={(e) => {
                 setPayload((prev) => ({

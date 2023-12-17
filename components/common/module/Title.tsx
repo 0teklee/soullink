@@ -18,9 +18,9 @@ const Title = ({
       return ``;
     }
     if (isH1 || isH2) {
-      return "text-gray-900";
+      return "text-gray-900 dark:text-warmGray-100";
     }
-    return "text-gray-700";
+    return "text-gray-700 dark:text-warmGray-50";
   };
 
   const color = colorSet();
