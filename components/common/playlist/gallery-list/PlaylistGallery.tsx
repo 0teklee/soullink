@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
+import React from "react";
+import { PlaylistType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import CommonModal from "@/components/common/modal/CommonModal";
-import CommonSongModal from "@/components/common/modal/CommonSongModal";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useSession } from "next-auth/react";
+import { UserSessionType } from "@/libs/types/userType";
 
 const PlaylistGallery = ({ playlists }: { playlists?: PlaylistType[] }) => {
+  const { data: session } = useSession() as { data: UserSessionType };
+  const { userId } = session || {};
   const router = useRouter();
-
-  const [selectedSongs, setSelectedSongs] = useState<SongType[]>([]);
-  const [isSongModalOpen, setIsSongModalOpen] = useState(false);
+  const { setModal } = useSetModal();
 
   return (
     <>
@@ -66,8 +68,10 @@ const PlaylistGallery = ({ playlists }: { playlists?: PlaylistType[] }) => {
                     className={`text-white text-xs font-medium hover:text-primary`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedSongs(playlist.songs);
-                      setIsSongModalOpen(true);
+                      setModal(MODAL_TYPE.SONG_TABLE, {
+                        songs: playlist.songs,
+                        userId,
+                      });
                     }}
                   >
                     {playlist.songs.length} songs
@@ -87,16 +91,6 @@ const PlaylistGallery = ({ playlists }: { playlists?: PlaylistType[] }) => {
           </div>
         )}
       </div>
-
-      <CommonModal
-        isModalOpen={isSongModalOpen}
-        setIsModalOpen={setIsSongModalOpen}
-      >
-        <CommonSongModal
-          songs={selectedSongs}
-          setIsModalOpen={setIsSongModalOpen}
-        />
-      </CommonModal>
     </>
   );
 };
