@@ -61,9 +61,7 @@ export async function generateMetadata({
     return {};
   }
 
-  const ImageSrc =
-    data?.profilePic ??
-    `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`;
+  const ImageSrc = data?.profilePic ?? `/image/common/default_cover_image.svg`;
 
   return {
     title: `${data?.nickname || ""} on soullink`,
