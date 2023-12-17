@@ -9,7 +9,7 @@ const DarkModeContainer = ({ children }: { children: ReactNode }) => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   return (
     <div className={`${darkMode ? `dark` : ``}`}>
-      <div className={`fixed top-1/2 left-2 -translate-y-1/2 z-30`}>
+      <div className={`fixed top-1/2 left-3 -translate-y-1/2 z-30 xs:hidden`}>
         {darkMode ? (
           <button
             className={`text-white`}
