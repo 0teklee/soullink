@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CommentPayloadType, UserSessionType } from "@/libs/types/userType";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postComment } from "@/libs/utils/client/fetchers";
+import { getComments, postComment } from "@/libs/utils/client/fetchers";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 
@@ -34,10 +34,10 @@ const CommentInput = ({
 
   const { mutate: postCommentMutate } = useMutation({
     mutationFn: () => postComment(payload),
-    onSuccess: () => {
+    onSuccess: async () => {
       setPayload((prev) => ({ ...prev, comment: "", isPrivate: false }));
-      queryClient.invalidateQueries({
-        refetchType: "all",
+      await queryClient.refetchQueries({
+        type: "all",
       });
     },
     onError: (error) => {

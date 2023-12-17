@@ -25,10 +25,12 @@ const CommentItem = ({
   commentProps,
   postId,
   userId,
+  fontColor,
 }: {
   commentProps: CommentType;
   postId: string;
   userId?: string;
+  fontColor?: string;
 }) => {
   const [isLikedByDropdownOpen, setIsLikedByDropdownOpen] = useState(false);
   const { setModal, setModalOpenState } = useSetModal();
@@ -53,6 +55,8 @@ const CommentItem = ({
   const isAuthor = author.id === userId;
   const isDeletedOrPrivate = nickname === "deleted" || nickname === "anonymous";
   const router = useRouter();
+  const customFontColor900 = fontColor ? "" : "text-gray-900";
+  const customFontColor500 = fontColor ? "" : "text-gray-500";
 
   const { mutate: likeCommentMutate } = useMutation({
     mutationFn: () => postLikeComment({ commentId, userId: userId || "" }),
@@ -126,7 +130,7 @@ const CommentItem = ({
               />
             </div>
             <button
-              className={`text-gray-900 font-medium ${
+              className={`${customFontColor900} font-medium ${
                 isDeletedOrPrivate ? "cursor-default" : "hover:underline"
               }`}
               onClick={() => {
@@ -139,19 +143,19 @@ const CommentItem = ({
               {nickname}
             </button>
           </div>
-          <p className={`text-gray-500 font-normal`}>{comment}</p>
+          <p className={`${customFontColor500} font-normal`}>{comment}</p>
         </div>
         {(!isPrivate || (isPrivate && isMutual)) && !isDeleted && (
           <div
             className={`flex items-center justify-between gap-1 w-[150px] xs:w-[50px]`}
           >
-            <p className={`text-xs text-gray-500 xs:hidden`}>
+            <p className={`text-xs ${customFontColor500} xs:hidden`}>
               {formatDaysAgo(createdAt)}
             </p>
             {isAuthor && !isDeleted && (
               <button onClick={handleDelete}>
                 <TrashIcon
-                  className={`w-4 h-4 text-gray-500 hover:text-primary cursor-pointer`}
+                  className={`w-4 h-4 ${customFontColor500} hover:text-primary cursor-pointer`}
                 />
               </button>
             )}
@@ -159,7 +163,7 @@ const CommentItem = ({
               <button onClick={handleLike}>
                 {hasLiked ? (
                   <SolidHeartIcon
-                    className={`w-4 h-4 text-primary hover:text-gray-500`}
+                    className={`w-4 h-4 text-primary hover:${customFontColor500}`}
                   />
                 ) : (
                   <HeartIcon
@@ -212,13 +216,15 @@ const CommentItem = ({
                             }}
                           >
                             <p
-                              className={`text-xs text-gray-900 font-semibold underline`}
+                              className={`text-xs ${customFontColor900} font-semibold underline`}
                             >
                               @{user.user.nickname}
                             </p>
                           </button>
                         </div>
-                        <p className={`text-xs text-gray-900 font-normal`}>
+                        <p
+                          className={`text-xs ${customFontColor900} font-normal`}
+                        >
                           liked this comment.
                         </p>
                       </div>

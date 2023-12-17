@@ -11,10 +11,12 @@ const CommentSection = ({
   postId,
   userId,
   isProfile,
+  fontColor,
 }: {
   postId: string;
   userId?: string;
   isProfile?: boolean;
+  fontColor?: string;
 }) => {
   return (
     <div
@@ -23,13 +25,12 @@ const CommentSection = ({
       <CommentInput postId={postId} isProfile={isProfile} />
       <ReactQueryErrorBoundary>
         <Suspense fallback={<Loading />}>
-          {!!postId && (
-            <CommentContainer
-              postId={postId}
-              userId={userId}
-              isProfile={isProfile}
-            />
-          )}
+          <CommentContainer
+            postId={postId}
+            userId={userId}
+            isProfile={isProfile}
+            fontColor={fontColor}
+          />
         </Suspense>
       </ReactQueryErrorBoundary>
     </div>
