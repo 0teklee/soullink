@@ -3,12 +3,11 @@ import Image from "next/image";
 import HeaderUser from "@/components/common/header/HeaderUser";
 import Link from "next/link";
 import HeaderSearch from "@/components/common/header/HeaderSearch";
-import Title from "@/components/common/module/Title";
 
 const Header = () => {
   return (
     <div
-      className={`fixed flex items-center justify-between w-screen px-8 py-3 bg-white border-b-2 border-primary z-50 xs:py-0.5 xs:px-2 `}
+      className={`fixed flex items-center justify-between w-screen px-8 py-3 bg-gray-700 border-b-2 border-primary z-50 xs:py-2 xs:px-2 `}
     >
       <div className={`flex items-center w-full h-full gap-6 xs:flex-1`}>
         <Link
@@ -25,7 +24,7 @@ const Header = () => {
           </h1>
         </Link>
         <div
-          className={`flex items-center justify-start gap-4 text-gray-700  whitespace-nowrap font-normal xs:hidden`}
+          className={`flex items-center justify-start gap-4 text-normal text-gray-100  whitespace-nowrap font-normal md:text-sm xs:hidden`}
         >
           <Link
             href={`/discover`}
