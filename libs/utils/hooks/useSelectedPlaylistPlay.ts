@@ -1,32 +1,32 @@
 import { useRecoilState } from "recoil";
 import { PlaylistType } from "@/libs/types/song&playlistType";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import {
   postPlaylistCount,
   postRecentPlayed,
 } from "@/libs/utils/client/fetchers";
 import { useMutation } from "@tanstack/react-query";
-import { played5MinSeconds } from "@/libs/utils/client/commonValues";
+import { INTERVAL_5MINS_MS } from "@/libs/utils/client/commonValues";
 import {
   isNowMoreThanTargetTime,
   setRecentPlaylistIdLocalStorage,
 } from "@/libs/utils/client/commonUtils";
 import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
+import { useRef } from "react";
 
 const UseSelectedPlaylistPlay = (
   playlistData?: PlaylistType,
   userId?: string,
 ) => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
   const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
-  const { playing, startedAt } = playerState;
+  const { playing } = playerState;
 
   const { mutate: postPlaylistPlayedTime } = useMutation({
     mutationFn: ({ id, time }: { id: string; time: number }) =>
       postPlaylistCount(id, time),
-    onSuccess: () => {
-      setPlayerState((prev) => ({ ...prev, startedAt: null }));
-    },
   });
 
   const { mutate: mutateRecentPlayed } = useMutation({
@@ -39,42 +39,46 @@ const UseSelectedPlaylistPlay = (
     }) => postRecentPlayed(curUserId, recentPlaylistId),
   });
 
-  const handleRecentPlayed = () => {
-    if (!!userId && !!playlistData) {
+  const handleRecentPlayed = (playlistId: string) => {
+    if (!!userId) {
       mutateRecentPlayed({
         curUserId: userId,
-        recentPlaylistId: playlistData.id,
+        recentPlaylistId: playlistId,
       });
+    }
+  };
+
+  const handlePostActions = (playlist: PlaylistType, startedAt: Dayjs) => {
+    const now = dayjs();
+
+    postPlaylistPlayedTime({
+      id: playlist.id,
+      time: now.diff(dayjs(startedAt), "seconds"),
+    });
+    handleRecentPlayed(playlist.id);
+
+    if (selectedPlaylist) {
+      setRecentPlaylistIdLocalStorage(selectedPlaylist.id);
     }
   };
 
   const handleChangePlaylistState = (playlist: PlaylistType) => {
     if (!playlistData) return;
 
-    const now = dayjs();
-    const isMoreThan5Mins = isNowMoreThanTargetTime(
-      startedAt,
-      played5MinSeconds,
-      "seconds",
-    );
+    const startedAt = dayjs();
 
     if (selectedPlaylist && selectedPlaylist.id === playlist.id) {
       setPlayerState((prev) => ({ ...playerState, playing: !prev.playing }));
       return;
     }
 
-    if (!startedAt) {
-      setPlayerState({ ...playerState, startedAt: now });
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
 
-    if (selectedPlaylist && isMoreThan5Mins) {
-      postPlaylistPlayedTime({
-        id: selectedPlaylist.id,
-        time: now.diff(dayjs(startedAt), "seconds"),
-      });
-      handleRecentPlayed();
-      setRecentPlaylistIdLocalStorage(selectedPlaylist.id);
-    }
+    timeoutRef.current = setTimeout(() => {
+      handlePostActions(playlist, startedAt);
+    }, INTERVAL_5MINS_MS);
 
     setSelectedPlaylist(playlistData);
     setPlayerState((prev) => ({
