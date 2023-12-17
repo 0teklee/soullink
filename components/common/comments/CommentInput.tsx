@@ -38,6 +38,8 @@ const CommentInput = ({
       setPayload((prev) => ({ ...prev, comment: "", isPrivate: false }));
       await queryClient.refetchQueries({
         type: "all",
+        stale: true,
+        exact: false,
       });
     },
     onError: (error) => {
