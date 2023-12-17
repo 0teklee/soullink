@@ -9,6 +9,8 @@ export enum SEARCH_ORDER_BY {
   USER_ASC = "USER,ASC",
   PLAYLIST_COUNT_DESC = "PLAYLIST,DESC",
   PLAYLIST_COUNT_ASC = "PLAYLIST,ASC",
+  RECENT_PLAY_DESC = "RECENTPLAYED,DESC",
+  RECENT_PLAY_ASC = "RECENTPLAYED,ASC",
 }
 
 export enum SEARCH_TYPE {
@@ -45,5 +47,13 @@ export const SEARCH_ORDER_BY_ARRAY = [
   {
     label: "Playlist Count - from lowest",
     value: SEARCH_ORDER_BY.PLAYLIST_COUNT_ASC,
+  },
+  {
+    label: "Frequently Played - from highest",
+    value: SEARCH_ORDER_BY.RECENT_PLAY_DESC,
+  },
+  {
+    label: "Frequently Played - from lowest",
+    value: SEARCH_ORDER_BY.RECENT_PLAY_ASC,
   },
 ];
