@@ -100,9 +100,8 @@ export const SONG_AVAIL_CUSTOM_URL = [
   "twitch",
 ];
 
-export const INTERVAL_5MINS_MS = 10 * 1000;
-export const played5MinSeconds = 30;
 export const interval5Seconds = 5 * 1000;
+export const INTERVAL_5MINS_MS = 5 * 60 * 1000;
 
 export const QUERY_CACHE_TIME = 5 * 60 * 1000;
 export const QUERY_STALE_TIME = QUERY_CACHE_TIME - interval5Seconds;
