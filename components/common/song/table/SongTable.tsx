@@ -4,9 +4,6 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 
 import TableItem from "@/components/common/song/table/TableItem";
-import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
-import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const SongTable = ({
   songList,
@@ -14,11 +11,9 @@ const SongTable = ({
   isCreateFavorite,
   setSongList,
   playlist,
-  setIsModalOpen,
   userId,
 }: {
   songList: SongType[];
-  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
   isCreateFavorite?: boolean;
   isCreate?: boolean;
   setSongList?: Dispatch<SetStateAction<SongType[]>>;
@@ -26,12 +21,8 @@ const SongTable = ({
   userId?: string;
 }) => {
   const [draggedItem, setDraggedItem] = useState<SongType | null>(null);
-  const { setModal } = useSetModal();
 
   const isNotCreate = !isCreate;
-  const isLogin = !!userId;
-
-  const { songLikeMutate } = useSongLike();
 
   const handleDragStart = (item: SongType) => {
     if (isCreate) {
@@ -47,23 +38,6 @@ const SongTable = ({
       newList.splice(targetIndex, 0, draggedItem);
       setSongList(newList);
       setDraggedItem(null);
-    }
-  };
-
-  const handleLikeSong = async (
-    songId: string,
-    userId?: string,
-    optimisticUpdate?: Dispatch<SetStateAction<boolean>>,
-  ) => {
-    if (!userId || !isLogin) {
-      setModal(MODAL_TYPE.LOGIN);
-      return;
-    }
-
-    songLikeMutate(songId, userId, optimisticUpdate);
-
-    if (setIsModalOpen) {
-      setIsModalOpen(false);
     }
   };
 
@@ -122,7 +96,6 @@ const SongTable = ({
                     userId={userId}
                     playlist={playlist}
                     setSongList={setSongList}
-                    handleLikeSong={handleLikeSong}
                     handleDragStart={handleDragStart}
                     handleDragDrop={handleDrop}
                   />
