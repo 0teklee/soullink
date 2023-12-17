@@ -21,7 +21,8 @@ export const getOrderByOptions = (type: SEARCH_TYPE | "") => {
       (item) =>
         item.value.includes("RECENT,") ||
         item.value.includes("PLAY,") ||
-        item.value.includes("LIKE,"),
+        item.value.includes("LIKE,") ||
+        item.value.includes("RECENTPLAYED,"),
     );
   }
 
