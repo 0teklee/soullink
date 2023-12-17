@@ -1,6 +1,6 @@
 "use client";
 
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import Title from "@/components/common/module/Title";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import Loading from "@/components/common/module/Loading";

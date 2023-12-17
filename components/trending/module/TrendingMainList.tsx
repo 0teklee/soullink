@@ -12,7 +12,7 @@ import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/solid";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import PlaylistGallery from "@/components/common/playlist/gallery-list/PlaylistGallery";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getTrendingMainPlaylists } from "@/libs/utils/client/fetchers";
 
 const TrendingMainList = () => {

@@ -59,7 +59,6 @@ const PlaylistListItem = ({
   } = playlist;
 
   const [isLikedByDropdownOpen, setIsLikedByDropdownOpen] = useState(false);
-  const [isSongModalOpen, setIsSongModalOpen] = useState(false);
   const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
     likedBy?.filter((user) => user.userId === userId).length > 0,
   );
