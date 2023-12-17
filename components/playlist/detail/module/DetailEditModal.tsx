@@ -227,7 +227,6 @@ const DetailEditModal = () => {
         <SongTable
           songList={songList}
           setSongList={setSongList}
-          setIsModalOpen={setModalOpenState}
           userId={userId}
           isCreate={true}
         />
