@@ -15,7 +15,7 @@ const ShareDownloadModal = () => {
     UseModalStateMap[MODAL_TYPE.PLAYLIST_DOWNLOAD]
   >(MODAL_TYPE.PLAYLIST_DOWNLOAD);
 
-  const { title, author, coverImage, songs, bgColor, fontColor } =
+  const { title, author, coverImage, songs, fontColor } =
     shareDownloadState || {};
 
   const downloadRef = useRef<HTMLDivElement>(null);

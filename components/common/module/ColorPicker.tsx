@@ -1,10 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import {
-  ChromePicker,
-  CirclePicker,
-  SketchPicker,
-  SliderPicker,
-} from "react-color";
+import { ChromePicker } from "react-color";
 
 interface ColorPickerProps {
   customFontColor: string;

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CommentPayloadType, UserSessionType } from "@/libs/types/userType";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getComments, postComment } from "@/libs/utils/client/fetchers";
+import { postComment } from "@/libs/utils/client/fetchers";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 
