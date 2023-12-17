@@ -110,7 +110,12 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
       <div className={`flex flex-col gap-3 items-start w-full`}>
         <Title size={`h2`} text={`Guestbook`} customColor={fontColor} />
         {profileId && (
-          <CommentSection postId={profileId} userId={userId} isProfile={true} />
+          <CommentSection
+            postId={profileId}
+            userId={userId}
+            isProfile={true}
+            fontColor={fontColor}
+          />
         )}
       </div>
     </section>
