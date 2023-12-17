@@ -21,15 +21,6 @@ export async function GET(req: Request) {
           contains: keyword,
         },
       },
-      orderBy: [
-        {
-          _relevance: {
-            fields: ["name"],
-            search: keyword,
-            sort: "asc",
-          },
-        },
-      ],
       select: {
         name: true,
         playlists: {
@@ -70,16 +61,7 @@ export async function GET(req: Request) {
             },
           ],
         },
-        orderBy: [
-          {
-            _relevance: {
-              fields: ["title", "description"],
-              search: keyword,
-              sort: "desc",
-            },
-          },
-          order,
-        ],
+        orderBy: [order],
         select: {
           id: true,
           title: true,
