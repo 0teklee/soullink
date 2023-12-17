@@ -9,8 +9,6 @@ import {
   postUserEdit,
   postUserFollow,
 } from "@/libs/utils/client/fetchers";
-import CommonModal from "@/components/common/modal/CommonModal";
-import UserFollowModal from "@/components/user/module/UserFollowModal";
 import {
   CheckIcon,
   MinusIcon,
@@ -40,6 +38,8 @@ const UserHeader = ({
 }) => {
   const queryClient = useQueryClient();
   const { setModal: setLoginModalOpen } = useSetModal();
+  const { setModal: setFollowModal } = useSetModal();
+
   const router = useRouter();
 
   const {
@@ -53,10 +53,9 @@ const UserHeader = ({
     bgColor,
     fontColor,
     createdPlaylists,
+    isEditor,
   } = userProfile;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFollowerModal, setIsFollowerModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isDuplicated, setIsDuplicated] = useState<boolean | undefined>(
     undefined,
@@ -167,7 +166,7 @@ const UserHeader = ({
   return (
     <>
       <div
-        className={`relative w-screen xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] text-gray-700`}
+        className={`relative full-screen-div text-gray-700`}
         style={{
           backgroundColor: customBgColor,
           color: customFontColor,
@@ -287,6 +286,20 @@ const UserHeader = ({
             <div
               className={`flex flex-col items-start justify-center gap-1 xs:items-center`}
             >
+              {isEditor && (
+                <div className={`flex items-center justify-start gap-2 `}>
+                  <div className={`relative w-5 h-5`}>
+                    <Image
+                      src={`/soullink_logo.png`}
+                      alt={`author`}
+                      fill={true}
+                    />
+                  </div>
+                  <p className={`text-base text-primary font-medium`}>
+                    {`Editor`}
+                  </p>
+                </div>
+              )}
               {!isEdit && (
                 <p className={`text-2xl font-semibold `}>{nickname}</p>
               )}
@@ -378,16 +391,22 @@ const UserHeader = ({
               >
                 <button
                   onClick={() => {
-                    setIsFollowerModal(false);
-                    setIsModalOpen(true);
+                    setFollowModal(MODAL_TYPE.FOLLOW, {
+                      follows: following,
+                      isFollower: false,
+                      profileNickname: nickname,
+                    });
                   }}
                 >
                   following {following?.length}
                 </button>
                 <button
                   onClick={() => {
-                    setIsFollowerModal(true);
-                    setIsModalOpen(true);
+                    setFollowModal(MODAL_TYPE.FOLLOW, {
+                      follows: followers,
+                      isFollower: true,
+                      profileNickname: nickname,
+                    });
                   }}
                 >
                   follower {followers?.length}
@@ -436,16 +455,6 @@ const UserHeader = ({
           </div>
         </div>
       </div>
-
-      {isModalOpen && (
-        <CommonModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
-          <UserFollowModal
-            follows={isFollowerModal ? followers : following}
-            isFollower={isFollowerModal}
-            profileNickname={nickname}
-          />
-        </CommonModal>
-      )}
     </>
   );
 };
