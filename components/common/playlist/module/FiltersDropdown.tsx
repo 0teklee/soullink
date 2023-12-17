@@ -13,6 +13,7 @@ interface FiltersDropdownProps {
   setSelectedFilter: <T>(val: T) => void | Dispatch<SetStateAction<T>>;
   selectedFilter?: string;
   selectedFilterLabel?: string;
+  customStyles?: string;
 }
 
 const FiltersDropdown = ({
@@ -20,6 +21,7 @@ const FiltersDropdown = ({
   setSelectedFilter,
   selectedFilter,
   selectedFilterLabel,
+  customStyles,
 }: FiltersDropdownProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -28,7 +30,9 @@ const FiltersDropdown = ({
       <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
         <div className={`flex items-center gap-2 `}>
           <p
-            className={`whitespace-nowrap text-gray-700 text-sm font-medium xs:text-xs`}
+            className={`${
+              customStyles || "text-sm font-medium"
+            } whitespace-nowrap text-gray-700 xs:text-xs`}
           >
             {selectedFilterLabel || selectedFilter}
           </p>
