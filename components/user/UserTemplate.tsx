@@ -87,7 +87,9 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
         </div>
       )}
       {recentPlayedPlayLists && !isRecentPlayedEmpty && (
-        <div className={`flex flex-col gap-3 items-start w-full text-gray-900`}>
+        <div
+          className={`flex flex-col gap-3 items-start w-full text-gray-900 dark:text-warmGray-100`}
+        >
           <Title size={`h1`} text={`Recent played`} customColor={fontColor} />
           <ReactQueryErrorBoundary>
             <PlaylistListContainer playlists={recentPlayedPlayLists} />

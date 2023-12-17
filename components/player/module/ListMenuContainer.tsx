@@ -35,7 +35,7 @@ const ListMenuContainer = ({
             onClick={() => {
               router.push(`/playlist/${formatPathName(title)}`);
             }}
-            className={`mb-1 text-base text-gray-900 font-semibold overflow-ellipsis  hover:underline`}
+            className={`mb-1 text-base text-gray-900 dark:text-warmGray-100 font-semibold overflow-ellipsis  hover:underline`}
           >
             {title}
           </button>
@@ -44,7 +44,7 @@ const ListMenuContainer = ({
               onClick={() => {
                 router.push(`/user/${decodeURIComponent(author.nickname)}`);
               }}
-              className={`text-sm text-gray-500 font-normal whitespace-nowrap hover:text-primary hover:underline`}
+              className={`text-sm text-gray-500 dark:text-warmGray-50 font-normal whitespace-nowrap hover:text-primary hover:underline`}
             >
               by {`@${author.nickname}`}
             </button>

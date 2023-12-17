@@ -55,8 +55,12 @@ const CommentItem = ({
   const isAuthor = author.id === userId;
   const isDeletedOrPrivate = nickname === "deleted" || nickname === "anonymous";
   const router = useRouter();
-  const customFontColor900 = fontColor ? "" : "text-gray-900";
-  const customFontColor500 = fontColor ? "" : "text-gray-500";
+  const customFontColor900 = fontColor
+    ? ""
+    : "text-gray-900 dark:text-warmGray-100";
+  const customFontColor500 = fontColor
+    ? ""
+    : "text-gray-500 dark:text-warmGray-50";
 
   const { mutate: likeCommentMutate } = useMutation({
     mutationFn: () => postLikeComment({ commentId, userId: userId || "" }),
@@ -167,7 +171,7 @@ const CommentItem = ({
                   />
                 ) : (
                   <HeartIcon
-                    className={`w-4 h-4 text-gray-500 hover:text-primary
+                    className={`w-4 h-4 text-gray-500 dark:text-warmGray-50 hover:text-primary
             `}
                   />
                 )}
@@ -180,7 +184,9 @@ const CommentItem = ({
                     }
                   }}
                 >
-                  <p className={`text-xs text-gray-500`}>{likedBy.length}</p>
+                  <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+                    {likedBy.length}
+                  </p>
                 </button>
                 {isLikedByDropdownOpen && (
                   <div

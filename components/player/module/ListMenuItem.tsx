@@ -26,17 +26,21 @@ const ListMenuItem = ({
       }}
     >
       <div className={`flex items-center gap-4`}>
-        <p className={`text-xs text-gray-700`}>{index + 1}</p>
+        <p className={`text-xs text-gray-700 dark:text-warmGray-50`}>
+          {index + 1}
+        </p>
         <div className={``}>
           <p
             className={`text-sm ${
-              isSelected ? "text-primary" : "text-gray-700"
+              isSelected
+                ? "text-primary"
+                : "text-gray-700 dark:text-warmGray-50"
             } font-medium line-clamp-1 overflow-ellipsis`}
           >
             {title}
           </p>
           <p
-            className={`text-xs text-gray-500 font-normal line-clamp-1 overflow-ellipsis`}
+            className={`text-xs text-gray-500 dark:text-warmGray-50 font-normal line-clamp-1 overflow-ellipsis`}
           >
             {artist}
           </p>

@@ -87,7 +87,9 @@ const PlaylistGallery = ({ playlists }: { playlists?: PlaylistType[] }) => {
         })}
         {!!playlists && playlists.length === 0 && (
           <div className={`flex items-center justify-center w-full h-full`}>
-            <p className={`text-gray-500 text-sm`}>No playlist</p>
+            <p className={`text-gray-500 dark:text-warmGray-50 text-sm`}>
+              No playlist
+            </p>
           </div>
         )}
       </div>

@@ -14,7 +14,7 @@ const CategoriesList = ({
 
   return (
     <div
-      className={`flex items-center gap-3 text-sm text-gray-700  lg:text-xs `}
+      className={`flex items-center gap-3 text-sm text-gray-700 dark:text-warmGray-50 dark:text-warmGray-50 lg:text-xs `}
     >
       {categoriesArr.map((category_item, index) => (
         <button

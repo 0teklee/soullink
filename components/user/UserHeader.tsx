@@ -166,7 +166,7 @@ const UserHeader = ({
   return (
     <>
       <div
-        className={`relative full-screen-div text-gray-700`}
+        className={`relative full-screen-div text-gray-700 dark:text-warmGray-50`}
         style={{
           backgroundColor: customBgColor,
           color: customFontColor,

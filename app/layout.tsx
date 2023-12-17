@@ -7,6 +7,7 @@ import RecoilRootProvider from "@/components/common/module/RecoilRootProvider";
 import CommonModalProvider from "@/components/common/modal/CommonModalProvider";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import { Noto_Sans } from "next/font/google";
+import DarkModeContainer from "@/components/common/module/DarkModeContainer";
 
 export const metadata = {
   title: "soullink",
@@ -30,13 +31,15 @@ export default function RootLayout({
           <NextAuthSessionProvider>
             <ReactQueryClientProvider>
               <Header />
-              <main
-                className={`xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] bg-white `}
-              >
-                <ReactQueryErrorBoundary isLayout={true}>
-                  {children}
-                </ReactQueryErrorBoundary>
-              </main>
+              <DarkModeContainer>
+                <main
+                  className={`xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] bg-white dark:bg-gray-600 dark:tw-font-dark`}
+                >
+                  <ReactQueryErrorBoundary isLayout={true}>
+                    {children}
+                  </ReactQueryErrorBoundary>
+                </main>
+              </DarkModeContainer>
               <Footer />
               <CommonModalProvider />
             </ReactQueryClientProvider>

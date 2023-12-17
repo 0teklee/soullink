@@ -93,7 +93,7 @@ const HeaderUser = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
-                className={`absolute flex flex-col gap-3 top-12 -right-3 p-2 text-gray-900 text-xs whitespace-nowrap bg-white border border-gray-300 rounded `}
+                className={`absolute flex flex-col gap-3 top-12 -right-3 p-2 text-gray-900 dark:text-warmGray-100 text-xs whitespace-nowrap bg-white border border-gray-300 rounded `}
               >
                 <button
                   className={`hover:text-primary`}
@@ -127,7 +127,7 @@ const HeaderUser = () => {
                   Create Playlist
                 </button>
                 <button
-                  className={`text-gray-900 hover:text-pink-500`}
+                  className={`text-gray-900 dark:text-warmGray-100 hover:text-pink-500`}
                   onClick={async (e) => {
                     e.stopPropagation();
                     await logout();
@@ -159,7 +159,7 @@ const HeaderUser = () => {
         />
         {isListClicked && !isLoading && isLogin && (
           <div
-            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
               className={`hover:bg-gray-200 hover:text-white`}
@@ -184,7 +184,7 @@ const HeaderUser = () => {
               Create Playlist
             </button>
             <button
-              className={`text-gray-900 hover:text-pink-500`}
+              className={`text-gray-900 dark:text-warmGray-100 hover:text-pink-500`}
               onClick={async (e) => {
                 e.stopPropagation();
                 await logout();
@@ -196,7 +196,7 @@ const HeaderUser = () => {
         )}
         {isListClicked && !isLoading && !isLogin && (
           <div
-            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
               className={`hover:text-primary`}

@@ -67,10 +67,12 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
           onMouseLeave={() => {
             setIsOnHover(false);
           }}
-          className={`relative flex items-center gap-1 text-gray-900`}
+          className={`relative flex items-center gap-1 text-gray-900 dark:text-warmGray-100`}
         >
           {isOnHover && (
-            <div className={`bg-white text-xs text-gray-700 whitespace-nowrap`}>
+            <div
+              className={`bg-white text-xs text-gray-700 dark:bg-gray-600 dark:text-warmGray-50 whitespace-nowrap`}
+            >
               {isUserLikedPlaylist
                 ? `unlike this playlist`
                 : `like this playlist`}
@@ -110,11 +112,11 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
             <h2 className={`text-2xl font-bold`}>{title}</h2>
             <h2 className={`text-base font-semibold`}>by {author?.nickname}</h2>
           </div>
-          <ul className={`z-2 `}>
+          <ul className={`z-2 overflow-hidden`}>
             {songs?.map((song, index) => {
               return (
                 <li
-                  className={`flex items-center justify-center gap-3 font-bold`}
+                  className={`flex items-center justify-center gap-3 w-full  px-2 font-semibold md:text-xs`}
                   key={index}
                 >
                   <span>{index + 1}</span>

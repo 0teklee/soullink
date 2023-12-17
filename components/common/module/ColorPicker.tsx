@@ -44,7 +44,7 @@ const ColorPicker = ({
       />
       <div className={`flex justify-between gap-3 px-2 py-3 bg-white`}>
         <button
-          className={`px-6 py-2 text-md text-white bg-gray-400 hover:bg-white hover:text-gray-500  rounded-md`}
+          className={`px-6 py-2 text-md text-white bg-gray-400 hover:bg-white hover:text-gray-500 dark:text-warmGray-50  rounded-md`}
           onClick={() => {
             setCustomFontColor("");
             setIsColorPickerOpen(false);

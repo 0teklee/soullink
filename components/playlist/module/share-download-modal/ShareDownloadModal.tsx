@@ -41,7 +41,9 @@ const ShareDownloadModal = () => {
 
   return (
     <div className={`flex flex-col gap-3 items-center bg-white`}>
-      <h3 className={`text-xl text-gray-700 font-semibold`}>
+      <h3
+        className={`text-xl text-gray-700 dark:text-warmGray-50 font-semibold`}
+      >
         Share Playlist Cover
       </h3>
       <div className={`relative w-96 h-96`} ref={downloadRef}>
@@ -90,7 +92,7 @@ const ShareDownloadModal = () => {
         </div>
       </div>
       <div
-        className={`relative flex items-center justify-center gap-3 text-gray-700`}
+        className={`relative flex items-center justify-center gap-3 text-gray-700 dark:text-warmGray-50`}
       >
         <div className={`flex items-center justify-between gap-2`}>
           <input
@@ -121,7 +123,7 @@ const ShareDownloadModal = () => {
           <span>Songs</span>
         </div>
         <div
-          className={`flex items-center justify-between gap-2 text-gray-700`}
+          className={`flex items-center justify-between gap-2 text-gray-700 dark:text-warmGray-50`}
         >
           <input
             className={`w-4 h-4 appearance-none rounded border border-gray-300 bg-white checked:bg-primary checked:border-transparent focus:outline-none  `}
@@ -137,7 +139,9 @@ const ShareDownloadModal = () => {
           <span>Author</span>
         </div>
       </div>
-      <div className={`flex flex-col gap-2 items-center text-gray-700`}>
+      <div
+        className={`flex flex-col gap-2 items-center text-gray-700 dark:text-warmGray-50`}
+      >
         {!checkBoxes.title && (
           <input
             className={`appearance-none pl-1 py-2 rounded border border-gray-300 bg-white checked:bg-primary checked:border-transparent focus:outline-none  `}
@@ -169,7 +173,9 @@ const ShareDownloadModal = () => {
             setIsColorPickerOpen((prev) => !prev);
           }}
         >
-          <PencilIcon className={`w-5 h-5text-gray-900`} />
+          <PencilIcon
+            className={`w-5 h-5text-gray-900 dark:text-warmGray-100`}
+          />
           <span className={`text-sm`}>Change font color</span>
         </button>
         {isColorPickerOpen && (

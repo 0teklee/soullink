@@ -12,7 +12,7 @@ const PlaylistListContainer = ({
   isIndex?: boolean;
 }) => {
   return (
-    <div className={`flex flex-col gap-0 w-full`}>
+    <div className={`flex flex-col gap-0 w-full dark:text-gray-50`}>
       {playlists?.map((playlist, index) => (
         <PlaylistListItem
           isLarge={isLarge}

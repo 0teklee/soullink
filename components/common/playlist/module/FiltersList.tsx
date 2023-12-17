@@ -20,7 +20,7 @@ const FiltersList = ({
         <button
           onClick={() => onClick(filter)}
           key={`category_${filter}_${index}`}
-          className={`px-2 py-1 text-sm text-gray-700 border border-gray-300 rounded font-medium hover:text-primary ${
+          className={`px-2 py-1 text-sm text-gray-700 dark:text-warmGray-50 border border-gray-300 rounded font-medium hover:text-primary ${
             isSelected(filter) &&
             `bg-primary text-white border-primary hover:text-white`
           }`}

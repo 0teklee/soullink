@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -53,6 +54,8 @@ module.exports = {
         "top-list-item": "340px",
       },
     },
+    prefix: "tw-",
+    important: true,
   },
   plugins: [],
 };

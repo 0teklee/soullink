@@ -77,7 +77,9 @@ const ImageCardItem = ({
         )}
       </div>
       {!isDefault && index === activeIndex && (
-        <div className={`flex flex-col items-center gap-1 my-2 text-gray-700 `}>
+        <div
+          className={`flex flex-col items-center gap-1 my-2 text-gray-700 dark:text-warmGray-50 `}
+        >
           <button
             onClick={() => {
               router.push(`/playlist/${formatPathName(title)}`);

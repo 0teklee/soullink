@@ -38,7 +38,7 @@ const SubmitPage = ({
           className={`flex items-center gap-3 p-3 border-y border-l border-gray-200 rounded-y rounded-l`}
         >
           <button
-            className={`text-gray-500`}
+            className={`text-gray-500 dark:text-warmGray-50`}
             onClick={() => setIsDropdownOpen((prev) => !prev)}
           >
             <span className={`relative top-0.5  mr-2`}>⛛</span>
@@ -82,7 +82,7 @@ const SubmitPage = ({
                 }
                 setPage("search");
               }}
-              className={`text-gray-500 underline`}
+              className={`text-gray-500 dark:text-warmGray-50 underline`}
             >
               {urlType
                 ? `click to search from ${urlType}`
