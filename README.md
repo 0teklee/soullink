@@ -1,7 +1,7 @@
 # WORK IN PROGRESS #
 
 ## Plans ##
-**2023-11-19 ~ 12-13**
+**2023-11-19 ~ 12-17**
 - ~~Main Page Revision - add personalized timeline feature~~
 - ~~Trending Page Revision - Move Hot tracks to trending page~~
 - ~~Recent Played Table apis & client side api calls~~
@@ -20,11 +20,14 @@
 - ~~**Edit playlist song order feature**~~
 - ~~Add Search on header (search modal)~~
 - ~~Bugfix: player state~~
+- ~~**Add optimistic update**~~
+- ~~Add "Frequency" filter to common filters (search, table list)~~
 
 ### SOON TO BE ADDED ###
-**2023-11-27 ~**
-- **Add optimistic update**
-- Add "Frequency" filter to common filters (search, table list)
+**2023-11-27 ~ 12-17**
+- Deploy to Vercel
+- Bugfix
+- - Comment section after input refetching
 - Code Refactoring 
 - - minimize rerendering when song is playing
 - - useReducer refactoring

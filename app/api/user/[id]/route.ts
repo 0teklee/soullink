@@ -33,6 +33,7 @@ export async function GET(
         instagram: true,
         twitter: true,
         website: true,
+        isEditor: true,
         bgColor: true,
         fontColor: true,
         followers: {

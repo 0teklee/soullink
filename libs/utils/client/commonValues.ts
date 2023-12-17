@@ -61,11 +61,24 @@ export enum DAYS_FILTER {
   ALL_TIME = 0,
 }
 
+export enum RECENT_FILTER {
+  RECENT_DESC = "RECENTPLAYED,DESC",
+  RECENT_ASC = "RECENTPLAYED,ASC",
+}
+
 export const DAYS_FILTER_ARR = [
   { label: "Today", value: DAYS_FILTER.TODAY },
   { label: "This Week", value: DAYS_FILTER.THIS_WEEK },
   { label: "This Month", value: DAYS_FILTER.THIS_MONTH },
   { label: "All Time", value: DAYS_FILTER.ALL_TIME },
+];
+
+export const RECENT_FILTER_ARR = [
+  {
+    label: "Frequently Played - from highest",
+    value: RECENT_FILTER.RECENT_DESC,
+  },
+  { label: "Frequently Played - from lowest", value: RECENT_FILTER.RECENT_ASC },
 ];
 
 export const MOOD_TYPE_ARR = ["energetic", "chill", "relaxed", "melancholic"];
@@ -87,9 +100,8 @@ export const SONG_AVAIL_CUSTOM_URL = [
   "twitch",
 ];
 
-export const played5MinsMs = 5 * 60 * 1000;
-export const played5MinSeconds = 30;
 export const interval5Seconds = 5 * 1000;
+export const INTERVAL_5MINS_MS = 5 * 60 * 1000;
 
 export const QUERY_CACHE_TIME = 5 * 60 * 1000;
 export const QUERY_STALE_TIME = QUERY_CACHE_TIME - interval5Seconds;

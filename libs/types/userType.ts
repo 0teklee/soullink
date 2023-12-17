@@ -83,6 +83,9 @@ export interface FollowingUserResponseType {
   following: FollowUserResponseType;
 }
 
+export type FollowerOptionNullable = FollowerUserResponseType[] | null;
+export type FollowingOptionNullable = FollowingUserResponseType[] | null;
+
 export interface CommentAuthorInterface {
   id: string;
   nickname: string;

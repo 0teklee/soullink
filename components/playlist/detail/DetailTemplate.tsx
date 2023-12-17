@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Title from "@/components/common/module/Title";
@@ -33,7 +33,6 @@ import UseCustomizeStyle from "@/libs/utils/hooks/useCustomizeStyle";
 const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   const router = useRouter();
 
-  const { playlistLikeMutate } = useMutatePlaylistLike();
   const { setModal } = useSetModal();
 
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
@@ -70,17 +69,21 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   } = author || playlistDefault.author;
 
   const isUserAuthor = !!userId && !!authorId && userId === authorId;
-  const isUserLikedPlaylist = useMemo(
-    () =>
-      !!userId &&
+  const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
+    !!userId &&
       !!likedBy &&
       likedBy.length > 0 &&
       likedBy.filter((likeItem) => likeItem.userId === userId).length > 0,
-    [userId, likedBy, playlistId],
+  );
+
+  const { playlistLikeMutate } = useMutatePlaylistLike(
+    playlistId,
+    userId,
+    setIsUserLikedPlaylist,
   );
 
   const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId);
+    playlistLikeMutate();
   };
 
   const handleDownloadModal = () => {
@@ -274,13 +277,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
       </div>
       <div className={`flex flex-col items-start w-full gap-6`}>
         <Title size={`h2`} text={`Comments`} customColor={fontColor} />
-        {playlistId && (
-          <CommentSection
-            postId={playlistId}
-            userId={userId || ""}
-            isProfile={false}
-          />
-        )}
+        <CommentSection postId={id} userId={userId || ""} isProfile={false} />
       </div>
     </section>
   );

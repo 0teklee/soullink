@@ -21,6 +21,9 @@ const PlaylistListContainer = ({
           index={isIndex ? index + 1 : undefined}
         />
       ))}
+      {!playlists?.length && (
+        <p className={`text-gray-300 text-lg font-normal`}>No playlists yet.</p>
+      )}
     </div>
   );
 };

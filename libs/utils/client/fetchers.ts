@@ -16,7 +16,7 @@ import {
   PostFollowType,
   UserType,
 } from "@/libs/types/userType";
-import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
+import { DAYS_FILTER, RECENT_FILTER } from "@/libs/utils/client/commonValues";
 
 import { formatEditUserPayload } from "@/libs/utils/client/formatter";
 import { YoutubeSearchResponse } from "@/libs/types/youtubeTypes";
@@ -137,9 +137,14 @@ export const getRecommendedPlaylists = async (
 
 export const getTrendingMainPlaylists = async (
   period: DAYS_FILTER,
+  recentPlayed?: RECENT_FILTER,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent/trending?recent=${period}`,
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/recent/trending?recent=${period}&recentPlayed=${
+      recentPlayed || ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -161,12 +166,17 @@ export const getCategoriesPlaylists = async (
 
 export const getTrendingCategoriesPlaylists = async (
   period: DAYS_FILTER,
+  recentPlayed?: RECENT_FILTER,
 ): Promise<{
   recentMostPlayedCategoryPlaylist: PlaylistType[];
   categories: string[];
 }> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent/category?recent=${period}`,
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/playlist/list/recent/category?recent=${period}&recentPlayed=${
+      recentPlayed || ""
+    }`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
@@ -392,14 +402,10 @@ export const getComments = async (
   postId: string,
   visitorId?: string,
   isProfile?: boolean,
-  id?: string,
+  lastId?: string,
 ): Promise<CommentType[]> => {
   const res = await fetch(
-    `${
-      process.env.NEXT_APP_BASE_URL
-    }/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${
-      id ? id : ""
-    }`,
+    `${process.env.NEXT_APP_BASE_URL}/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${lastId}`,
   );
 
   const resData: Promise<CommentType[]> = await res

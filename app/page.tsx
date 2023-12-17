@@ -1,4 +1,3 @@
-import { Noto_Sans } from "next/font/google";
 import MainTemplate from "@/components/main/MainTemplate";
 import {
   getMainPageFriendsPlaylists,
@@ -14,11 +13,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-
-const notoSans = Noto_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
 
 const Home = async () => {
   const queryClient = new QueryClient();

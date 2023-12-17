@@ -21,7 +21,6 @@ const HeaderUser = () => {
   const login = async () => {
     await signIn("google", {
       redirect: true,
-      callbackUrl: isLogin ? `/` : "signup",
     });
   };
 
@@ -43,9 +42,8 @@ const HeaderUser = () => {
   }, [session]);
 
   return (
-    <>
+    <div ref={listRef}>
       <div
-        ref={listRef}
         className={`flex-1 flex items-center w-full font-medium gap-6 xs:hidden`}
       >
         {!isLoading && !isLogin && (
@@ -55,7 +53,6 @@ const HeaderUser = () => {
               onClick={async () => {
                 await signIn("google", {
                   redirect: true,
-                  callbackUrl: isLogin ? `/` : "/signup",
                 });
               }}
             >
@@ -66,7 +63,6 @@ const HeaderUser = () => {
               onClick={async () => {
                 await signIn("google", {
                   redirect: true,
-                  callbackUrl: isLogin ? `/` : "/signup",
                 });
               }}
             >
@@ -76,10 +72,9 @@ const HeaderUser = () => {
         )}
         {!isLoading && isLogin && (
           <div
-            className={`relative flex items-center w-8 h-8 rounded-full border-[1px] border-gray-300`}
+            className={`relative flex items-center w-8 h-8 rounded-full bg-white border-[1px] border-gray-300`}
           >
             <button
-              className={`flex items-center`}
               onClick={() => {
                 setIsListClicked((prev) => !prev);
               }}
@@ -105,7 +100,6 @@ const HeaderUser = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(`/`);
-                    setIsListClicked(false);
                   }}
                 >
                   Home
@@ -119,7 +113,6 @@ const HeaderUser = () => {
                         `/user/${formatPathName(userSession.userNickname)}`,
                       );
                     }
-                    setIsListClicked(false);
                   }}
                 >
                   My Page
@@ -147,28 +140,26 @@ const HeaderUser = () => {
           </div>
         )}
       </div>
-      <div className={`relative hidden xs:block`}>
-        <button
-          className={`flex items-center`}
-          onClick={() => {
-            setIsListClicked((prev) => !prev);
-          }}
-        >
-          <Image
-            className={`cursor-pointer rounded-full`}
-            src={`${
-              isLogin
-                ? userSession?.userImage || "/image/common/default_profile.svg"
-                : "/image/common/mobile_header_menu.svg"
-            }`}
-            alt={`mobile_header`}
-            width={32}
-            height={32}
-          />
-        </button>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsListClicked((prev) => !prev);
+        }}
+        className={`relative w-8 h-8 hidden xs:block`}
+      >
+        <Image
+          className={`cursor-pointer rounded-full`}
+          src={`${
+            isLogin
+              ? userSession?.userImage || "/image/common/default_profile.svg"
+              : "/image/common/mobile_header_menu.svg"
+          }`}
+          alt={`mobile_header`}
+          fill={true}
+        />
         {isListClicked && !isLoading && isLogin && (
           <div
-            className={`absolute flex flex-col gap-3 top-12 -right-3 p-2 text-gray-900 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
               className={`hover:bg-gray-200 hover:text-white`}
@@ -192,32 +183,33 @@ const HeaderUser = () => {
             >
               Create Playlist
             </button>
+            <button
+              className={`text-gray-900 hover:text-pink-500`}
+              onClick={async (e) => {
+                e.stopPropagation();
+                await logout();
+              }}
+            >
+              Logout
+            </button>
           </div>
         )}
         {isListClicked && !isLoading && !isLogin && (
           <div
-            className={`absolute flex flex-col gap-3 top-12 right-1 p-2 text-gray-900 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={`fixed top-12 left-0 flex flex-col w-screen gap-3 p-2 text-gray-900 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
-              className={`text-primary hover:bg-gray-200 hover:text-white`}
+              className={`hover:text-primary`}
               onClick={async () => {
-                await login().then(() => {
-                  if (!userSession?.userId) {
-                    router.push(`/signup`);
-                  }
-                });
+                await login();
               }}
             >
               Sign up
             </button>
             <button
-              className={`hover:bg-gray-200 hover:text-white`}
+              className={`hover:text-primary`}
               onClick={async () => {
-                await login().then(() => {
-                  if (!!userSession?.userId) {
-                    router.push(`/signup`);
-                  }
-                });
+                await login();
               }}
             >
               Login
@@ -225,7 +217,7 @@ const HeaderUser = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

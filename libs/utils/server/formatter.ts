@@ -136,6 +136,22 @@ export const formatSearchOrderBy = (
     };
   }
 
+  if (param === "RECENTPLAYED,DESC") {
+    return {
+      recentPlay: {
+        _count: "desc",
+      },
+    };
+  }
+
+  if (param === "RECENTPLAYED,ASC") {
+    return {
+      recentPlay: {
+        _count: "asc",
+      },
+    };
+  }
+
   return {};
 };
 

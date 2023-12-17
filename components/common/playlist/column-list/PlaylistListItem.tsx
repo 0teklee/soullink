@@ -9,8 +9,6 @@ import {
   formatPathName,
 } from "@/libs/utils/client/formatter";
 import dayjs from "dayjs";
-import CommonModal from "@/components/common/modal/CommonModal";
-import CommonSongModal from "@/components/common/modal/CommonSongModal";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
@@ -23,6 +21,8 @@ import { HeartIcon } from "@heroicons/react/24/solid";
 import CategoriesList from "@/components/common/category/list/CategoriesList";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
+import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 
 const PlaylistListItem = ({
   playlist,
@@ -41,7 +41,8 @@ const PlaylistListItem = ({
     playlist,
     userId,
   );
-  const { playlistLikeMutate } = useMutatePlaylistLike();
+
+  const { setModal } = useSetModal();
 
   const {
     id: playlistId,
@@ -58,7 +59,6 @@ const PlaylistListItem = ({
   } = playlist;
 
   const [isLikedByDropdownOpen, setIsLikedByDropdownOpen] = useState(false);
-  const [isSongModalOpen, setIsSongModalOpen] = useState(false);
   const [isUserLikedPlaylist, setIsUserLikedPlaylist] = useState(
     likedBy?.filter((user) => user.userId === userId).length > 0,
   );
@@ -67,8 +67,14 @@ const PlaylistListItem = ({
 
   const cover = coverImage || `/image/common/default_cover_image.svg`;
 
-  const handleLikePlaylist = async () => {
-    playlistLikeMutate(playlistId, userId);
+  const { playlistLikeMutate } = useMutatePlaylistLike(
+    playlistId,
+    userId,
+    setIsUserLikedPlaylist,
+  );
+
+  const handleLikePlaylist = () => {
+    playlistLikeMutate();
   };
 
   const handleClickOutside = () => {
@@ -245,7 +251,10 @@ const PlaylistListItem = ({
           </button>
           <button
             onClick={() => {
-              setIsSongModalOpen(true);
+              setModal(MODAL_TYPE.SONG_TABLE, {
+                songs: playlist.songs,
+                userId,
+              });
             }}
             className={`text-sm font-medium hover:text-primary`}
           >
@@ -287,12 +296,6 @@ const PlaylistListItem = ({
           </div>
         </div>
       </div>
-      <CommonModal
-        isModalOpen={isSongModalOpen}
-        setIsModalOpen={setIsSongModalOpen}
-      >
-        <CommonSongModal songs={songs} setIsModalOpen={setIsSongModalOpen} />
-      </CommonModal>
     </>
   );
 };
