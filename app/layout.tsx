@@ -26,6 +26,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={notoSans.className}>
+      <head>
+        <meta
+          name="google-site-verification"
+          content={process.env.GOOGLE_SITE_VERIFICATION}
+        />
+      </head>
       <body>
         <RecoilRootProvider>
           <NextAuthSessionProvider>
