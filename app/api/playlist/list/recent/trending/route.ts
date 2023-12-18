@@ -108,11 +108,14 @@ export async function GET(req: Request) {
           },
         },
       })
-      .then((playlists) =>
-        playlists.map((playlist) => {
+      .then((playlists) => {
+        if (!playlists || playlists.length === 0) {
+          return [];
+        }
+        return playlists.map((playlist) => {
           return { ...playlist, songs: formatSongResponse(playlist.songs) };
-        }),
-      );
+        });
+      });
 
     return new NextResponse(
       JSON.stringify({

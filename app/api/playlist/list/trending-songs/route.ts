@@ -39,7 +39,7 @@ export async function GET() {
         id: "admin",
         nickname: "",
       },
-      songs,
+      songs: songs && songs.length > 0 ? songs : [],
       isSongTable: true,
       category: [{ name: "trending" }],
       mood: { name: "chill" },
