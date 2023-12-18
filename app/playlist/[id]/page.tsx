@@ -1,12 +1,12 @@
 import React from "react";
-import DetailTemplate from "../../../components/playlist/detail/DetailTemplate";
+import DetailTemplate from "@/components/playlist/detail/DetailTemplate";
 import {
   getPlaylistsPaths,
   getSinglePlaylist,
-} from "../../../libs/utils/client/fetchers";
+} from "@/libs/utils/client/fetchers";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../app/api/auth/[...nextauth]/route";
-import { UserSessionType } from "../../../libs/types/userType";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 import {
   dehydrate,
   HydrationBoundary,
@@ -15,6 +15,9 @@ import {
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const queryClient = new QueryClient();
+  if (!id) {
+    return null;
+  }
 
   const { userId } = await getServerSession(authOptions)
     .then((session) => (session as UserSessionType) || { userId: "" })
