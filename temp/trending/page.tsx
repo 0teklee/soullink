@@ -1,20 +1,20 @@
 import React from "react";
-import TrendingTemplate from "@/components/trending/TrendingTemplate";
+import TrendingTemplate from "../../components/trending/TrendingTemplate";
 import {
   getMoodPlaylists,
   getTrendingCategoriesPlaylists,
   getTrendingMainPlaylists,
   getTrendingSongs,
-} from "@/libs/utils/client/fetchers";
+} from "../../libs/utils/client/fetchers";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { UserSessionType } from "@/libs/types/userType";
+import { authOptions } from "../../app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "../../libs/types/userType";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
+import { DAYS_FILTER } from "../../libs/utils/client/commonValues";
 
 const Page = async () => {
   const queryClient = new QueryClient();
