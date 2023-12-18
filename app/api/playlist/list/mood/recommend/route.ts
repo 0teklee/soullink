@@ -200,7 +200,7 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("mood recommend playlisy get api error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",

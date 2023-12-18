@@ -79,7 +79,7 @@ export async function POST(req: Request) {
       { status: 200, statusText: "OK" },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("playlist create error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",

@@ -9,12 +9,15 @@ export async function GET() {
         nickname: true,
       },
     });
-    const encodeURIUserNicknamePaths = userNicknamePaths.map((user) => {
-      return {
-        ...user,
-        nickname: encodeURIComponent(user.nickname),
-      };
-    });
+    const encodeURIUserNicknamePaths =
+      userNicknamePaths && userNicknamePaths.length > 0
+        ? userNicknamePaths.map((user) => {
+            return {
+              ...user,
+              nickname: encodeURIComponent(user.nickname),
+            };
+          })
+        : [];
 
     return NextResponse.json(
       {
@@ -36,3 +39,5 @@ export async function GET() {
     );
   }
 }
+
+export const dynamic = "force-static";

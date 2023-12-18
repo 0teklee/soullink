@@ -40,7 +40,7 @@ export async function PATCH(req: Request) {
       { status: 200, statusText: "OK" },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("user edit profile patch api error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: `Internal Server Error : ${err}`,

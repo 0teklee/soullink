@@ -53,7 +53,7 @@ export async function GET() {
       },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("trending songs get api error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",

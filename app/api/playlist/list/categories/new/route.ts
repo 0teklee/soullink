@@ -216,10 +216,12 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("new categories get api error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",
     });
   }
 }
+
+export const dynamic = "force-static";
