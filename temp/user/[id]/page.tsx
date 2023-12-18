@@ -1,13 +1,13 @@
 import React from "react";
-import UserTemplate from "@/components/user/UserTemplate";
+import UserTemplate from "../../../components/user/UserTemplate";
 import {
   getRecentPlaylists,
   getSingleUserProfile,
   getUsersPaths,
-} from "@/libs/utils/client/fetchers";
+} from "../../../libs/utils/client/fetchers";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { UserSessionType } from "@/libs/types/userType";
+import { authOptions } from "../../../app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "../../../libs/types/userType";
 import {
   dehydrate,
   HydrationBoundary,
