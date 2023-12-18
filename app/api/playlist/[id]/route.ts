@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { formatSongResponse } from "@/libs/utils/server/formatter";
 
-export async function GET(
-  req: Request,
-  { params: { id } }: { params: { id: string } },
-) {
+export async function GET({ params: { id } }: { params: { id: string } }) {
   try {
+    if (!id) {
+      return new NextResponse(
+        JSON.stringify({ message: "playlist not found", data: {} }),
+        {
+          status: 200,
+          statusText: "no playlist",
+        },
+      );
+    }
+
     const title = decodeURIComponent(id);
 
     const playlist = await prisma.playlist
@@ -98,7 +105,7 @@ export async function GET(
       },
     );
   } catch (err) {
-    console.log("post playlistDetail error: ", err);
+    console.log("get playlistDetail page error: ", err);
     return new NextResponse(
       JSON.stringify({ message: "fail to get playlist", errorCode: 500 }),
       {

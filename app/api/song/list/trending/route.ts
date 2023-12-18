@@ -55,10 +55,11 @@ export async function GET(req: Request) {
       },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("main trending playlists get api error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",
     });
   }
 }
+export const dynamic = "force-static";

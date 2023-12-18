@@ -5,6 +5,16 @@ export async function GET(
   req: Request,
   { params: { id: nickname } }: { params: { id: string } },
 ) {
+  if (!nickname) {
+    return new NextResponse(
+      JSON.stringify({ message: "user not found", data: {} }),
+      {
+        status: 200,
+        statusText: "no user",
+      },
+    );
+  }
+
   try {
     const userLikedPlaylists = await prisma.playlist.findMany({
       where: {

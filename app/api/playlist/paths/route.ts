@@ -10,7 +10,11 @@ export async function GET() {
           title: true,
         },
       })
-      .then((res) => res.map((item) => encodeURIComponent(item.title)));
+      .then((res) => {
+        return res && res.length > 0
+          ? res.map((item) => encodeURIComponent(item.title))
+          : [];
+      });
 
     return NextResponse.json(
       {
@@ -22,7 +26,7 @@ export async function GET() {
       },
     );
   } catch (err) {
-    console.log("post playlistDetail error: ", err);
+    console.log("playlist paths error: ", err);
     return new NextResponse(
       JSON.stringify({ message: "fail", errorCode: 404 }),
       {
@@ -32,3 +36,5 @@ export async function GET() {
     );
   }
 }
+
+export const dynamic = "force-static";

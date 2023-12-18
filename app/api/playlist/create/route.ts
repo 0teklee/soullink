@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     });
 
     await prisma.song.createMany({
-      data: request.songs.map((song, index) => ({
+      data: request.songs.map((song) => ({
         title: song.title,
         artist: song.artist,
         url: song.url,
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
       { status: 200, statusText: "OK" },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("playlist create error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",

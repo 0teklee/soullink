@@ -24,9 +24,10 @@ export async function GET(req: Request) {
       ],
     });
 
-    const mostCountCategoryListId = mostCountCategoryList.map(
-      (category) => category.id,
-    );
+    const mostCountCategoryListId =
+      mostCountCategoryList && mostCountCategoryList.length > 0
+        ? mostCountCategoryList.map((category) => category.id)
+        : [];
 
     const recentMostPlayedCategoryPlaylist = await prisma.playlist
       .findMany({
@@ -123,11 +124,14 @@ export async function GET(req: Request) {
           },
         },
       })
-      .then((playlists) =>
-        playlists.map((playlist) => {
+      .then((playlists) => {
+        if (!playlists || playlists?.length === 0) {
+          return [];
+        }
+        return playlists.map((playlist) => {
           return { ...playlist, songs: formatSongResponse(playlist.songs) };
-        }),
-      );
+        });
+      });
 
     return new NextResponse(
       JSON.stringify({

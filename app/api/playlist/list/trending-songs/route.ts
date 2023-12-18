@@ -39,7 +39,7 @@ export async function GET() {
         id: "admin",
         nickname: "",
       },
-      songs,
+      songs: songs && songs.length > 0 ? songs : [],
       isSongTable: true,
       category: [{ name: "trending" }],
       mood: { name: "chill" },
@@ -53,7 +53,7 @@ export async function GET() {
       },
     );
   } catch (err) {
-    console.log("write.ts error: ", err);
+    console.log("trending songs get api error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",
