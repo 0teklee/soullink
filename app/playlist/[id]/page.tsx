@@ -1,12 +1,12 @@
 import React from "react";
-import DetailTemplate from "../../../components/playlist/detail/DetailTemplate";
+import DetailTemplate from "@/components/playlist/detail/DetailTemplate";
 import {
   getPlaylistsPaths,
   getSinglePlaylist,
-} from "../../../libs/utils/client/fetchers";
+} from "@/libs/utils/client/fetchers";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../app/api/auth/[...nextauth]/route";
-import { UserSessionType } from "../../../libs/types/userType";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 import {
   dehydrate,
   HydrationBoundary,

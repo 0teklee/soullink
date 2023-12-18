@@ -4,11 +4,11 @@ import {
   getDiscoverMoodPlaylists,
   getEditorPlaylists,
   getRecommendedPlaylists,
-} from "../../libs/utils/client/fetchers";
-import DiscoverTemplate from "../../components/discover/DiscoverTemplate";
+} from "@/libs/utils/client/fetchers";
+import DiscoverTemplate from "@/components/discover/DiscoverTemplate";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../app/api/auth/[...nextauth]/route";
-import { UserSessionType } from "../../libs/types/userType";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { UserSessionType } from "@/libs/types/userType";
 import {
   dehydrate,
   HydrationBoundary,
