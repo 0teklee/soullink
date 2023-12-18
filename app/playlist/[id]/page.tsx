@@ -5,7 +5,7 @@ import {
   getSinglePlaylist,
 } from "@/libs/utils/client/fetchers";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { UserSessionType } from "@/libs/types/userType";
 import {
   dehydrate,
