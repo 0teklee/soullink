@@ -167,7 +167,7 @@ const HeaderUser = () => {
             className={`fixed top-12 left-0 flex flex-col w-screen items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
-              className={`px-3 py-1 hover:bg-gray-200 hover:text-white`}
+              className={`w-full px-3 py-1 hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 if (userSession?.userNickname) {
                   router.push(
@@ -180,7 +180,7 @@ const HeaderUser = () => {
               My Page
             </button>
             <button
-              className={`px-3 py-1 hover:bg-gray-200 hover:text-white`}
+              className={`w-full px-3 py-1 hover:bg-gray-200 hover:text-white`}
               onClick={() => {
                 router.push(`/playlist/create`);
                 setIsListClicked(false);
@@ -190,24 +190,24 @@ const HeaderUser = () => {
             </button>
             <Link
               href={`/discover`}
-              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+              className={`w-full px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             >
               Discover
             </Link>
             <Link
               href={`/trending`}
-              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+              className={`w-full px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             >
               Trending
             </Link>
             <Link
               href={`/search`}
-              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+              className={`w-full px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             >
               Search
             </Link>
             <button
-              className={`px-3 py-1 text-gray-900 dark:text-warmGray-100 hover:text-pink-500`}
+              className={`w-full px-3 py-1 text-gray-900 dark:text-warmGray-100 hover:text-pink-500`}
               onClick={async (e) => {
                 e.stopPropagation();
                 await logout();
@@ -234,7 +234,7 @@ const HeaderUser = () => {
             className={`fixed top-12 left-0 flex flex-col w-screen items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
           >
             <button
-              className={`px-3 py-1 hover:text-primary`}
+              className={`w-full px-3 py-1 text-start hover:text-primary`}
               onClick={async () => {
                 await login();
               }}
@@ -242,7 +242,7 @@ const HeaderUser = () => {
               Sign up
             </button>
             <button
-              className={`px-3 py-1 hover:text-primary`}
+              className={`w-full px-3 py-1 text-start hover:text-primary`}
               onClick={async () => {
                 await login();
               }}
@@ -251,19 +251,19 @@ const HeaderUser = () => {
             </button>
             <Link
               href={`/discover`}
-              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+              className={`w-full px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             >
               Discover
             </Link>
             <Link
               href={`/trending`}
-              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+              className={`w-full px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             >
               Trending
             </Link>
             <Link
               href={`/search`}
-              className={`px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
+              className={`w-full px-3 py-1 hover:bg-primary hover:text-white rounded-lg`}
             >
               Search
             </Link>
