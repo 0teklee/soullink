@@ -85,7 +85,9 @@ const HeaderUser = () => {
               }}
             >
               <Image
-                className={`bg-white object-cover rounded-full`}
+                className={` ${
+                  isLogin ? "bg-white" : ""
+                } object-cover rounded-full`}
                 src={`${
                   userSession?.userImage || `/image/common/default_profile.svg`
                 }`}
@@ -153,7 +155,7 @@ const HeaderUser = () => {
         className={`relative w-8 h-8 hidden xs:block`}
       >
         <Image
-          className={`bg-white cursor-pointer rounded-full`}
+          className={`cursor-pointer rounded-full ${isLogin ? "bg-white" : ""}`}
           src={`${
             isLogin
               ? userSession?.userImage || "/image/common/default_profile.svg"
