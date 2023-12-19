@@ -73,10 +73,28 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
       return;
     }
     nicknameDuplicateMutate({ nickname: payload.nickname });
-  }, 500);
+  }, 800);
 
   const handleSignup = (arrPayload: SignupPayload) => {
-    mutate(arrPayload);
+    const formattedPayload = {
+      ...arrPayload,
+      nickname: arrPayload.nickname.trim(),
+      bio: arrPayload.bio.trim(),
+      socialLinks: {
+        ...arrPayload.socialLinks,
+        website: arrPayload.socialLinks.website
+          ? `https://${arrPayload.socialLinks.website}`
+          : "",
+        instagram: arrPayload.socialLinks.instagram
+          ? `https://www.instagram.com/${arrPayload.socialLinks.instagram}`
+          : "",
+        twitter: arrPayload.socialLinks.twitter
+          ? `https://twitter.com/${arrPayload.socialLinks.twitter}`
+          : "",
+      },
+    };
+
+    mutate(formattedPayload);
   };
 
   const handlePayloadImgUpload = (imgUrl: string) => {
@@ -182,10 +200,16 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
               placeholder={`@nickname`}
               value={payload.nickname}
               onChange={(e) => {
+                if (e.currentTarget.value === " ") {
+                  return;
+                }
+
                 setPayload((prev) => ({
                   ...prev,
                   nickname: e.target.value,
                 }));
+              }}
+              onKeyUp={(e) => {
                 resetTimer(timer);
               }}
             />
