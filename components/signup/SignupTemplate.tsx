@@ -209,7 +209,7 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
                   nickname: e.target.value,
                 }));
               }}
-              onKeyUp={(e) => {
+              onKeyUp={() => {
                 resetTimer(timer);
               }}
             />
