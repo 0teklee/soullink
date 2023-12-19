@@ -22,10 +22,10 @@
 - ~~Bugfix: player state~~
 - ~~**Add optimistic update**~~
 - ~~Add "Frequency" filter to common filters (search, table list)~~
+- ~~**Deploy to Vercel**~~
 
 ### SOON TO BE ADDED ###
 **2023-11-27 ~ 12-17**
-- Deploy to Vercel
 - Bugfix
 - - Comment section after input refetching
 - Code Refactoring 
