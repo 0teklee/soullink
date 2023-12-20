@@ -327,12 +327,14 @@ const PlayerController = ({
             )}
           </div>
           <div
-            className={`whitespace-nowrap xs:order-1 xs:flex-1 xs:text-center`}
+            className={`max-w-[200px] overflow-x-hidden xs:order-1 xs:flex-1 xs:text-center`}
           >
-            <p className={`text-xs text-gray-900 font-medium`}>
+            <p className={`sideways-scroll text-xs text-gray-900 font-medium`}>
               {songList[songListIndex]?.title}
             </p>
-            <p className={`text-xs text-gray-600 font-normal xs:hidden`}>
+            <p
+              className={`sideways-scroll text-xs text-gray-600 font-normal xs:hidden`}
+            >
               {songList[songListIndex]?.artist}
             </p>
           </div>
