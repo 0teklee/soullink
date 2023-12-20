@@ -8,12 +8,11 @@ import { SignupPayload, UserSessionType } from "@/libs/types/userType";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
-import { getServerSession } from "next-auth";
+
 import { postNicknameDuplicate } from "@/libs/utils/client/fetchers";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import useTimer from "@/libs/utils/hooks/useTimer";
 import Loading from "@/components/common/module/Loading";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const SignupTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };
