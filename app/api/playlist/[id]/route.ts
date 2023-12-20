@@ -4,16 +4,6 @@ import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET({ params: { id } }: { params: { id: string } }) {
   try {
-    if (!id) {
-      return new NextResponse(
-        JSON.stringify({ message: "playlist not found", data: {} }),
-        {
-          status: 200,
-          statusText: "no playlist",
-        },
-      );
-    }
-
     const title = decodeURIComponent(id);
 
     const playlist = await prisma.playlist

@@ -15,10 +15,6 @@ import {
 } from "@tanstack/react-query";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
-  if (!id) {
-    return null;
-  }
-
   const queryClient = new QueryClient();
 
   const [{ userId }] = await Promise.all([

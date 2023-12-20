@@ -15,9 +15,6 @@ import {
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const queryClient = new QueryClient();
-  if (!id) {
-    return null;
-  }
 
   const { userId } = await getServerSession(authOptions)
     .then((session) => (session as UserSessionType) || { userId: "" })
