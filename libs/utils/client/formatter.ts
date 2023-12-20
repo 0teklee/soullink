@@ -2,7 +2,7 @@ import {
   CommentAuthorInterface,
   EditProfilePayload,
 } from "@/libs/types/userType";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { emptyRegex, titleRegex } from "@/libs/utils/client/commonValues";
 import {
@@ -14,13 +14,36 @@ import { sanitize } from "isomorphic-dompurify";
 
 dayjs.extend(isBetween);
 
-export const formatSecondsToString = (seconds: number): string => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
+export const formatSecondsToString = (
+  playedSeconds: number,
+  isDuration?: boolean,
+  duration?: number,
+): string => {
+  if (isDuration && playedSeconds === 0) {
+    return "-";
+  }
+
+  if (duration && duration < playedSeconds) {
+    return "0:00";
+  }
+
+  const minutes = Math.floor(playedSeconds / 60);
+  const remainingSeconds = Math.floor(playedSeconds % 60);
   const minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`;
   const secondsString =
     remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
   return `${minutesString}:${secondsString}`;
+};
+
+export const formatPlayedSeconds = (
+  played: number,
+  songStartedAt: Dayjs | null,
+  duration?: number,
+): number => {
+  if ((!duration || (duration && duration < played)) && songStartedAt) {
+    return dayjs().diff(songStartedAt, "seconds");
+  }
+  return played;
 };
 
 export const formatPathName = (title: string): string => {
