@@ -32,7 +32,9 @@ const TopListContainter = ({ playlists }: { playlists: PlaylistType[] }) => {
 
   return (
     <div className={`h-top-list-container`}>
-      <div className={`absolute left-0 w-screen`}>
+      <div
+        className={`w-screen xs:-mx-4 desktop:-mx-[400px] xl:-mx-24 3xl:-mx-48`}
+      >
         <div className={`relative w-full h-full `}>
           <motion.div animate={controls}>
             <TopListItem playlist={playlists[currentIndex]} />
