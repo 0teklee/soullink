@@ -1,16 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 
 export async function GET(
-  req: Request,
-  { params: { id: nickname } }: { params: { id: string } },
+  _: NextRequest,
+  { params }: { params: { id: string } },
 ) {
+  const nickname = params?.id || "";
   try {
     const userLikedPlaylists = await prisma.playlist.findMany({
       where: {
         likedBy: {
           some: {
-            userId: nickname,
+            user: { nickname },
           },
         },
       },
