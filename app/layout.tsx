@@ -40,7 +40,7 @@ export default function RootLayout({
               <Header />
               <DarkModeContainer>
                 <main
-                  className={`xs:my-10 py-12 xs:h-screen xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] bg-white dark:bg-gray-600 dark:text-warmGray-50 dark:[&__input]:text-gray-700 dark:[&__textarea]:text-gray-700`}
+                  className={`xs:my-10 py-12 xs:h-[calc(100vh-120px)] xs:pt-4 xs:pb-12 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px] bg-white dark:bg-gray-600 dark:text-warmGray-50 dark:[&__input]:text-gray-700 dark:[&__textarea]:text-gray-700`}
                 >
                   <ReactQueryErrorBoundary isLayout={true}>
                     {children}
