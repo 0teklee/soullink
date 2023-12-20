@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
-import { SignupPayload } from "@/libs/types/userType";
+import { SignupPayload, UserSessionType } from "@/libs/types/userType";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
@@ -16,7 +16,7 @@ import Loading from "@/components/common/module/Loading";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const SignupTemplate = () => {
-  const { data: session } = useSession();
+  const { data: session } = useSession() as { data: UserSessionType };
   const userEmail = session?.user?.email;
   const router = useRouter();
 
