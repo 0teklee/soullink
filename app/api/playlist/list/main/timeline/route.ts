@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { formatSongResponse } from "@/libs/utils/server/formatter";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const userId = new URL(req.url).searchParams.get("userId");
 
   try {
