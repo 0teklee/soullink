@@ -25,17 +25,17 @@ const ListMenuItem = ({
         setPlayerState((prev) => ({ ...prev, currentSongListIndex: index }));
       }}
     >
-      <div className={`flex items-center gap-4`}>
+      <div className={`flex items-center gap-4 `}>
         <p className={`text-xs text-gray-700 dark:text-warmGray-50`}>
           {index + 1}
         </p>
-        <div className={``}>
+        <div className={`overflow-x-hidden`}>
           <p
             className={`text-sm ${
               isSelected
                 ? "text-primary"
                 : "text-gray-700 dark:text-warmGray-50"
-            } font-medium line-clamp-1 overflow-ellipsis`}
+            } font-medium sideways-scroll`}
           >
             {title}
           </p>
