@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { formatSongResponse } from "@/libs/utils/server/formatter";
 
-export async function GET({ params: { id } }: { params: { id: string } }) {
+export async function GET(
+  _: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const title = decodeURIComponent(id);
+    const title = decodeURIComponent(params.id);
 
     const playlist = await prisma.playlist
       .findUnique({
