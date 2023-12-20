@@ -71,7 +71,7 @@ const SongTable = ({
                   <th className={`text-start opacity-0 xs:hidden`}>
                     Like & Add
                   </th>
-                  <th className={`text-start font-light xs:hidden`}>PLAYED</th>
+                  <th className={`text-start font-light md:hidden`}>PLAYED</th>
                   {isNotCreate && playlist && (
                     <th className={`text-start opacity-0 xs:hidden`}>PLAY</th>
                   )}
