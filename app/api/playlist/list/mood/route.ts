@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { PlaylistMoodType } from "@/libs/types/song&playlistType";
 import {
@@ -6,7 +6,7 @@ import {
   formatSongResponse,
 } from "@/libs/utils/server/formatter";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const { param, recent } = Object.fromEntries(url.searchParams.entries()) as {
     param: PlaylistMoodType | "null" | "undefined";

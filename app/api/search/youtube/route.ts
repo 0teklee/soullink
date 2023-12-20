@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { YoutubeSearchResponse } from "@/libs/types/youtubeTypes";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const { search, pageToken } = Object.fromEntries(url.searchParams.entries());
 

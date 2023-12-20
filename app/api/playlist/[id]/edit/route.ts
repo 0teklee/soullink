@@ -4,8 +4,9 @@ import { PlaylistCreateRequestType } from "@/libs/types/song&playlistType";
 
 export async function PATCH(
   req: Request,
-  { params: { id } }: { params: { id: string } },
+  { params }: { params: { id: string } },
 ) {
+  const id = params?.id || "";
   const request: PlaylistCreateRequestType & { userId: string } = await req
     .json()
     .then((data) => data);

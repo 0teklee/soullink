@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import { formatPrivate } from "@/libs/utils/server/formatter";
 
 export async function GET(
-  req: Request,
-  { params: { id } }: { params: { id: string } },
+  req: NextRequest,
+  { params }: { params: { id: string } },
 ) {
+  const id = params?.id || "";
   try {
     const url = new URL(req.url);
     const { userId, isProfile, lastId } = Object.fromEntries(

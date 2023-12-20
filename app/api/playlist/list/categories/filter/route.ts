@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
 import {
   formatDateFilter,
   formatSongResponse,
 } from "@/libs/utils/server/formatter";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const { recent, categories } = Object.fromEntries(url.searchParams.entries());
   const recentDate = formatDateFilter(recent);
