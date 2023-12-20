@@ -51,21 +51,7 @@ export async function generateMetadata({
 
   const data = await getSinglePlaylist(id);
 
-  if (!data) {
-    return {
-      title: "Soullink",
-      description: "Soullink",
-      openGraph: {
-        title: "Soullink",
-        description: "Soullink",
-        images: `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`,
-      },
-    };
-  }
-
-  const ImageSrc =
-    data?.coverImage ??
-    `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`;
+  const ImageSrc = data?.coverImage ?? `/image/common/default_cover_image.svg`;
 
   return {
     title: `${data?.title || ""} on soullink`,
