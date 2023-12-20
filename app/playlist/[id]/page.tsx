@@ -52,7 +52,15 @@ export async function generateMetadata({
   const data = await getSinglePlaylist(id);
 
   if (!data) {
-    return {};
+    return {
+      title: "Soullink",
+      description: "Soullink",
+      openGraph: {
+        title: "Soullink",
+        description: "Soullink",
+        images: `${process.env.NEXT_APP_BASE_URL}/image/common/default_cover_image.svg`,
+      },
+    };
   }
 
   const ImageSrc =
