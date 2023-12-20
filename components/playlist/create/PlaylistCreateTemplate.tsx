@@ -140,7 +140,7 @@ const PlaylistCreateTemplate = () => {
 
   return (
     <section
-      className={`flex flex-col items-center justify-center gap-10 xs:h-screen dark:bg-gray-600 xs:overflow-y-scroll xs:py-5 py-12 xs:pt-6 xs:pb-24`}
+      className={`flex flex-col items-center gap-12 py-6 xs:px-3 xs:overflow-y-scroll xs:gap-6 dark:bg-gray-600 xs:h-screen xs:pt-6 xs:pb-24`}
     >
       <Title size={`h1`} text={`Create Playlist`} />
       <div
