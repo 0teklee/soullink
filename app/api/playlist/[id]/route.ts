@@ -7,7 +7,8 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const title = decodeURIComponent(params.id);
+    const pathParam = params?.id || "";
+    const title = decodeURIComponent(pathParam);
 
     const playlist = await prisma.playlist
       .findUnique({
