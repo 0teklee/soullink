@@ -85,10 +85,8 @@ export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${id}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   );
-  const resData: Promise<PlaylistType> = await res
-    .json()
-    .then((data) => data.data);
-  return resData;
+  const resData: { data: PlaylistType } = await res.json();
+  return resData.data;
 };
 
 export const getPlaylistsPaths = async (): Promise<string[]> => {
