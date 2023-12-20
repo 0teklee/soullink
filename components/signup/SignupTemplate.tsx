@@ -54,8 +54,7 @@ const SignupTemplate = () => {
 
   const { mutate } = useMutation({
     mutationFn: fetcherSignup,
-    onSuccess: async () => {
-      await getServerSession(authOptions);
+    onSuccess: () => {
       router.push(`/`);
     },
   });
@@ -112,6 +111,10 @@ const SignupTemplate = () => {
   }, [payload.nickname]);
 
   useEffect(() => {
+    if (!!session && !!session?.userId) {
+      router.push(`/`);
+    }
+
     if (!userEmail) {
       return;
     }
