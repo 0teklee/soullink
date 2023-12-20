@@ -85,6 +85,51 @@ const ImageUploadPost = async (data: FormData) => {
   );
 };
 
+const compressImage = (file: File): Promise<File> => {
+  const maxWidth = 1000;
+  const quality = 0.7;
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const scaleSize = maxWidth / img.width;
+      canvas.width = maxWidth;
+      canvas.height = img.height * scaleSize;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Unable to get canvas context"));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error("Canvas to Blob conversion failed"));
+            return;
+          }
+
+          resolve(
+            new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            }),
+          );
+        },
+        "image/jpeg",
+        quality,
+      );
+    };
+
+    img.onerror = () => reject(new Error("Image loading error"));
+  });
+};
+
 export const handleImageUpload = (callback: (imageVal: string) => void) => {
   const input = document.createElement("input");
   input.setAttribute("type", "file");
@@ -93,12 +138,11 @@ export const handleImageUpload = (callback: (imageVal: string) => void) => {
 
   input.onchange = async () => {
     if (!input.files) return;
-    const file = input.files[0];
+    let file = input.files[0];
     const formData = new FormData();
 
     if (file.size > 1024 * 1024) {
-      alert("file size cannot exceed 1mb");
-      return;
+      file = await compressImage(file);
     }
 
     if (/^image\//.test(file.type)) {
