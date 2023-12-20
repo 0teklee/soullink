@@ -13,7 +13,7 @@ import {
   HeartIcon,
   PauseIcon,
   PlayIcon,
-  ShareIcon,
+  // ShareIcon,
 } from "@heroicons/react/24/outline";
 import {
   HeartIcon as HeartIconSolid,
@@ -141,13 +141,13 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
               </p>
             </div>
           )}
-          <button className={`relative w-5 h-5`}>
-            <ShareIcon
-              className={`w-5 h-5 ${
-                fontColor || "text-gray-700 dark:text-warmGray-50"
-              } font-medium`}
-            />
-          </button>
+          {/*<button className={`relative w-5 h-5`}>*/}
+          {/*  <ShareIcon*/}
+          {/*    className={`w-5 h-5 ${*/}
+          {/*      fontColor || "text-gray-700 dark:text-warmGray-50"*/}
+          {/*    } font-medium`}*/}
+          {/*  />*/}
+          {/*</button>*/}
           <button className={`relative w-5 h-5`} onClick={handleDownloadModal}>
             <ArrowDownTrayIcon
               className={`w-5 h-5 ${

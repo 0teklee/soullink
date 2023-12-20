@@ -90,13 +90,19 @@ const TableItem = ({
       <td className={`py-2 pl-2 xs:hidden`}>{index + 1}</td>
       <td className={`py-2`}>
         <div className={`flex flex-col gap-0.5`}>
-          <p>{song.title}</p>
+          <div className={`max-w-lg overflow-x-hidden `}>
+            <p className={`sideways-scroll`}>{song.title}</p>
+          </div>
           {"likedCount" in song && isNotCreate && (
             <p className={`text-xs`}>{song.likedCount} likes</p>
           )}
         </div>
       </td>
-      <td className={`py-2`}>{song.artist}</td>
+      <td className={`py-2`}>
+        <div className={`max-w-md overflow-x-hidden`}>
+          <p className={`sideways-scroll`}>{song.artist}</p>
+        </div>
+      </td>
       {"playedCount" in song && isNotCreate && (
         <>
           <td className={`py-2`}>

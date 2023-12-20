@@ -141,15 +141,15 @@ const PlaylistListItem = ({
             </div>
           </div>
           <div className={` flex flex-col items-start gap-3`}>
-            <div>
-              <button
+            <div className={`overflow-x-hidden`}>
+              <div
                 onClick={() => {
                   router.push(`/playlist/${formatPathName(title)}`);
                 }}
-                className={`text-lg text-gray-900 dark:text-warmGray-100 font-medium hover:text-primary xs:text-xs lg:text-start`}
+                className={`max-w-lg overflow-x-hidden cursor-pointer text-lg text-gray-900 dark:text-warmGray-100 font-medium hover:text-primary xs:text-xs lg:text-start`}
               >
-                {title}
-              </button>
+                <p className={`sideways-scroll`}>{title}</p>
+              </div>
               <div
                 className={`relative flex items-center gap-2 text-xs text-gray-500 dark:text-warmGray-50 font-medium`}
               >

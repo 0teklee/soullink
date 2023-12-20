@@ -155,3 +155,18 @@ a {
 .full-screen-div {
   @apply w-screen xs:my-10 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px];
 }
+
+.sideways-scroll {
+  width: 100%;
+  white-space: nowrap;
+  line-clamp: 1;
+}
+
+.sideways-scroll:hover {
+  animation: scroll-text 10s linear infinite;
+}
+
+@keyframes scroll-text {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
