@@ -8,6 +8,7 @@ import CommonModalProvider from "@/components/common/modal/CommonModalProvider";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import { Noto_Sans } from "next/font/google";
 import DarkModeContainer from "@/components/common/module/DarkModeContainer";
+import AuthUserNavigator from "@/components/common/module/AuthUserNavigator";
 
 export const metadata = {
   title: "soullink - beta",
@@ -47,6 +48,7 @@ export default function RootLayout({
                 </main>
               </DarkModeContainer>
               <Footer />
+              <AuthUserNavigator />
               <CommonModalProvider />
             </ReactQueryClientProvider>
           </NextAuthSessionProvider>

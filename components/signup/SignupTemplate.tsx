@@ -4,18 +4,18 @@ import React, { useEffect, useState } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
-import { SignupPayload } from "@/libs/types/userType";
-import { signIn } from "next-auth/react";
+import { SignupPayload, UserSessionType } from "@/libs/types/userType";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
-import { getServerSession, Session } from "next-auth";
+
 import { postNicknameDuplicate } from "@/libs/utils/client/fetchers";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import useTimer from "@/libs/utils/hooks/useTimer";
 import Loading from "@/components/common/module/Loading";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const SignupTemplate = ({ session }: { session: Session | null }) => {
+const SignupTemplate = () => {
+  const { data: session } = useSession() as { data: UserSessionType };
   const userEmail = session?.user?.email;
   const router = useRouter();
 
@@ -53,8 +53,7 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
 
   const { mutate } = useMutation({
     mutationFn: fetcherSignup,
-    onSuccess: async () => {
-      await getServerSession(authOptions);
+    onSuccess: () => {
       router.push(`/`);
     },
   });
@@ -111,6 +110,10 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
   }, [payload.nickname]);
 
   useEffect(() => {
+    if (!!session && !!session?.userId) {
+      router.push(`/`);
+    }
+
     if (!userEmail) {
       return;
     }
@@ -118,7 +121,7 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
       ...prev,
       email: userEmail || "",
     }));
-  }, [session]);
+  }, [session, userEmail]);
 
   return (
     <section
@@ -165,6 +168,7 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
             >
               Email
             </p>
+            <p className={`text-xs text-gray-400 font-semibold`}>*required</p>
             <input
               type={`text`}
               className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
@@ -177,7 +181,6 @@ const SignupTemplate = ({ session }: { session: Session | null }) => {
               onClick={async () => {
                 await signIn("google", {
                   redirect: true,
-                  callbackUrl: `/signup`,
                 });
               }}
               disabled={isOAuthSignIn}

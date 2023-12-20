@@ -66,9 +66,7 @@ const HeaderUser = () => {
             <button
               className={`text-primary whitespace-nowrap`}
               onClick={async () => {
-                await signIn("google", {
-                  redirect: true,
-                });
+                router.push(`/signup`);
               }}
             >
               Sign up
@@ -238,7 +236,7 @@ const HeaderUser = () => {
             <button
               className={`w-full px-3 py-1 text-start hover:text-primary`}
               onClick={async () => {
-                await login();
+                router.push(`/signup`);
               }}
             >
               Sign up
@@ -246,7 +244,9 @@ const HeaderUser = () => {
             <button
               className={`w-full px-3 py-1 text-start hover:text-primary`}
               onClick={async () => {
-                await login();
+                await login().then((res) => {
+                  console.log("login res", res);
+                });
               }}
             >
               Login

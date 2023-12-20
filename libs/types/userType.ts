@@ -98,6 +98,9 @@ export interface UserSessionType extends Session {
   userId?: string;
   userNickname?: string;
   userImage?: string;
+  user?: {
+    email: string;
+  };
 }
 
 export interface SignupPayload {
