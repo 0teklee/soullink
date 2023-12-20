@@ -30,12 +30,14 @@ const ListMenuContainer = ({
       <div
         className={`flex flex-col items-start w-[200px] p-3 bg-gray-50 border border-gray-300 rounded `}
       >
-        <div className={`flex justify-between items-center gap-2 w-full mb-2`}>
+        <div
+          className={`flex overflow-x-hidden justify-between items-center gap-2 w-full mb-2`}
+        >
           <button
             onClick={() => {
               router.push(`/playlist/${formatPathName(title)}`);
             }}
-            className={`mb-1 text-base text-gray-900 dark:text-warmGray-100 font-semibold overflow-ellipsis  hover:underline`}
+            className={`mb-1 sideways-scroll text-base text-gray-900 dark:text-warmGray-100 font-semibold  hover:underline`}
           >
             {title}
           </button>
@@ -44,7 +46,7 @@ const ListMenuContainer = ({
               onClick={() => {
                 router.push(`/user/${decodeURIComponent(author.nickname)}`);
               }}
-              className={`text-sm text-gray-500 dark:text-warmGray-50 font-normal whitespace-nowrap hover:text-primary hover:underline`}
+              className={`sideways-scroll text-sm text-gray-500 dark:text-warmGray-50 font-normal whitespace-nowrap hover:text-primary hover:underline`}
             >
               by {`@${author.nickname}`}
             </button>
