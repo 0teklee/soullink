@@ -8,7 +8,7 @@ import { SignupPayload } from "@/libs/types/userType";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
-import { getServerSession, Session } from "next-auth";
+import { getServerSession } from "next-auth";
 import { postNicknameDuplicate } from "@/libs/utils/client/fetchers";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import useTimer from "@/libs/utils/hooks/useTimer";
