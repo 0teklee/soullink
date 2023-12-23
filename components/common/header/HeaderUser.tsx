@@ -156,7 +156,7 @@ const HeaderUser = () => {
           className={`cursor-pointer rounded-full ${isLogin ? "bg-white" : ""}`}
           src={`${
             isLogin
-              ? userSession?.userImage || "/image/common/default_profile.svg"
+              ? userSession?.userImage || `/image/common/default_profile.svg`
               : "/image/common/mobile_header_menu.svg"
           }`}
           alt={`mobile_header`}

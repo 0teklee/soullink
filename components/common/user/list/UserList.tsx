@@ -20,7 +20,7 @@ const UserList = ({ users }: { users: UserType[] }) => {
               <Image
                 fill={true}
                 className={`object-cover rounded-full`}
-                src={user?.profilePic || `/images/common/default_profile.svg`}
+                src={user?.profilePic || `/image/common/default_profile.svg`}
                 alt={`${user.nickname}_profile_pic`}
               />
             </div>

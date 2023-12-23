@@ -164,7 +164,7 @@ const PlayerController = ({
 
   return (
     <div
-      className={`w-screen px-5 py-3 bg-white border-t-[1px] border-gray-200 xs:py-3 xs:px-2`}
+      className={`w-screen px-5 py-3 bg-white border-t-[1px] border-gray-200 xs:py-3 xs:px-3`}
     >
       <div className={`flex items-center justify-between gap-6 px-5 xs:px-0`}>
         <div
@@ -275,14 +275,14 @@ const PlayerController = ({
             }}
           />
         </div>
-        <button className={`xs:hidden`}>
-          <Image
-            src={`/image/player/repeat.svg`}
-            width={24}
-            height={24}
-            alt={`repeat`}
-          />
-        </button>
+        {/*<button className={`xs:hidden`}>*/}
+        {/*  <Image*/}
+        {/*    src={`/image/player/repeat.svg`}*/}
+        {/*    width={24}*/}
+        {/*    height={24}*/}
+        {/*    alt={`repeat`}*/}
+        {/*  />*/}
+        {/*</button>*/}
         <div
           className={`flex items-center justify-evenly gap-2 xs:justify-start xs:flex-1 xs:gap-3`}
         >
@@ -327,7 +327,7 @@ const PlayerController = ({
             )}
           </div>
           <div
-            className={`max-w-[200px] overflow-x-hidden xs:order-1 xs:flex-1 xs:text-center`}
+            className={`max-w-[200px] overflow-x-hidden xs:max-w-[90px] xs:order-1 xs:flex-1 xs:text-center`}
           >
             <p className={`sideways-scroll text-xs text-gray-900 font-medium`}>
               {songList[songListIndex]?.title}

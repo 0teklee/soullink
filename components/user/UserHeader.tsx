@@ -173,7 +173,7 @@ const UserHeader = ({
         }}
       >
         <div
-          className={`flex items-start justify-start gap-5 w-full xs:my-3 pt-12 pb-4 xs:py-2 xs:px-4  bg-transparent xs:flex-col xs:items-center xs:justify-center `}
+          className={`flex items-start justify-start gap-5 w-full xs:my-3 pt-12 pb-4 xs:pt-1 xs:py-2 xs:px-4  bg-transparent xs:flex-col xs:items-center xs:justify-center `}
         >
           <div
             className={`profile-card relative flex flex-col items-center gap-y-3 z-10`}
@@ -416,9 +416,6 @@ const UserHeader = ({
             <div className={`w-full line-clamp-[12] overflow-ellipsis`}>
               {!!bio && !isEdit && (
                 <div className={`flex flex-col items-start gap-3`}>
-                  <div className={`text-lg`}>
-                    <DomPurifiedText text={bio} />
-                  </div>
                   <div className={`flex flex-col items-start gap-1`}>
                     {createdPlaylists && (
                       <p className={`text-center text-md font-normal `}>
@@ -430,6 +427,10 @@ const UserHeader = ({
                         {playedCount} played
                       </p>
                     )}
+                  </div>
+                  <div className={`text-lg`}>
+                    <p className={`font-semibold`}>Bio</p>
+                    <DomPurifiedText text={bio} />
                   </div>
                 </div>
               )}

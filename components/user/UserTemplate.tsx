@@ -3,7 +3,7 @@
 import React from "react";
 import UserHeader from "@/components/user/UserHeader";
 import Title from "@/components/common/module/Title";
-import PlayListSlider from "@/components/common/playlist/PlayListSlider";
+import PlayListSlider from "@/components/common/playlist/playlist-slider/PlayListSlider";
 import CommentSection from "@/components/common/comments/CommentSection";
 import SongTable from "@/components/common/song/table/SongTable";
 import { PlaylistType } from "@/libs/types/song&playlistType";
@@ -57,7 +57,9 @@ const UserTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   UseCustomizeStyle(bgColor, fontColor);
 
   return (
-    <section className={`flex flex-col items-center gap-10 pb-10`}>
+    <section
+      className={`flex flex-col items-center gap-10 pb-10 xs:pt-3 xs:pb-12`}
+    >
       {userData && (
         <ReactQueryErrorBoundary>
           <UserHeader userProfile={userData} userId={userId} />

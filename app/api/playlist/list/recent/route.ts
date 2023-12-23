@@ -62,6 +62,11 @@ export async function GET(req: NextRequest) {
           likedBy: {
             select: {
               userId: true,
+              user: {
+                select: {
+                  nickname: true,
+                },
+              },
             },
           },
         },

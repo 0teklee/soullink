@@ -1,7 +1,10 @@
 "use client";
 
 import React, { RefObject } from "react";
-import { formatSecondsToString } from "@/libs/utils/client/formatter";
+import {
+  formatPlayedSeconds,
+  formatSecondsToString,
+} from "@/libs/utils/client/formatter";
 import ReactPlayer from "react-player";
 import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
 import { PlayerType } from "@/libs/types/playerType";
@@ -49,8 +52,7 @@ const Player = ({
         onReady={(ReactPlayer) => {
           setPlayerState({
             ...playerState,
-            duration:
-              formatSecondsToString(ReactPlayer.getDuration()) || "00:00",
+            duration: formatSecondsToString(ReactPlayer.getDuration(), true),
             durationSec: ReactPlayer.getDuration(),
             isLoading: false,
           });
@@ -62,11 +64,23 @@ const Player = ({
           });
         }}
         onProgress={(state) => {
-          setPlayerState({
-            ...playerState,
-            played: formatSecondsToString(state.playedSeconds) || "00:00",
-            playedSec: state.playedSeconds,
-          });
+          setPlayerState((prev) => ({
+            ...prev,
+            played: formatSecondsToString(
+              prev.durationSec > state.playedSeconds
+                ? state.playedSeconds
+                : formatPlayedSeconds(
+                    state.playedSeconds,
+                    prev?.songStartedAt,
+                    prev.durationSec,
+                  ),
+            ),
+            playedSec: formatPlayedSeconds(
+              state.playedSeconds,
+              prev?.songStartedAt,
+              prev.durationSec,
+            ),
+          }));
         }}
         onEnded={() => {
           if (songListIndex + 1 < songList.length) {

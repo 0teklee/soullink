@@ -90,7 +90,7 @@ const TableItem = ({
       <td className={`py-2 pl-2 xs:hidden`}>{index + 1}</td>
       <td className={`py-2`}>
         <div className={`flex flex-col gap-0.5`}>
-          <div className={`max-w-lg overflow-x-hidden `}>
+          <div className={`max-w-lg overflow-x-hidden md:max-w-[200px]`}>
             <p className={`sideways-scroll`}>{song.title}</p>
           </div>
           {"likedCount" in song && isNotCreate && (
@@ -99,7 +99,9 @@ const TableItem = ({
         </div>
       </td>
       <td className={`py-2`}>
-        <div className={`max-w-md overflow-x-hidden`}>
+        <div
+          className={`max-w-md overflow-x-hidden md:max-w-[50px] md:text-xs`}
+        >
           <p className={`sideways-scroll`}>{song.artist}</p>
         </div>
       </td>
@@ -126,7 +128,7 @@ const TableItem = ({
               </button>
             </div>
           </td>
-          <td className={`py-2 xs:hidden`}>{song.playedCount}</td>
+          <td className={`py-2 md:hidden`}>{song.playedCount}</td>
           <td className={`py-2 xs:hidden`}>
             {isNotCreate && playlist && (
               <button

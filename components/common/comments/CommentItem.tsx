@@ -128,7 +128,7 @@ const CommentItem = ({
             <div className={`relative w-5 h-5`}>
               <Image
                 className={`rounded-full`}
-                src={profilePic || "/image/common/default_profile.svg"}
+                src={profilePic || `/image/common/default_profile.svg`}
                 alt={`usr_${author.id}`}
                 fill={true}
               />
@@ -206,7 +206,7 @@ const CommentItem = ({
                               className={`rounded-full`}
                               src={
                                 user.user.profilePic ||
-                                "/image/common/default_profile.svg"
+                                `/image/common/default_profile.svg`
                               }
                               alt={`usr_${user.user.id}`}
                               width={16}
