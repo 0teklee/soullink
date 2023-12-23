@@ -174,7 +174,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
             <div className={`relative w-6 h-6 rounded-full bg-white`}>
               <Image
                 className={`object-cover rounded-full`}
-                src={profilePic || "/image/common/default_profile.svg"}
+                src={profilePic || `/image/common/default_profile.svg`}
                 alt={`user_profile`}
                 fill={true}
               />
