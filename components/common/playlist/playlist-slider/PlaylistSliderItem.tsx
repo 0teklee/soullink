@@ -11,7 +11,11 @@ import { UserSessionType } from "@/libs/types/userType";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 
-const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
+const PlaylistSliderItem = ({
+  playlistItem,
+}: {
+  playlistItem: PlaylistType;
+}) => {
   const { data: userSession } = useSession() as { data: UserSessionType };
   const userId = userSession?.userId;
   const router = useRouter();
@@ -116,13 +120,17 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
             {songs?.map((song, index) => {
               return (
                 <li
-                  className={`flex items-center justify-center gap-3 w-full  px-2 font-semibold md:text-xs`}
+                  className={`flex items-center justify-center gap-3 w-full px-2 font-semibold md:text-xs xs:justify-between xs:gap-2 xs:overflow-x-hidden`}
                   key={index}
                 >
                   <span>{index + 1}</span>
-                  <span>{song.title}</span>
+                  <div className={`overflow-x-hidden xs:w-[140px] truncate`}>
+                    <span className={`sideways-scroll`}>{song.title}</span>
+                  </div>
                   <span>-</span>
-                  <span>{song.artist}</span>
+                  <div className={`overflow-x-hidden xs:w-[80px] truncate`}>
+                    <span className={`sideways-scroll`}>{song.artist}</span>
+                  </div>
                 </li>
               );
             })}
@@ -133,4 +141,4 @@ const PlaylistItem = ({ playlistItem }: { playlistItem: PlaylistType }) => {
   );
 };
 
-export default PlaylistItem;
+export default PlaylistSliderItem;

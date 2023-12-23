@@ -3,7 +3,7 @@
 import React from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import PlaylistItem from "@/components/common/playlist/PlaylistItem";
+import PlaylistSliderItem from "@/components/common/playlist/playlist-slider/PlaylistSliderItem";
 
 import "swiper/css";
 import { PlaylistType } from "@/libs/types/song&playlistType";
@@ -38,7 +38,7 @@ const PlayListSlider = ({ playlists }: { playlists: PlaylistType[] }) => {
           {playlists.map((item, index) => {
             return (
               <SwiperSlide key={`slide_item_${item.id}_${index}`}>
-                <PlaylistItem playlistItem={item} />
+                <PlaylistSliderItem playlistItem={item} />
               </SwiperSlide>
             );
           })}
