@@ -141,7 +141,7 @@ const PlaylistListItem = ({
             </div>
           </div>
           <div className={` flex flex-col items-start gap-3`}>
-            <div className={`overflow-x-hidden`}>
+            <div>
               <div
                 onClick={() => {
                   router.push(`/playlist/${formatPathName(title)}`);
@@ -188,7 +188,7 @@ const PlaylistListItem = ({
                 {isLikedByDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className={`absolute top-5 left-0 px-3 py-2 z-10 bg-white border border-gray-300 rounded`}
+                    className={`absolute top-5 left-0 px-3 py-2 bg-white border border-gray-300 rounded dark:bg-gray-500 z-10`}
                   >
                     {likedBy?.map((user) => (
                       <div
@@ -198,16 +198,15 @@ const PlaylistListItem = ({
                         <div
                           className={`flex items-center justify-start gap-2`}
                         >
-                          <div className={`w-4 h-4`}>
+                          <div className={`relative w-4 h-4`}>
                             <Image
                               className={`rounded-full`}
                               src={
                                 user.user?.profilePic ||
-                                "/image/common/default_profile.svg"
+                                `/image/common/default_profile.svg`
                               }
                               alt={`usr_${user.user?.nickname}`}
-                              width={16}
-                              height={16}
+                              fill={true}
                             />
                           </div>
                           <button
