@@ -52,16 +52,16 @@ const UserFollowModal = () => {
 
             return (
               <div
-                className={`flex items-center justify-start gap-4 w-full px-2 py-1 rounded-md  text-gray-400 hover:bg-gray-100 hover:text-gray-700 cursor-pointer`}
+                className={`flex items-center justify-start gap-4 w-full px-2 py-1 rounded-md xs:gap-2  text-gray-400 hover:bg-gray-100 hover:text-gray-700 cursor-pointer`}
                 key={`user_${idx}_${formattedUser?.id || formattedUser?.id}`}
                 onClick={() =>
                   router.push(`/user/${formatPathName(formattedUser.nickname)}`)
                 }
               >
-                <div className={`w-7 h-7 rounded-full`}>
+                <div className={`relative w-7 h-7 `}>
                   <Image
-                    width={28}
-                    height={28}
+                    className={`object-cover rounded-full`}
+                    fill={true}
                     src={
                       formattedUser.profilePic ||
                       `/image/common/default_profile.svg`
