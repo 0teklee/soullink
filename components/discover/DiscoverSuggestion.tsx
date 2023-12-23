@@ -4,7 +4,7 @@ import React from "react";
 import Title from "@/components/common/module/Title";
 import { useQuery } from "@tanstack/react-query";
 import { getRecommendedPlaylists } from "@/libs/utils/client/fetchers";
-import PlayListSlider from "@/components/common/playlist/PlayListSlider";
+import PlayListSlider from "@/components/common/playlist/playlist-slider/PlayListSlider";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
 const DiscoverSuggestion = ({

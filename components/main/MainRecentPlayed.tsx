@@ -2,7 +2,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import Title from "@/components/common/module/Title";
-import PlayListSlider from "@/components/common/playlist/PlayListSlider";
+import PlayListSlider from "@/components/common/playlist/playlist-slider/PlayListSlider";
 import { useQuery } from "@tanstack/react-query";
 import {
   getLocalRecentPlaylists,
