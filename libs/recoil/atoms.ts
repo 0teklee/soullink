@@ -27,5 +27,5 @@ export const playlistState = atom<null | PlaylistType>({
 
 export const darkModeState = atom<boolean>({
   key: "darkModeState",
-  default: false,
+  default: true,
 });

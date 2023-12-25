@@ -70,6 +70,13 @@ const TableItem = ({
   return (
     <tr
       draggable={isCreate}
+      onClick={() => {
+        if (isCreate) {
+          return;
+        }
+
+        handlePlaySong();
+      }}
       onDragStart={
         isCreate
           ? () => {

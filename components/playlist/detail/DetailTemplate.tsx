@@ -163,7 +163,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           <div className={`flex items-center gap-3`}>
             <button
               className={`font-normal ${
-                fontColor || "text-black"
+                fontColor || "text-black dark:text-warmGray-100"
               } hover:underline`}
               onClick={() => {
                 router.push(`/user/${formatPathName(author.nickname)}`);
