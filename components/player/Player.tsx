@@ -25,7 +25,7 @@ const Player = ({
   songListIndex: number;
   playerRef: RefObject<PlayerProps>;
 }) => {
-  const { playing, played, duration, seeking, volume, muted } = playerState;
+  const { playing, volume, muted } = playerState;
 
   useEffect(() => {
     return () => {
