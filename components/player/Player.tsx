@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -27,6 +27,21 @@ const Player = ({
 }) => {
   const { playing, played, duration, seeking, volume, muted } = playerState;
 
+  useEffect(() => {
+    return () => {
+      setPlayerState({
+        ...playerState,
+        muted: true,
+      });
+      setTimeout(() => {
+        setPlayerState({
+          ...playerState,
+          muted: false,
+        });
+      }, 1000);
+    };
+  });
+
   return (
     <>
       <ReactPlayer
@@ -34,7 +49,7 @@ const Player = ({
         ref={playerRef}
         className={`hidden`}
         autoPlay={true}
-        playsinline={true}
+        playsinline
         url={song}
         playing={playing}
         volume={volume}
