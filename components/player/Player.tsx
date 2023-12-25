@@ -27,21 +27,6 @@ const Player = ({
 }) => {
   const { playing, volume, muted } = playerState;
 
-  useEffect(() => {
-    return () => {
-      setPlayerState({
-        ...playerState,
-        muted: true,
-      });
-      setTimeout(() => {
-        setPlayerState({
-          ...playerState,
-          muted: false,
-        });
-      }, 1000);
-    };
-  });
-
   return (
     <>
       <ReactPlayer
