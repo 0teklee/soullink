@@ -67,6 +67,7 @@ const PlayerContainer = () => {
       setPlayerState({
         ...playerState,
         muted: false,
+        playing: true,
       });
     }, 1000);
   };
@@ -78,6 +79,7 @@ const PlayerContainer = () => {
 
     const handleAutoPlay = () => {
       if (playerState?.playing) {
+        console.log("beforeunload");
         handleAutoPlayMute();
       }
     };
