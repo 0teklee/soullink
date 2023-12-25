@@ -58,14 +58,35 @@ const PlayerContainer = () => {
     }));
   }, [selectedPlayList]);
 
+  const handleAutoPlayMute = () => {
+    setPlayerState({
+      ...playerState,
+      muted: true,
+    });
+    setTimeout(() => {
+      setPlayerState({
+        ...playerState,
+        muted: false,
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       handlePlayerKeyPress(e, playerRef, setPlayerState);
     };
 
+    const handleAutoPlay = () => {
+      if (playerState?.playing) {
+        handleAutoPlayMute();
+      }
+    };
+
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("beforeunload", handleAutoPlay);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("beforeunload", handleAutoPlay);
     };
   }, [setPlayerState, playerRef]);
 
