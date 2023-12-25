@@ -33,6 +33,8 @@ const Player = ({
         //@ts-ignore
         ref={playerRef}
         className={`hidden`}
+        autoPlay={true}
+        playsinline={true}
         url={song}
         playing={playing}
         volume={volume}
