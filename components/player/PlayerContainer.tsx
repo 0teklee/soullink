@@ -79,7 +79,6 @@ const PlayerContainer = () => {
 
     const handleAutoPlay = () => {
       if (playerState?.playing) {
-        console.log("beforeunload");
         handleAutoPlayMute();
       }
     };
