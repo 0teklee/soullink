@@ -23,6 +23,7 @@
 - ~~**Add optimistic update**~~
 - ~~Add "Frequency" filter to common filters (search, table list)~~
 - ~~**Deploy to Vercel**~~
+- ~~useReducer refactoring~~
 
 ### SOON TO BE ADDED ###
 **2023-11-27 ~ 12-17**
@@ -30,4 +31,3 @@
 - - Comment section after input refetching
 - Code Refactoring 
 - - minimize rerendering when song is playing
-- - useReducer refactoring
