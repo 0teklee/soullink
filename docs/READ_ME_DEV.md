@@ -1,6 +1,9 @@
 # Soullink
-**2023 06 ~** 
+**2023 06 ~ 2024** 
 ### Made by 0teklee
+
+### Demo
+![ezgif-3-3ee71583b6](https://github.com/0teklee/soullink/assets/89988500/92f7a06a-bd41-4dd6-a7b1-0afb8ca7535c)
 
 
 ## KR 
