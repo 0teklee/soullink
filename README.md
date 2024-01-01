@@ -46,4 +46,4 @@ For more technical details and development guidelines, check out [README_DEV](ht
 
 ## Feedback
 
-Your input helps make Soullink better. If you encounter any bugs or have suggestions for improvement, please open a [Gihub Issue](https://github.com/soullink-org/soullink/issues)https://github.com/soullink-org/soullink/issues.
+Your input helps make Soullink better. If you encounter any bugs or have suggestions for improvement, please open a [Gihub Issue](https://github.com/soullink-org/soullink/issues)
