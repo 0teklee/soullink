@@ -14,6 +14,7 @@ import {
   PayloadCommentDeleteType,
   PayloadCommentLikeType,
   PostFollowType,
+  SignupPayload,
   UserType,
 } from "@/libs/types/userType";
 import { DAYS_FILTER, RECENT_FILTER } from "@/libs/utils/client/commonValues";
@@ -413,6 +414,17 @@ export const getComments = async (
 };
 
 /* POST */
+
+export const fetcherSignup = async (reqPayload: SignupPayload) => {
+  const data = await fetch(`/api/user/signup`, {
+    method: `POST`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(reqPayload),
+  }).then((res) => res.json());
+  return data;
+};
 
 export const postComment = async (request: CommentPayloadType) => {
   const res = await fetch(
