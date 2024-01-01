@@ -101,7 +101,7 @@ const PlaylistSliderItem = ({
         onClick={() => {
           handleChangePlaylistState(playlistItem);
         }}
-        className={`relative xs:w-[300px]  xs:h-[300px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
+        className={`relative xs:w-[300px] xs:h-[300px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
       >
         <Image
           className={`absolute object-cover hover:blur-md -z-10`}
@@ -120,16 +120,23 @@ const PlaylistSliderItem = ({
             {songs?.map((song, index) => {
               return (
                 <li
-                  className={`flex items-center justify-center gap-3 w-full px-2 font-semibold md:text-xs xs:justify-between xs:gap-2 xs:overflow-x-hidden`}
+                  className={`grid grid-cols-8 gap-3 w-full px-2 font-semibold md:text-xs xs:justify-between xs:gap-2 xs:overflow-x-hidden`}
                   key={index}
                 >
-                  <span>{index + 1}</span>
-                  <div className={`overflow-x-hidden xs:w-[140px] truncate`}>
-                    <span className={`sideways-scroll`}>{song.title}</span>
+                  <span className={`col-span-1 w-sm`}>{index + 1}</span>
+                  <div
+                    className={`col-span-5 text-start max-w-[160px] desktop:max-w-[140px] overflow-x-hidden`}
+                  >
+                    <div className={`sideways-scroll`}>
+                      <span>{song.title}</span>
+                    </div>
                   </div>
-                  <span>-</span>
-                  <div className={`overflow-x-hidden xs:w-[80px] truncate`}>
-                    <span className={`sideways-scroll`}>{song.artist}</span>
+                  <div
+                    className={`col-span-2 max-w-[80px] xs:max-w-[60px] overflow-x-hidden`}
+                  >
+                    <div className={`sideways-scroll `}>
+                      <span>{song.artist}</span>
+                    </div>
                   </div>
                 </li>
               );

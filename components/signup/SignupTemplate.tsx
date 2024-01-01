@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
@@ -9,52 +9,45 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 
-import { postNicknameDuplicate } from "@/libs/utils/client/fetchers";
+import {
+  fetcherSignup,
+  postNicknameDuplicate,
+} from "@/libs/utils/client/fetchers";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import useTimer from "@/libs/utils/hooks/useTimer";
 import Loading from "@/components/common/module/Loading";
+import { payloadReducer } from "@/components/signup/utils";
 
 const SignupTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };
   const userEmail = session?.user?.email;
   const router = useRouter();
 
-  const [payload, setPayload] = useState<SignupPayload>({
-    profilePic: "",
-    nickname: "",
-    bio: "",
-    email: userEmail || "",
-    socialLinks: {
-      website: "",
-      instagram: "",
-      twitter: "",
+  const [payloadState, dispatch] = useReducer(payloadReducer, {
+    payload: {
+      profilePic: "",
+      nickname: "",
+      bio: "",
+      email: userEmail || "",
+      socialLinks: { website: "", instagram: "", twitter: "" },
     },
+    isDuplicated: null,
   });
-  const [isDuplicated, setIsDuplicated] = useState<boolean | null>(null);
 
-  const isOAuthSignIn = !!session?.user?.email && !!payload.email;
+  const isDuplicated = payloadState?.isDuplicated;
+  const isOAuthSignIn = !!session?.user?.email && !!payloadState?.payload.email;
 
   const isSubmitDisabled =
-    !payload.email ||
-    payload.nickname === "" ||
-    payload.bio === "" ||
-    !!isDuplicated;
-
-  const fetcherSignup = async (reqPayload: SignupPayload) => {
-    const data = await fetch(`/api/user/signup`, {
-      method: `POST`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reqPayload),
-    }).then((res) => res.json());
-    return data;
-  };
+    !payloadState?.payload.email ||
+    payloadState?.payload.nickname === "" ||
+    payloadState?.payload.bio === "" ||
+    !!payloadState?.isDuplicated;
 
   const { mutate } = useMutation({
-    mutationFn: fetcherSignup,
+    mutationFn: (signUp: SignupPayload) => fetcherSignup(signUp),
     onSuccess: () => {
       router.push(`/`);
+      window.location.reload();
     },
   });
 
@@ -63,51 +56,49 @@ const SignupTemplate = () => {
       mutationFn: ({ nickname }: { nickname: string }) =>
         postNicknameDuplicate({ nickname }),
       onSuccess: (res) => {
-        setIsDuplicated(res);
+        dispatch({ type: "SET_IS_DUPLICATED", isDuplicated: res });
       },
     });
 
   const { timer, resetTimer } = useTimer(() => {
-    if (!payload.nickname) {
+    if (!payloadState?.payload.nickname) {
       return;
     }
-    nicknameDuplicateMutate({ nickname: payload.nickname });
+    nicknameDuplicateMutate({ nickname: payloadState?.payload.nickname });
   }, 800);
 
   const handleSignup = (arrPayload: SignupPayload) => {
     const formattedPayload = {
       ...arrPayload,
-      nickname: arrPayload.nickname.trim(),
-      bio: arrPayload.bio.trim(),
+      nickname: arrPayload?.nickname.trim(),
+      bio: arrPayload?.bio.trim(),
       socialLinks: {
-        ...arrPayload.socialLinks,
-        website: arrPayload.socialLinks.website
-          ? `https://${arrPayload.socialLinks.website}`
+        ...arrPayload?.socialLinks,
+        website:
+          !!arrPayload?.socialLinks.website ||
+          !arrPayload?.socialLinks.website.startsWith("http")
+            ? `https://${arrPayload?.socialLinks.website}`
+            : "",
+        instagram: arrPayload?.socialLinks.instagram
+          ? `https://www.instagram.com/${arrPayload?.socialLinks.instagram}`
           : "",
-        instagram: arrPayload.socialLinks.instagram
-          ? `https://www.instagram.com/${arrPayload.socialLinks.instagram}`
-          : "",
-        twitter: arrPayload.socialLinks.twitter
-          ? `https://twitter.com/${arrPayload.socialLinks.twitter}`
+        twitter: arrPayload?.socialLinks.twitter
+          ? `https://x.com/${arrPayload?.socialLinks.twitter}`
           : "",
       },
     };
-
     mutate(formattedPayload);
   };
 
   const handlePayloadImgUpload = (imgUrl: string) => {
-    setPayload((prev) => ({
-      ...prev,
-      profilePic: imgUrl,
-    }));
+    dispatch({ type: "SET_PAYLOAD", payload: { profilePic: imgUrl } });
   };
 
   useEffect(() => {
-    if (!payload.nickname) {
-      setIsDuplicated(null);
+    if (!payloadState?.payload.nickname) {
+      dispatch({ type: "SET_IS_DUPLICATED", isDuplicated: null });
     }
-  }, [payload.nickname]);
+  }, [payloadState?.payload.nickname]);
 
   useEffect(() => {
     if (!!session && !!session?.userId) {
@@ -117,10 +108,7 @@ const SignupTemplate = () => {
     if (!userEmail) {
       return;
     }
-    setPayload((prev) => ({
-      ...prev,
-      email: userEmail || "",
-    }));
+    dispatch({ type: "SET_PAYLOAD", payload: { email: userEmail } });
   }, [session, userEmail]);
 
   return (
@@ -138,7 +126,7 @@ const SignupTemplate = () => {
             }}
             className={`relative flex items-center justify-center w-[200px] h-[200px] bg-gray-100 border border-gray-300 rounded-xl cursor-pointer`}
           >
-            {!payload.profilePic && (
+            {!payloadState?.payload.profilePic && (
               <Image
                 src={`/image/common/plus.svg`}
                 width={36}
@@ -146,10 +134,10 @@ const SignupTemplate = () => {
                 alt={`add cover`}
               />
             )}
-            {payload.profilePic && (
+            {payloadState?.payload.profilePic && (
               <Image
                 className={`object-cover`}
-                src={`${payload.profilePic}`}
+                src={`${payloadState?.payload.profilePic}`}
                 fill={true}
                 alt={`add cover`}
               />
@@ -174,7 +162,7 @@ const SignupTemplate = () => {
               className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={20}
               placeholder={`email`}
-              value={payload.email}
+              value={payloadState?.payload.email}
               disabled={true}
             />
             <button
@@ -201,23 +189,22 @@ const SignupTemplate = () => {
               className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={20}
               placeholder={`@nickname`}
-              value={payload.nickname}
+              value={payloadState?.payload.nickname}
               onChange={(e) => {
                 if (e.currentTarget.value === " ") {
                   return;
                 }
-
-                setPayload((prev) => ({
-                  ...prev,
-                  nickname: e.target.value,
-                }));
+                dispatch({
+                  type: "SET_PAYLOAD",
+                  payload: { nickname: e.target.value },
+                });
               }}
               onKeyUp={() => {
                 resetTimer(timer);
               }}
             />
             <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
-              {payload.nickname.length} / {20}
+              {payloadState?.payload.nickname.length} / {20}
             </p>
             {!isDuplicateLoading && isDuplicated !== null && (
               <div className={`w-full mt-0.5`}>
@@ -235,16 +222,17 @@ const SignupTemplate = () => {
                 )}
               </div>
             )}
-            {isDuplicateLoading && payload.nickname.length > 0 && (
-              <div
-                className={`flex items-center justify-start gap-2 whitespace-nowrap`}
-              >
-                <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
-                  checking...
-                </p>
-                <Loading size={20} />
-              </div>
-            )}
+            {isDuplicateLoading &&
+              payloadState?.payload.nickname.length > 0 && (
+                <div
+                  className={`flex items-center justify-start gap-2 whitespace-nowrap`}
+                >
+                  <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+                    checking...
+                  </p>
+                  <Loading size={20} />
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -254,16 +242,13 @@ const SignupTemplate = () => {
         <textarea
           className={`w-full max-w-4xl min-h-[100px] p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
           maxLength={120}
-          value={payload.bio}
+          value={payloadState?.payload.bio}
           onChange={(e) => {
-            setPayload((prev) => ({
-              ...prev,
-              bio: e.target.value,
-            }));
+            dispatch({ type: "SET_PAYLOAD", payload: { bio: e.target.value } });
           }}
         />
         <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
-          {payload.bio.length} / {120}
+          {payloadState?.payload.bio.length} / {120}
         </p>
       </div>
       <div
@@ -283,15 +268,14 @@ const SignupTemplate = () => {
             type={`text`}
             className={`w-full p-1.5 text-sm text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             placeholder={`https://example.com`}
-            value={payload.socialLinks.website}
+            value={payloadState?.payload.socialLinks.website}
             onChange={(e) => {
-              setPayload((prev) => ({
-                ...prev,
-                socialLinks: {
-                  ...prev.socialLinks,
+              dispatch({
+                type: "UPDATE_SOCIAL_LINKS",
+                payload: {
                   website: e.target.value,
                 },
-              }));
+              });
             }}
           />
         </div>
@@ -305,15 +289,14 @@ const SignupTemplate = () => {
             type={`text`}
             className={`w-full p-1.5 text-sm text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             placeholder={`instagram id`}
-            value={payload.socialLinks.instagram}
+            value={payloadState?.payload.socialLinks.instagram}
             onChange={(e) => {
-              setPayload((prev) => ({
-                ...prev,
-                socialLinks: {
-                  ...prev.socialLinks,
+              dispatch({
+                type: "UPDATE_SOCIAL_LINKS",
+                payload: {
                   instagram: e.target.value,
                 },
-              }));
+              });
             }}
           />
         </div>
@@ -327,15 +310,14 @@ const SignupTemplate = () => {
             type={`text`}
             className={`w-full p-1.5 text-sm text-gray-500 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             placeholder={`twitter id`}
-            value={payload.socialLinks.twitter}
+            value={payloadState?.payload.socialLinks.twitter}
             onChange={(e) => {
-              setPayload((prev) => ({
-                ...prev,
-                socialLinks: {
-                  ...prev.socialLinks,
+              dispatch({
+                type: "UPDATE_SOCIAL_LINKS",
+                payload: {
                   twitter: e.target.value,
                 },
-              }));
+              });
             }}
           />
         </div>
@@ -344,11 +326,11 @@ const SignupTemplate = () => {
         disabled={isSubmitDisabled}
         className={`w-full max-w-xs my-4 px-2 py-3 text-sm text-white font-bold bg-primary rounded-md disabled:opacity-50 disabled:cursor-not-allowed xs:my-1`}
         onClick={() => {
-          if (!isOAuthSignIn || !payload.email) {
+          if (!isOAuthSignIn || !payloadState?.payload.email) {
             alert(`Please sign in with Google`);
             return;
           }
-          handleSignup(payload);
+          handleSignup(payloadState?.payload);
         }}
       >
         Sign up
