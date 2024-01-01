@@ -3,7 +3,8 @@
 ### Made by 0teklee
 
 ### Demo
-![ezgif-3-3ee71583b6](https://github.com/0teklee/soullink/assets/89988500/92f7a06a-bd41-4dd6-a7b1-0afb8ca7535c)
+https://github.com/0teklee/soullink/assets/89988500/8d10f6de-d098-41a9-a1ae-e040da3a7780
+
 
 
 ## KR 
