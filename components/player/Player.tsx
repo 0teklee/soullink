@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
