@@ -29,6 +29,21 @@ const PlayerContainer = () => {
   const prevSongId = useRef<string | null>(null);
   const { handleSongChange } = useSongCountUpdater();
 
+  const handleVisibilityChange = () => {
+    setPlayerState((prev) => ({
+      ...prev,
+      muted: true,
+    }));
+
+    setTimeout(() => {
+      setPlayerState((prev) => ({
+        ...prev,
+        muted: false,
+        playing: prev.playing,
+      }));
+    }, 500);
+  };
+
   useEffect(() => {
     if (!songId) {
       return;
@@ -58,38 +73,23 @@ const PlayerContainer = () => {
     }));
   }, [selectedPlayList]);
 
-  const handleAutoPlayMute = () => {
-    setPlayerState({
-      ...playerState,
-      muted: true,
-    });
-    setTimeout(() => {
-      setPlayerState({
-        ...playerState,
-        muted: false,
-        playing: true,
-      });
-    }, 1000);
-  };
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       handlePlayerKeyPress(e, playerRef, setPlayerState);
     };
 
-    const handleAutoPlay = () => {
-      if (playerState?.playing) {
-        handleAutoPlayMute();
-      }
-    };
-
     document.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("beforeunload", handleAutoPlay);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("beforeunload", handleAutoPlay);
     };
   }, [setPlayerState, playerRef]);
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   return (
     <div className={`fixed bottom-0 z-50`}>
