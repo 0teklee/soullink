@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject, useEffect } from "react";
+import React, { RefObject } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -9,6 +9,7 @@ import ReactPlayer from "react-player";
 import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
 import { PlayerType } from "@/libs/types/playerType";
 import { SetterOrUpdater } from "recoil";
+import { handleSourceSet } from "@/components/player/utils";
 
 const Player = ({
   song,
@@ -98,7 +99,9 @@ const Player = ({
           }
         }}
         controls={true}
-      />
+      >
+        {handleSourceSet(songListIndex, songList)}
+      </ReactPlayer>
     </>
   );
 };
