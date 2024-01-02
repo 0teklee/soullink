@@ -179,16 +179,19 @@ export const formatIsSongCustomUrlValid = (
   customUrl: string,
   availDomain: string[],
 ) => {
-  const urlRegex =
-    /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z0-9-]+)(\/[a-zA-Z0-9-]+)?$/;
-  const splitUrl = customUrl.split(".");
-  const isAvailDomain =
-    splitUrl.filter(
-      (url) =>
-        availDomain.filter((availItem) => url.includes(availItem)).length > 0,
-    ).length > 0;
+  const urlRegex = /^(https?:\/\/)?((([a-zA-Z0-9-]+)\.)+([a-zA-Z]{2,}))\/?.*$/;
 
-  return isAvailDomain && urlRegex.test(customUrl);
+  const match = customUrl.match(urlRegex);
+  if (!match) {
+    return false;
+  }
+
+  const domain = match[2];
+
+  const isAvailDomain = availDomain.some((availItem) =>
+    domain.includes(availItem),
+  );
+  return isAvailDomain;
 };
 
 export const formatEditUserPayload = (payload: EditProfilePayload) => {
