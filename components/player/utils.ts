@@ -1,7 +1,25 @@
 import React from "react";
-import { PlayerProps } from "@/libs/types/song&playlistType";
+import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
 import { SetterOrUpdater } from "recoil";
 import { PlayerType } from "@/libs/types/playerType";
+
+export const handleSourceSet = (
+  currentIndex?: number,
+  songList?: SongType[],
+) => {
+  if (currentIndex === undefined || songList === undefined) {
+    return;
+  }
+  const sourceSet = songList
+    .slice(currentIndex, songList.length)
+    .map((song) => {
+      return {
+        src: song.url,
+      };
+    });
+
+  return sourceSet;
+};
 
 const handlePlayerKeyPress = (
   e: React.KeyboardEvent<Document> | KeyboardEvent,
