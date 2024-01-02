@@ -29,7 +29,7 @@ const PlayerContainer = () => {
   const prevSongId = useRef<string | null>(null);
   const { handleSongChange } = useSongCountUpdater();
 
-  const handleVisibilityChange = () => {
+  const handleUnloadChange = () => {
     setPlayerState((prev) => ({
       ...prev,
       muted: true,
@@ -38,7 +38,6 @@ const PlayerContainer = () => {
     setTimeout(() => {
       setPlayerState((prev) => ({
         ...prev,
-        muted: false,
         playing: prev.playing,
       }));
     }, 500);
@@ -85,9 +84,9 @@ const PlayerContainer = () => {
   }, [setPlayerState, playerRef]);
 
   useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("beforeunload", handleUnloadChange);
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("beforeunload", handleUnloadChange);
     };
   }, []);
 

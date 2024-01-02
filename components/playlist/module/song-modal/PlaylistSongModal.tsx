@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { SONG_URL_TYPE, SongType } from "@/libs/types/song&playlistType";
 import { formatIsSongCustomUrlValid } from "@/libs/utils/client/formatter";
 import {
@@ -31,9 +31,9 @@ const PlaylistSongModal = () => {
   const [isAvailableCustomUrl, setIsAvailableCustomUrl] =
     useState<boolean>(true);
 
-  const isUrlValid = formatIsSongCustomUrlValid(
-    songValue.url,
-    SONG_AVAIL_CUSTOM_URL,
+  const isUrlValid = useMemo(
+    () => formatIsSongCustomUrlValid(songValue.url, SONG_AVAIL_CUSTOM_URL),
+    [songValue.url],
   );
 
   const handleAddSong = () => {

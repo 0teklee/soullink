@@ -28,6 +28,18 @@ const Player = ({
 }) => {
   const { playing, volume, muted } = playerState;
 
+  // const [isAutoPlay, setIsAutoPlay] = useState(false);
+  // const handleUnloadChange = () => {
+  //   setIsAutoPlay(true);
+  // };
+  //
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", handleUnloadChange);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleUnloadChange);
+  //   };
+  // }, []);
+
   return (
     <>
       <ReactPlayer
@@ -40,6 +52,7 @@ const Player = ({
         playing={playing}
         volume={volume}
         muted={muted}
+        stopOnUnmount={false}
         onBuffer={() => {
           setPlayerState({
             ...playerState,

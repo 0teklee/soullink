@@ -147,7 +147,7 @@ const YoutubeSearchPage = ({
                   >
                     <div className={`relative w-16 h-16 rounded`}>
                       <Image
-                        className={`object-cover w-16 h-16`}
+                        className={`object-cover`}
                         fill={true}
                         src={item.snippet.thumbnails.default.url}
                         alt={item.snippet.title}
@@ -157,7 +157,9 @@ const YoutubeSearchPage = ({
                     <div
                       className={`flex flex-col items-start justify-start gap-1 max-w-sm overflow-ellipsis line-clamp-2`}
                     >
-                      <p className={`text-start text-sm font-bold`}>
+                      <p
+                        className={`text-start text-sm font-bold sideways-scroll`}
+                      >
                         {formatSongNames(item.snippet.title)}
                       </p>
                       <p className={`text-xs`}>
