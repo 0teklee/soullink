@@ -34,6 +34,8 @@ const Player = ({
   const [isAutoPlay, setIsAutoPlay] = useState(false);
 
   const handleUnloadChange = () => {
+    console.log("unload");
+    playerRef.current?.seekTo(playerState?.durationSec || 0);
     setIsAutoPlay(true);
   };
 
@@ -118,6 +120,8 @@ const Player = ({
       />
       {isAutoPlay && (
         <ReactPlayer
+          //@ts-ignore
+          ref={playerRef}
           className={`hidden`}
           autoPlay={true}
           playsinline
@@ -125,9 +129,7 @@ const Player = ({
           playing={true}
           muted={true}
           stopOnUnmount={false}
-        >
-          {handleSourceSet(songListIndex, songList)}
-        </ReactPlayer>
+        />
       )}
     </>
   );
