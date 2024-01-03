@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -9,7 +9,10 @@ import ReactPlayer from "react-player";
 import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
 import { PlayerType } from "@/libs/types/playerType";
 import { SetterOrUpdater } from "recoil";
-import { handleSourceSet } from "@/components/player/utils";
+import {
+  formatAutoplaySonglist,
+  handleSourceSet,
+} from "@/components/player/utils";
 
 const Player = ({
   song,
@@ -28,17 +31,18 @@ const Player = ({
 }) => {
   const { playing, volume, muted } = playerState;
 
-  // const [isAutoPlay, setIsAutoPlay] = useState(false);
-  // const handleUnloadChange = () => {
-  //   setIsAutoPlay(true);
-  // };
-  //
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", handleUnloadChange);
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleUnloadChange);
-  //   };
-  // }, []);
+  const [isAutoPlay, setIsAutoPlay] = useState(false);
+
+  const handleUnloadChange = () => {
+    setIsAutoPlay(true);
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleUnloadChange);
+    return () => {
+      window.removeEventListener("beforeunload", handleUnloadChange);
+    };
+  }, []);
 
   return (
     <>
@@ -52,7 +56,6 @@ const Player = ({
         playing={playing}
         volume={volume}
         muted={muted}
-        stopOnUnmount={false}
         onBuffer={() => {
           setPlayerState({
             ...playerState,
@@ -112,9 +115,20 @@ const Player = ({
           }
         }}
         controls={true}
-      >
-        {handleSourceSet(songListIndex, songList)}
-      </ReactPlayer>
+      />
+      {isAutoPlay && (
+        <ReactPlayer
+          className={`hidden`}
+          autoPlay={true}
+          playsinline
+          url={formatAutoplaySonglist(songListIndex, songList)}
+          playing={true}
+          muted={true}
+          stopOnUnmount={false}
+        >
+          {handleSourceSet(songListIndex, songList)}
+        </ReactPlayer>
+      )}
     </>
   );
 };
