@@ -29,20 +29,6 @@ const PlayerContainer = () => {
   const prevSongId = useRef<string | null>(null);
   const { handleSongChange } = useSongCountUpdater();
 
-  const handleUnloadChange = () => {
-    setPlayerState((prev) => ({
-      ...prev,
-      muted: true,
-    }));
-
-    setTimeout(() => {
-      setPlayerState((prev) => ({
-        ...prev,
-        playing: prev.playing,
-      }));
-    }, 500);
-  };
-
   useEffect(() => {
     if (!songId) {
       return;
@@ -82,13 +68,6 @@ const PlayerContainer = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [setPlayerState, playerRef]);
-
-  useEffect(() => {
-    window.addEventListener("beforeunload", handleUnloadChange);
-    return () => {
-      document.removeEventListener("beforeunload", handleUnloadChange);
-    };
-  }, []);
 
   return (
     <div className={`fixed bottom-0 z-50`}>
