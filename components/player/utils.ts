@@ -21,6 +21,20 @@ export const handleSourceSet = (
   return sourceSet;
 };
 
+export const formatAutoplaySonglist = (
+  currentIndex?: number,
+  songList?: SongType[],
+) => {
+  if (currentIndex === undefined || songList === undefined) {
+    return;
+  }
+  const urlArray = songList.slice(currentIndex, songList.length).map((song) => {
+    return song.url;
+  });
+
+  return urlArray;
+};
+
 const handlePlayerKeyPress = (
   e: React.KeyboardEvent<Document> | KeyboardEvent,
   playerRef: React.RefObject<PlayerProps>,
