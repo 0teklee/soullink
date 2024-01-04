@@ -404,7 +404,11 @@ export const getComments = async (
   lastId?: string,
 ): Promise<CommentType[]> => {
   const res = await fetch(
-    `${process.env.NEXT_APP_BASE_URL}/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${lastId}`,
+    `${
+      process.env.NEXT_APP_BASE_URL
+    }/api/comment/${postId}?userId=${visitorId}&isProfile=${isProfile}&lastId=${
+      lastId || ""
+    }`,
   );
 
   const resData: Promise<CommentType[]> = await res
