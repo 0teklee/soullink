@@ -6,6 +6,7 @@ interface CommentDBinterface
     "profile" | "playlist" | "authorId" | "type" | "profileId" | "author"
   > {
   author: CommentAuthorInterface;
+  authorId: string;
   profile?: CommentAuthorInterface | null;
   playlist?: {
     author: CommentAuthorInterface | null;
@@ -34,9 +35,9 @@ export const formatPrivate = (
   postId?: string | null,
   userId?: string | null,
 ) => {
-  const { isPrivate, author } = comment;
+  const { isPrivate, author, authorId } = comment;
 
-  if (!isPrivate || author?.id === userId) {
+  if (!isPrivate || author?.id === userId || authorId === userId) {
     return comment;
   }
 
