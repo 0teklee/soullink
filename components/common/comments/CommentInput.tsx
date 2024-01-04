@@ -36,10 +36,9 @@ const CommentInput = ({
     mutationFn: () => postComment(payload),
     onSuccess: async () => {
       setPayload((prev) => ({ ...prev, comment: "", isPrivate: false }));
-      await queryClient.refetchQueries({
-        type: "all",
-        stale: true,
-        exact: false,
+      await queryClient.fetchInfiniteQuery({
+        queryKey: ["commentList", postId],
+        initialPageParam: undefined,
       });
     },
     onError: (error) => {
