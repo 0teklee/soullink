@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -31,12 +31,9 @@ const Player = ({
 }) => {
   const { playing, volume, muted } = playerState;
 
-  const [isAutoPlay, setIsAutoPlay] = useState(false);
-
   const handleUnloadChange = () => {
     console.log("unload");
     playerRef.current?.seekTo(playerState?.durationSec || 0);
-    setIsAutoPlay(true);
   };
 
   useEffect(() => {
@@ -118,19 +115,19 @@ const Player = ({
         }}
         controls={true}
       />
-      {isAutoPlay && (
-        <ReactPlayer
-          //@ts-ignore
-          ref={playerRef}
-          className={`hidden`}
-          autoPlay={true}
-          playsinline
-          url={formatAutoplaySonglist(songListIndex, songList)}
-          playing={true}
-          muted={true}
-          stopOnUnmount={false}
-        />
-      )}
+      <ReactPlayer
+        //@ts-ignore
+        ref={playerRef}
+        className={`hidden`}
+        autoPlay={true}
+        playsinline
+        url={formatAutoplaySonglist(songListIndex, songList)}
+        playing={true}
+        muted={true}
+        stopOnUnmount={false}
+      >
+        {handleSourceSet(songListIndex, songList)}
+      </ReactPlayer>
     </>
   );
 };
