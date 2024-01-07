@@ -17,7 +17,6 @@ const CommentContainer = ({
   isProfile?: boolean;
   fontColor?: string;
 }) => {
-  const lastCursor = useRef<string | undefined>("");
   const [isLast, setIsLast] = useState<boolean>(false);
 
   const { ref: lastPageRef, inView } = useInView();
@@ -29,17 +28,16 @@ const CommentContainer = ({
     fetchNextPage,
   } = useSuspenseInfiniteQuery({
     queryKey: ["commentList", postId],
-    queryFn: async () =>
-      await getComments(postId, userId, isProfile, lastCursor.current),
+    queryFn: async ({ pageParam }) =>
+      await getComments(postId, userId, isProfile, pageParam),
     initialPageParam: "",
     refetchInterval: false,
     retry: false,
     getNextPageParam: (lastPage) => {
-      if (!lastPage || lastPage?.length < 10) {
+      if (!lastPage) {
         return undefined;
       }
-      lastCursor.current = lastPage[lastPage?.length - 1].id;
-      return lastCursor.current;
+      return lastPage[lastPage?.length - 1]?.id;
     },
     staleTime: 0,
     gcTime: 0,
