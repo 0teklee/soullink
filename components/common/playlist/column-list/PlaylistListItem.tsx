@@ -118,8 +118,8 @@ const PlaylistListItem = ({
           </div>
           <div
             className={`${
-              isLarge ? "w-32 h-32" : "w-10 h-10"
-            } relative xs:w-10 xs:h-10 lg:w-20 lg:h-20`}
+              isLarge ? "w-32 h-32 min-w-[128px]" : "w-10 h-10  min-w-[40px]"
+            } relative xs:min-w-[40px] xs:w-10 xs:h-10 lg:min-w-[80px] lg:w-20 lg:h-20`}
           >
             <Image
               className={`object-cover`}
@@ -140,15 +140,17 @@ const PlaylistListItem = ({
               )}
             </div>
           </div>
-          <div className={` flex flex-col items-start gap-3`}>
+          <div
+            className={`flex flex-col items-start gap-3 max-w-lg overflow-x-hidden`}
+          >
             <div>
               <div
                 onClick={() => {
                   router.push(`/playlist/${formatPathName(title)}`);
                 }}
-                className={`max-w-lg overflow-x-hidden cursor-pointer text-lg text-gray-900 dark:text-warmGray-100 font-medium hover:text-primary xs:text-xs lg:text-start`}
+                className={`sideways-scroll cursor-pointer text-lg text-gray-900 dark:text-warmGray-100 font-medium hover:text-primary xs:text-xs lg:text-start`}
               >
-                <p className={`sideways-scroll`}>{title}</p>
+                <p className={``}>{title}</p>
               </div>
               <div
                 className={`relative flex items-center gap-2 text-xs text-gray-500 dark:text-warmGray-50 font-medium`}

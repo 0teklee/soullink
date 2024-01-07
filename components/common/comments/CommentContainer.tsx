@@ -1,8 +1,8 @@
 "use client";
 
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getComments } from "@/libs/utils/client/fetchers";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import CommentItem from "@/components/common/comments/CommentItem";
 
@@ -17,7 +17,6 @@ const CommentContainer = ({
   isProfile?: boolean;
   fontColor?: string;
 }) => {
-  const lastCursor = useRef<string | undefined>("0");
   const [isLast, setIsLast] = useState<boolean>(false);
 
   const { ref: lastPageRef, inView } = useInView();
@@ -27,20 +26,18 @@ const CommentContainer = ({
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
-  } = useInfiniteQuery({
-    enabled: !!postId,
+  } = useSuspenseInfiniteQuery({
     queryKey: ["commentList", postId],
-    queryFn: async () =>
-      await getComments(postId, userId, isProfile, lastCursor.current),
-    initialPageParam: "0",
+    queryFn: async ({ pageParam }) =>
+      await getComments(postId, userId, isProfile, pageParam),
+    initialPageParam: "",
     refetchInterval: false,
     retry: false,
     getNextPageParam: (lastPage) => {
-      if (!lastPage || lastPage?.length < 10) {
+      if (!lastPage) {
         return undefined;
       }
-      lastCursor.current = lastPage[lastPage?.length - 1].id;
-      return lastCursor.current;
+      return lastPage[lastPage?.length - 1]?.id;
     },
     staleTime: 0,
     gcTime: 0,

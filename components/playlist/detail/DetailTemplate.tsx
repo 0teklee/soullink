@@ -291,7 +291,13 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
       </div>
       <div className={`flex flex-col items-start w-full gap-6`}>
         <Title size={`h2`} text={`Comments`} customColor={fontColor} />
-        <CommentSection postId={id} userId={userId || ""} isProfile={false} />
+        {playlistId && (
+          <CommentSection
+            postId={playlistId}
+            userId={userId || ""}
+            isProfile={false}
+          />
+        )}
       </div>
     </section>
   );
