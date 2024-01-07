@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject, useEffect } from "react";
+import React, { RefObject, useEffect, useMemo } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -9,10 +9,7 @@ import ReactPlayer from "react-player";
 import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
 import { PlayerType } from "@/libs/types/playerType";
 import { SetterOrUpdater } from "recoil";
-import {
-  formatAutoplaySonglist,
-  handleSourceSet,
-} from "@/components/player/utils";
+import { handleSourceSet } from "@/components/player/utils";
 
 const Player = ({
   song,
@@ -31,8 +28,11 @@ const Player = ({
 }) => {
   const { playing, volume, muted } = playerState;
 
+  const songListSrcset = useMemo(() => {
+    return handleSourceSet(songListIndex, songList);
+  }, [songListIndex, songList]);
+
   const handleUnloadChange = () => {
-    console.log("unload");
     playerRef.current?.seekTo(playerState?.durationSec || 0);
   };
 
@@ -115,19 +115,16 @@ const Player = ({
         }}
         controls={true}
       />
-      <ReactPlayer
-        //@ts-ignore
-        ref={playerRef}
+      <audio
         className={`hidden`}
         autoPlay={true}
-        playsinline
-        url={formatAutoplaySonglist(songListIndex, songList)}
-        playing={true}
+        playsInline={true}
         muted={true}
-        stopOnUnmount={false}
       >
-        {handleSourceSet(songListIndex, songList)}
-      </ReactPlayer>
+        {songListSrcset?.map((song) => (
+          <source key={`src_${song.src}`} src={song.src} />
+        ))}
+      </audio>
     </>
   );
 };
