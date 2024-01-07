@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject, useEffect, useMemo } from "react";
+import React, { RefObject, useEffect, useMemo, useRef } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -26,6 +26,7 @@ const Player = ({
   songListIndex: number;
   playerRef: RefObject<PlayerProps>;
 }) => {
+  const browserCloseRef = useRef<HTMLVideoElement>(null);
   const { playing, volume, muted } = playerState;
 
   const songListSrcset = useMemo(() => {
@@ -34,6 +35,10 @@ const Player = ({
 
   const handleUnloadChange = () => {
     playerRef.current?.seekTo(playerState?.durationSec || 0);
+    if (!!browserCloseRef?.current) {
+      browserCloseRef.current.currentTime = playerState?.durationSec;
+      browserCloseRef.current.play();
+    }
   };
 
   useEffect(() => {
@@ -115,16 +120,18 @@ const Player = ({
         }}
         controls={true}
       />
-      <audio
+      <video
+        ref={browserCloseRef}
         className={`hidden`}
         autoPlay={true}
         playsInline={true}
         muted={true}
+        controls={true}
       >
         {songListSrcset?.map((song) => (
           <source key={`src_${song.src}`} src={song.src} />
         ))}
-      </audio>
+      </video>
     </>
   );
 };
