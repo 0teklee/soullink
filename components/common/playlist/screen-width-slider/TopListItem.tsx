@@ -67,9 +67,7 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
             </div>
           </div>
         </div>
-        <div
-          className={`flex flex-col items-start gap-3  [&_p]:mix-blend-difference`}
-        >
+        <div className={`flex flex-col items-start gap-3`}>
           <div
             className={`flex flex-col items-start gap-1 w-full xs:items-center `}
           >
