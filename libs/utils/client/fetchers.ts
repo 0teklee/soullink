@@ -19,7 +19,10 @@ import {
 } from "@/libs/types/userType";
 import { DAYS_FILTER, RECENT_FILTER } from "@/libs/utils/client/commonValues";
 
-import { formatEditUserPayload } from "@/libs/utils/client/formatter";
+import {
+  formatEditUserPayload,
+  formatSignUpUserPayload,
+} from "@/libs/utils/client/formatter";
 import { YoutubeSearchResponse } from "@/libs/types/youtubeTypes";
 
 /* Playlist Fetchers */
@@ -420,12 +423,13 @@ export const getComments = async (
 /* POST */
 
 export const fetcherSignup = async (reqPayload: SignupPayload) => {
+  const formattedPayload = formatSignUpUserPayload(reqPayload);
   const data = await fetch(`/api/user/signup`, {
     method: `POST`,
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(reqPayload),
+    body: JSON.stringify(formattedPayload),
   }).then((res) => res.json());
   return data;
 };
@@ -484,7 +488,9 @@ export const postUserFollow = async (request: PostFollowType) => {
   return data;
 };
 
-export const postNicknameDuplicate = async (request: { nickname: string }) => {
+export const postNicknameDuplicate = async (request: {
+  nickname: string;
+}): Promise<boolean> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/user/duplicate`,
     {
