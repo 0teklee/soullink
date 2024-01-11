@@ -51,6 +51,10 @@ export interface PlaylistCreateRequestType {
   bgColor?: string;
 }
 
+export interface PlaylistInputValidationType extends PlaylistCreateRequestType {
+  categoryInput: string;
+}
+
 export interface PlaylistType {
   id: string;
   title: string;
