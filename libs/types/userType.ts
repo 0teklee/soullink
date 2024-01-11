@@ -115,6 +115,11 @@ export interface SignupPayload {
   };
 }
 
+export interface SignupInputValidate extends Omit<SignupPayload, "profilePic"> {
+  isDuplicate: boolean | null;
+  profilePic: string | "";
+}
+
 export interface EditProfilePayload {
   userId: string;
   profilePic?: string;

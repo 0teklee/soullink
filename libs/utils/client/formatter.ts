@@ -1,6 +1,7 @@
 import {
   CommentAuthorInterface,
   EditProfilePayload,
+  SignupPayload,
 } from "@/libs/types/userType";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -192,6 +193,18 @@ export const formatIsSongCustomUrlValid = (
     domain.includes(availItem),
   );
   return isAvailDomain;
+};
+
+export const formatSignUpUserPayload = ({
+  nickname,
+  bio,
+  ...payload
+}: SignupPayload): SignupPayload => {
+  return {
+    ...payload,
+    nickname: formatInputText(nickname),
+    bio: formatInputText(bio),
+  };
 };
 
 export const formatEditUserPayload = (payload: EditProfilePayload) => {
