@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 import Title from "@/components/common/module/Title";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
@@ -17,8 +17,6 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import useTimer from "@/libs/utils/hooks/useTimer";
 import Loading from "@/components/common/module/Loading";
 import { useForm } from "react-hook-form";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
 
 const SignupTemplate = () => {
   const { data: session } = useSession() as { data: UserSessionType };
