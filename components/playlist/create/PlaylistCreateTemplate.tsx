@@ -6,16 +6,19 @@ import Image from "next/image";
 import SongTable from "@/components/common/song/table/SongTable";
 import {
   PlaylistCreateRequestType,
+  PlaylistInputValidationType,
   PlaylistMoodType,
   SongType,
 } from "@/libs/types/song&playlistType";
-import PlaylistCreateSubmit from "@/components/playlist/create/PlaylistCreateSubmit";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
-import { getSingleUserProfile } from "@/libs/utils/client/fetchers";
-import { useQuery } from "@tanstack/react-query";
+import {
+  getSingleUserProfile,
+  postCreatePlaylist,
+} from "@/libs/utils/client/fetchers";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -23,35 +26,54 @@ import {
 } from "@heroicons/react/24/outline";
 import { commonMoods } from "@/libs/utils/client/commonValues";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
-import { formatMoodBgColor } from "@/libs/utils/client/formatter";
+import {
+  formatMoodBgColor,
+  formatPathName,
+} from "@/libs/utils/client/formatter";
 import { SongModalPropsState } from "@/libs/recoil/modalAtoms";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useForm } from "react-hook-form";
 
 const PlaylistCreateTemplate = () => {
-  const { data: session } = useSession() as { data: UserSessionType };
-  const userId = session?.userId;
-
-  const router = useRouter();
-
-  const [songList, setSongList] = useState<SongType[]>([]);
-  const [payload, setPayload] = useState<PlaylistCreateRequestType>({
-    title: "",
-    description: "",
-    coverImage: "",
-    songs: songList,
-    categories: [],
-    mood: "" as PlaylistMoodType,
-  });
-  const [isMaxSongList, setIsMaxSongList] = useState(false);
-  const [isMoodDropdownOpen, setIsMoodDropdownOpen] = useState(false);
-  const [categoryInput, setCategoryInput] = useState("");
-
   const [songModalState, setSongModalProps] =
     useRecoilState(SongModalPropsState);
+
   const { setModal } = useSetModal();
 
-  const { title, description, songs, mood: currentMood, categories } = payload;
+  const { data: session } = useSession() as { data: UserSessionType };
+  const userId = session?.userId;
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    setError,
+    setValue,
+  } = useForm<PlaylistInputValidationType>({
+    defaultValues: {
+      title: "",
+      description: "",
+      coverImage: "",
+      songs: [],
+      categories: [],
+      mood: "" as PlaylistMoodType,
+      categoryInput: "",
+    },
+  });
+
+  const title = watch("title");
+  const description = watch("description");
+  const songs = watch("songs");
+  const categories = watch("categories");
+  const categoryInput = watch("categoryInput");
+  const coverImage = watch("coverImage");
+  const currentMood = watch("mood");
+
+  const [isMoodDropdownOpen, setIsMoodDropdownOpen] = useState<boolean>(false);
+  const [songList, setSongList] = useState<SongType[]>([]);
 
   const { data: userData } = useQuery({
     queryKey: ["user", userId],
@@ -59,6 +81,18 @@ const PlaylistCreateTemplate = () => {
       return userId ? getSingleUserProfile(userId) : null;
     },
     enabled: !!userId,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: (payload: PlaylistCreateRequestType) => {
+      if (!userId) {
+        throw Error("need login");
+      }
+      return postCreatePlaylist(payload, userId);
+    },
+    onSuccess: (data) => {
+      router.push(`/playlist/${formatPathName(data.playlistTitle)}`);
+    },
   });
 
   const { likedSong } = userData || {};
@@ -71,64 +105,69 @@ const PlaylistCreateTemplate = () => {
     !!songs &&
     songs.length > 0 &&
     songs.length <= 20 &&
-    !!userId;
+    !!userId &&
+    !!currentMood;
+
+  const handlePayload = ({
+    categoryInput,
+    ...payload
+  }: PlaylistInputValidationType) => {
+    if (!userId) {
+      setModal(MODAL_TYPE.LOGIN);
+      return;
+    }
+    mutate(payload);
+  };
+
+  const handleSongChange = (songList: SongType[]) => {
+    if (songList.find((song) => song.url === songModalState?.modalSong?.url)) {
+      return songList;
+    }
+    return [...songList, songModalState?.modalSong as SongType];
+  };
 
   const handlePayloadImgUpload = (imgUrl: string) => {
-    setPayload((prev) => ({
-      ...prev,
-      coverImage: imgUrl,
-    }));
+    setValue("coverImage", imgUrl);
   };
 
   const handleCategories = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (categories?.length === 3) {
+    e.stopPropagation();
+    if (categories?.length === 3 || !categoryInput) {
       return;
     }
 
     if (e.key === "Enter") {
-      setPayload((prev) => ({
-        ...prev,
-        categories: prev?.categories
-          ? [...prev.categories, categoryInput]
-          : [categoryInput],
-      }));
-      setCategoryInput("");
+      setValue("categories", categories.concat(categoryInput));
+      setValue("categoryInput", "");
     }
   };
 
   const handleClickCategory = () => {
-    if (categories?.length === 3) {
+    if (categories?.length === 3 || !categoryInput) {
       return;
     }
 
-    setPayload((prev) => ({
-      ...prev,
-      categories: prev?.categories
-        ? [...prev.categories, categoryInput]
+    setValue(
+      "categories",
+      categories && categories.length > 0
+        ? [...categories, categoryInput]
         : [categoryInput],
-    }));
-    setCategoryInput("");
+    );
+    setValue("categoryInput", "");
   };
 
   useEffect(() => {
     if (!songModalState?.modalSong) {
       return;
     }
-
-    setSongList((prev) => {
-      if (prev.find((song) => song.url === songModalState?.modalSong?.url)) {
-        return prev;
-      }
-      return [...prev, songModalState?.modalSong as SongType];
-    });
+    setSongList(handleSongChange(songList));
     setSongModalProps(null);
   }, [songModalState?.modalSong]);
 
   useEffect(() => {
-    setPayload((prev) => ({
-      ...prev,
-      songs: songList,
-    }));
+    if (songList?.length > 0) {
+      setValue("songs", songList);
+    }
   }, [songList]);
 
   useEffect(() => {
@@ -143,7 +182,8 @@ const PlaylistCreateTemplate = () => {
       className={`flex flex-col items-center gap-12 py-6 xs:px-3 xs:overflow-y-scroll xs:gap-6 dark:bg-gray-600 xs:h-screen xs:pt-6 xs:pb-24`}
     >
       <Title size={`h1`} text={`Create Playlist`} />
-      <div
+      <form
+        onSubmit={handleSubmit(handlePayload)}
         className={`flex flex-col items-center w-full max-w-lg gap-10 xs:gap-6`}
       >
         <div
@@ -163,7 +203,14 @@ const PlaylistCreateTemplate = () => {
               ) : (
                 <ChevronDownIcon className={`w-4 h-4`} />
               )}
-              <p>{currentMood ? currentMood : `select mood`}</p>
+              <div>
+                <p>{currentMood ? currentMood : `select mood`}</p>
+                {currentMood ? null : (
+                  <p className={`text-gray-300 text-xs font-medium`}>
+                    *required
+                  </p>
+                )}
+              </div>
             </div>
             {isMoodDropdownOpen && (
               <div
@@ -173,10 +220,7 @@ const PlaylistCreateTemplate = () => {
                   <div
                     key={mood}
                     onClick={() => {
-                      setPayload((prev) => ({
-                        ...prev,
-                        mood,
-                      }));
+                      setValue("mood", mood);
                       setIsMoodDropdownOpen(false);
                     }}
                     className={`flex items-center justify-between w-full px-2 py-1 text-gray-400 text-sm border-b border-gray-300 hover:text-white ${formatMoodBgColor(
@@ -204,9 +248,9 @@ const PlaylistCreateTemplate = () => {
             onClick={() => {
               handleImageUpload(handlePayloadImgUpload);
             }}
-            className={`relative flex items-center justify-center w-[300px] h-[300px] bg-gray-100 border border-gray-300 rounded-xl`}
+            className={`relative flex items-center justify-center w-[300px] h-[300px] bg-gray-100 border border-gray-300 rounded-xl overflow-hidden`}
           >
-            {!payload.coverImage && (
+            {!coverImage && (
               <Image
                 src={`/image/common/plus.svg`}
                 width={36}
@@ -214,10 +258,10 @@ const PlaylistCreateTemplate = () => {
                 alt={`add cover`}
               />
             )}
-            {payload.coverImage && (
+            {coverImage && (
               <Image
                 className={`object-cover`}
-                src={`${payload.coverImage}`}
+                src={`${coverImage}`}
                 fill={true}
                 alt={`add cover`}
               />
@@ -226,30 +270,27 @@ const PlaylistCreateTemplate = () => {
         </div>
         <div className={`flex flex-col gap-2 items-center w-full max-w-xs`}>
           <Title size={`h3`} text={`Categories`} />
-          {categories && categories?.length > 0 && (
-            <div className={`flex  gap-2`}>
-              {categories.map((category, idx) => (
-                <div
-                  key={`${idx}_${category}`}
-                  className={`flex items-center justify-center gap-1 w-full px-2 py-1 text-gray-400 text-sm border border-gray-300 rounded-lg`}
+          <div className={`flex gap-2`}>
+            {categories?.map((category, idx) => (
+              <div
+                key={`${idx}_${category}`}
+                className={`flex items-center justify-center gap-1 w-full px-2 py-1 text-gray-400 text-sm border border-gray-300 rounded-lg`}
+              >
+                <p>{category}</p>
+                <button
+                  type={`button`}
+                  onClick={() => {
+                    setValue(
+                      "categories",
+                      categories?.filter((c) => c !== category),
+                    );
+                  }}
                 >
-                  <p>{category}</p>
-                  <button
-                    onClick={() => {
-                      setPayload((prev) => ({
-                        ...prev,
-                        categories: prev?.categories?.filter(
-                          (c) => c !== category,
-                        ),
-                      }));
-                    }}
-                  >
-                    <XMarkIcon className={`w-4 h-4 text-gray-300`} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+                  <XMarkIcon className={`w-4 h-4 text-gray-300`} />
+                </button>
+              </div>
+            ))}
+          </div>
           <p className={`text-gray-300 text-xs font-medium`}>
             *You can add up to 3 categories
           </p>
@@ -264,10 +305,11 @@ const PlaylistCreateTemplate = () => {
                 if (e.currentTarget.value.length > 30) {
                   return;
                 }
-                setCategoryInput(e.currentTarget.value);
+                setValue("categoryInput", e.currentTarget.value);
               }}
             />
             <button
+              type={`button`}
               onClick={handleClickCategory}
               className={`absolute right-[18px] top-8 -translate-y-1/2 text-gray-300 hover:text-primary`}
             >
@@ -279,22 +321,27 @@ const PlaylistCreateTemplate = () => {
           className={`flex flex-col items-center justify-center gap-4 w-full`}
         >
           <SongTable
-            songList={songList}
+            songList={songs}
             isCreate={true}
             setSongList={setSongList}
           />
           <p
             className={`${
-              isMaxSongList ? "text-pink-600" : "text-gray-300"
+              errors.songs?.message ? "text-pink-600" : "text-gray-300"
             } text-xs font-medium`}
           >
             *You can add up to 20 songs to the list
           </p>
           <button
+            type={`button`}
             className={`flex items-center gap-1`}
-            onClick={() => {
-              if (songList.length >= 20) {
-                setIsMaxSongList(true);
+            onClick={(e) => {
+              e.stopPropagation();
+              if (songs.length >= 20) {
+                setError("songs", {
+                  type: "manual",
+                  message: "You can add up to 20 songs to the list",
+                });
                 return;
               }
               setModal(MODAL_TYPE.SONG, {
@@ -331,17 +378,22 @@ const PlaylistCreateTemplate = () => {
               placeholder={`playlist title`}
               className={`w-full h-full mt-3 px-5 py-2 text-gray-900 dark:text-warmGray-100 bg-white border border-gray-300 resize-none rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={40}
-              onChange={(e) => {
-                setPayload((prev) => ({
-                  ...prev,
-                  title: e.target.value,
-                }));
-              }}
+              {...register("title", {
+                required: "title is required",
+                minLength: {
+                  value: 1,
+                  message: "title should be at least 1 character",
+                },
+                maxLength: {
+                  value: 40,
+                  message: "title should be less than 40 characters",
+                },
+              })}
             />
             <span
               className={`absolute bottom-2.5 right-2 text-xs text-gray-400`}
             >
-              {payload.title.length} / 40
+              {title.length} / 40
             </span>
           </div>
         </div>
@@ -354,24 +406,31 @@ const PlaylistCreateTemplate = () => {
               placeholder={`..for playlist`}
               className={`w-full h-full min-h-[200px] mt-3 px-5 pt-2 text-gray-900 dark:text-warmGray-100 bg-white border border-gray-300 resize-none rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
               maxLength={300}
-              onChange={(e) => {
-                setPayload((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }));
-              }}
+              {...register("description", {
+                required: "description is required",
+                minLength: {
+                  value: 1,
+                  message: "description should be at least 1 character",
+                },
+                maxLength: {
+                  value: 300,
+                  message: "description should be less than 300 characters",
+                },
+              })}
             />
             <span className={`absolute bottom-4 right-2 text-xs text-gray-400`}>
-              {payload.description.length} / 300
+              {description.length} / 300
             </span>
           </div>
         </div>
-        <PlaylistCreateSubmit
-          isPayloadValid={isPayloadValid}
-          payload={payload}
-          userId={userId}
-        />
-      </div>
+        <button
+          className={`px-5 py-2 rounded-xl text-white text-lg font-medium bg-primary disabled:bg-gray-300`}
+          disabled={!isPayloadValid}
+          type={`submit`}
+        >
+          submit
+        </button>
+      </form>
     </section>
   );
 };
