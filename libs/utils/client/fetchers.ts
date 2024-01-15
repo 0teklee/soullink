@@ -55,11 +55,12 @@ export const getMainPageTodayPlaylists = async (): Promise<PlaylistType[]> => {
 
 export const getTimelinePlaylists = async (
   id?: string,
+  lastId?: string,
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/timeline?userId=${
       id ? id : ""
-    }`,
+    }&lastId=${lastId || ""}`,
     { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.timelinePlaylists;

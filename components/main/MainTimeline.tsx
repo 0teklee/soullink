@@ -1,19 +1,70 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { getTimelinePlaylists } from "@/libs/utils/client/fetchers";
 import Title from "@/components/common/module/Title";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import Loading from "@/components/common/module/Loading";
 
-const MainTimeline = async ({ userId }: { userId?: string }) => {
-  const data = await getTimelinePlaylists(userId);
+const MainTimeline = ({ userId }: { userId?: string }) => {
+  const [isLast, setIsLast] = useState<boolean>(false);
+  const { data, isLoading, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["timeline"],
+      queryFn: async ({ pageParam }) =>
+        await getTimelinePlaylists(userId, pageParam),
+      initialPageParam: "",
+      refetchInterval: false,
+      retry: false,
+      getNextPageParam: (lastPage) => {
+        if (!lastPage) {
+          return undefined;
+        }
+        return lastPage[lastPage?.length - 1]?.id;
+      },
+      staleTime: 0,
+      gcTime: 0,
+      enabled: !isLast,
+    });
+
+  useEffect(() => {
+    const lastPage = data?.pages[data?.pages?.length - 1];
+    if (
+      data?.pages &&
+      data?.pages?.length > 0 &&
+      !!lastPage &&
+      lastPage.length < 10
+    ) {
+      setIsLast(true);
+    }
+  }, [data]);
 
   return (
     <section className={`flex flex-col items-start gap-3 w-full `}>
       <Title size={`h1`} text={`Timeline`} />
-      {data && data.length > 0 && (
-        <PlaylistListContainer playlists={data} isLarge={true} />
-      )}
-      {data && data.length === 0 && (
+      {data &&
+        data?.pages &&
+        data?.pages.map((page, idx) => (
+          <PlaylistListContainer
+            key={`timeline_${idx}`}
+            playlists={page}
+            isLarge={true}
+          />
+        ))}
+      {data && data?.pages && data.pages.length === 0 && (
         <Title size={`h2`} text={`No playlists yet`} />
+      )}
+      {isLoading && <Loading />}
+      {!isLoading && !isLast && (
+        <div className={`flex justify-center w-full `}>
+          <button
+            className={`text-primary text-md`}
+            onClick={() => fetchNextPage()}
+          >
+            Load more
+          </button>
+        </div>
       )}
     </section>
   );

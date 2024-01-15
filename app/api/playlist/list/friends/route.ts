@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import dayjs from "dayjs";
 import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: NextRequest) {
   try {
-    const now = dayjs();
-    const lastweek = now.subtract(1, "week");
+    // todo : 추후 1주일간의 플레이리스트만 가져오도록 수정
+    // const now = dayjs();
+    // const lastweek = now.subtract(1, "week");
     const userIdQuery = new URL(req.url).searchParams.get("userId");
     const userIdWhere = userIdQuery
       ? {
@@ -40,10 +40,10 @@ export async function GET(req: NextRequest) {
             {
               likedBy: {
                 some: {
-                  createdAt: {
-                    gte: lastweek.toDate(),
-                    lte: now.toDate(),
-                  },
+                  // createdAt: {
+                  //   gte: lastweek.toDate(),
+                  //   lte: now.toDate(),
+                  // },
                   user: {
                     followers: {
                       some: {
@@ -59,10 +59,8 @@ export async function GET(req: NextRequest) {
             {
               recentPlay: {
                 some: {
-                  createdAt: {
-                    gte: lastweek.toDate(),
-                    lte: now.toDate(),
-                  },
+                  // gte: lastweek.toDate(),
+                  // lte: now.toDate(),
                   user: {
                     some: {
                       followers: {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/client";
-import dayjs from "dayjs";
 import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: NextRequest) {
@@ -9,12 +8,14 @@ export async function GET(req: NextRequest) {
     userId?: string;
   };
 
-  const DISCOVER_MOOD_UPDATE_DAYS = 1;
   const isLogin = !!userId;
-  const today = dayjs().startOf("day");
-  const discoverTime = today
-    .subtract(DISCOVER_MOOD_UPDATE_DAYS, "day")
-    .toDate();
+
+  // todo
+  // const DISCOVER_MOOD_UPDATE_DAYS = 1;
+  // const today = dayjs().startOf("day");
+  // const discoverTime = today
+  //   .subtract(DISCOVER_MOOD_UPDATE_DAYS, "day")
+  //   .toDate();
 
   try {
     const mostLikedMood = await prisma.mood
@@ -78,36 +79,7 @@ export async function GET(req: NextRequest) {
     const moodPlayLists = await prisma.playlist
       .findMany({
         where: {
-          AND: [
-            {
-              OR: [
-                {
-                  recentPlay: {
-                    some: {
-                      createdAt: {
-                        gte: discoverTime,
-                      },
-                    },
-                  },
-                },
-                {
-                  likedBy: {
-                    some: {
-                      createdAt: {
-                        gte: discoverTime,
-                      },
-                    },
-                  },
-                },
-                {
-                  createdAt: {
-                    gte: discoverTime,
-                  },
-                },
-              ],
-            },
-            moodSearch,
-          ],
+          AND: [moodSearch],
         },
         take: 10,
         orderBy: [

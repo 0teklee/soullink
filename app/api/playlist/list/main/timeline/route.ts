@@ -3,64 +3,67 @@ import { prisma } from "@/prisma/client";
 import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: NextRequest) {
-  const userId = new URL(req.url).searchParams.get("userId");
+  // const userId = new URL(req.url).searchParams.get("userId");
+  const lastId = new URL(req.url).searchParams.get("lastId");
+  const lastIdCursor = !!lastId ? { cursor: { id: lastId } } : undefined;
 
   try {
-    const userFollowingsDB = await prisma.user.findUnique({
-      where: {
-        id: userId || "",
-      },
-      select: {
-        following: {
-          select: {
-            followingId: true,
-          },
-        },
-      },
-    });
-
-    const userFollowings =
-      userFollowingsDB?.following.map((following) => following.followingId) ||
-      [];
+    // const userFollowingsDB = await prisma.user.findUnique({
+    //   where: {
+    //     id: userId || "",
+    //   },
+    //   select: {
+    //     following: {
+    //       select: {
+    //         followingId: true,
+    //       },
+    //     },
+    //   },
+    // });
+    //
+    // const userFollowings =
+    //   userFollowingsDB?.following.map((following) => following.followingId) ||
+    //   [];
 
     const timelinePlaylists = await prisma.playlist
       .findMany({
-        take: 20,
-        where: {
-          OR: [
-            {
-              author: {
-                id: {
-                  in: userFollowings,
-                },
-              },
-            },
-            {
-              likedBy: {
-                every: {
-                  user: {
-                    id: {
-                      in: userFollowings,
-                    },
-                  },
-                },
-              },
-            },
-            {
-              recentPlay: {
-                every: {
-                  user: {
-                    every: {
-                      id: {
-                        in: userFollowings,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        take: 10,
+        skip: !!lastIdCursor ? 1 : 0,
+        ...lastIdCursor, // where: {
+        //   OR: [
+        //     {
+        //       author: {
+        //         id: {
+        //           in: userFollowings,
+        //         },
+        //       },
+        //     },
+        //     {
+        //       likedBy: {
+        //         some: {
+        //           user: {
+        //             id: {
+        //               in: userFollowings,
+        //             },
+        //           },
+        //         },
+        //       },
+        //     },
+        //     {
+        //       recentPlay: {
+        //         some: {
+        //           user: {
+        //             some: {
+        //               id: {
+        //                 in: userFollowings,
+        //               },
+        //             },
+        //           },
+        //         },
+        //       },
+        //     },
+        //   ],
+        // },
         orderBy: [
           { createdAt: "desc" },
           { playedCount: "desc" },
