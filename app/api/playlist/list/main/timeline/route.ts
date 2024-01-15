@@ -4,6 +4,8 @@ import { formatSongResponse } from "@/libs/utils/server/formatter";
 
 export async function GET(req: NextRequest) {
   // const userId = new URL(req.url).searchParams.get("userId");
+  const lastId = new URL(req.url).searchParams.get("lastId");
+  const lastIdCursor = !!lastId ? { cursor: { id: lastId } } : undefined;
 
   try {
     // const userFollowingsDB = await prisma.user.findUnique({
@@ -25,8 +27,9 @@ export async function GET(req: NextRequest) {
 
     const timelinePlaylists = await prisma.playlist
       .findMany({
-        take: 20,
-        // where: {
+        take: 10,
+        skip: !!lastIdCursor ? 1 : 0,
+        ...lastIdCursor, // where: {
         //   OR: [
         //     {
         //       author: {
