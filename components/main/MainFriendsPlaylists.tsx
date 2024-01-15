@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Title from "@/components/common/module/Title";
 import { getMainPageFriendsPlaylists } from "@/libs/utils/client/fetchers";
