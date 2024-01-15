@@ -1,7 +1,5 @@
 import MainTemplate from "@/components/main/MainTemplate";
 import {
-  getMainPageFriendsPlaylists,
-  getMainPageTodayPlaylists,
   getRecentPlaylists,
   getTimelinePlaylists,
 } from "@/libs/utils/client/fetchers";
@@ -22,16 +20,8 @@ const Home = async () => {
 
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: ["todayPlaylists"],
-      queryFn: getMainPageTodayPlaylists,
-    }),
-    queryClient.prefetchQuery({
       queryKey: ["timeline_playlists", userId],
       queryFn: () => getTimelinePlaylists(userId),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["mainPageFriendsPlaylists"],
-      queryFn: () => getMainPageFriendsPlaylists(userId),
     }),
     queryClient.prefetchQuery({
       queryKey: ["recentPlayed", userId],
@@ -41,7 +31,6 @@ const Home = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {/* @ts-expect-error Async Server Component */}
       <MainTemplate userId={userId} userNickname={userNickname} />
     </HydrationBoundary>
   );
