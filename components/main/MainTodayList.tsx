@@ -1,18 +1,11 @@
-"use client";
 import React from "react";
 import Title from "@/components/common/module/Title";
 import TopListContainter from "@/components/common/playlist/screen-width-slider/TopListContainter";
-import { useQuery } from "@tanstack/react-query";
 import { getMainPageTodayPlaylists } from "@/libs/utils/client/fetchers";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
-const MainTodayList = () => {
-  const { data } = useQuery({
-    queryKey: ["todayPlaylists"],
-    queryFn: () => getMainPageTodayPlaylists(),
-    throwOnError: true,
-  });
-
+const MainTodayList = async () => {
+  const data = await getMainPageTodayPlaylists();
   return (
     <section className={`flex flex-col items-start gap-3 w-full`}>
       <Title size={`h1`} text={`Today's Playlists`} />

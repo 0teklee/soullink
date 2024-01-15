@@ -41,6 +41,7 @@ const Home = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      {/* @ts-expect-error Async Server Component */}
       <MainTemplate userId={userId} userNickname={userNickname} />
     </HydrationBoundary>
   );

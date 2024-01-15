@@ -1,19 +1,14 @@
 "use client";
 
 import React from "react";
-import { PlaylistType } from "@/libs/types/song&playlistType";
 import Title from "@/components/common/module/Title";
 import Link from "next/link";
 import Image from "next/image";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { getMainPageFriendsPlaylists } from "@/libs/utils/client/fetchers";
-import { useQuery } from "@tanstack/react-query";
 
-const MainFriendsPlaylists = ({ userId }: { userId?: string }) => {
-  const { data } = useQuery<PlaylistType[]>({
-    queryKey: ["mainPageFriendsPlaylists"],
-    queryFn: () => getMainPageFriendsPlaylists(userId),
-  });
+const MainFriendsPlaylists = async ({ userId }: { userId?: string }) => {
+  const data = await getMainPageFriendsPlaylists(userId);
 
   const dataAvailable = data && data.length > 0;
 

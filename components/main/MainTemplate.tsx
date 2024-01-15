@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
 import MainRecentPlayed from "@/components/main/MainRecentPlayed";
 import MainTodayList from "@/components/main/MainTodayList";
 import MainTimeline from "@/components/main/MainTimeline";
 
-const MainTemplate = ({
+const MainTemplate = async ({
   userId,
   userNickname,
 }: {
@@ -13,9 +13,18 @@ const MainTemplate = ({
 }) => {
   return (
     <div className={`flex flex-col items-start py-6 gap-12 `}>
-      <MainTodayList />
-      <MainTimeline userId={userId} />
-      <MainFriendsPlaylists userId={userId} />
+      <Suspense>
+        {/* @ts-expect-error Async Server Component */}
+        <MainTodayList />
+      </Suspense>
+      <Suspense>
+        {/* @ts-expect-error Async Server Component */}
+        <MainTimeline userId={userId} />
+      </Suspense>
+      <Suspense>
+        {/* @ts-expect-error Async Server Component */}
+        <MainFriendsPlaylists userId={userId} />
+      </Suspense>
       <MainRecentPlayed userId={userId} userNickname={userNickname} />
     </div>
   );
