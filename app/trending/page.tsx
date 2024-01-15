@@ -14,7 +14,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
+import { DAYS_FILTER, RECENT_FILTER } from "@/libs/utils/client/commonValues";
 
 const Page = async () => {
   const queryClient = new QueryClient();
@@ -26,12 +26,28 @@ const Page = async () => {
       )
       .catch(() => ({ userId: "" })),
     queryClient.prefetchQuery({
-      queryKey: ["trendingMain", DAYS_FILTER.ALL_TIME],
-      queryFn: () => getTrendingMainPlaylists(DAYS_FILTER.ALL_TIME),
+      queryKey: [
+        "trendingMain",
+        DAYS_FILTER.ALL_TIME,
+        RECENT_FILTER.RECENT_DESC,
+      ],
+      queryFn: () =>
+        getTrendingMainPlaylists(
+          DAYS_FILTER.ALL_TIME,
+          RECENT_FILTER.RECENT_DESC,
+        ),
     }),
     queryClient.prefetchQuery({
-      queryKey: ["trendingCategories", DAYS_FILTER.ALL_TIME],
-      queryFn: () => getTrendingCategoriesPlaylists(DAYS_FILTER.ALL_TIME),
+      queryKey: [
+        "trendingCategories",
+        DAYS_FILTER.ALL_TIME,
+        RECENT_FILTER.RECENT_DESC,
+      ],
+      queryFn: () =>
+        getTrendingCategoriesPlaylists(
+          DAYS_FILTER.ALL_TIME,
+          RECENT_FILTER.RECENT_DESC,
+        ),
     }),
     queryClient.prefetchQuery({
       queryKey: ["trendingMood", DAYS_FILTER.ALL_TIME, null],
