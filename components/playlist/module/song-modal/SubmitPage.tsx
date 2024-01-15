@@ -1,6 +1,6 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
-import { SONG_TYPE_OPTIONS } from "@/libs/utils/client/commonValues";
+import { SONG_TYPE_OPTIONS } from "@/libs/utils/client/contants/commonValues";
 import { SONG_URL_TYPE, SongType } from "@/libs/types/song&playlistType";
 
 interface SubmitPageProps {

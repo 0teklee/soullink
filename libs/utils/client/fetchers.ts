@@ -17,7 +17,10 @@ import {
   SignupPayload,
   UserType,
 } from "@/libs/types/userType";
-import { DAYS_FILTER, RECENT_FILTER } from "@/libs/utils/client/commonValues";
+import {
+  DAYS_FILTER,
+  RECENT_FILTER,
+} from "@/libs/utils/client/contants/commonValues";
 
 import {
   formatEditUserPayload,

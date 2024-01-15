@@ -16,7 +16,7 @@ import PlaylistListContainer from "@/components/common/playlist/column-list/Play
 import {
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
-} from "@/libs/utils/client/commonValues";
+} from "@/libs/utils/client/contants/commonValues";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import UseCustomizeStyle from "@/libs/utils/hooks/useCustomizeStyle";
 

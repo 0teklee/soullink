@@ -2,8 +2,8 @@ import {
   SEARCH_ORDER_BY_ARRAY,
   SEARCH_TYPE,
   SEARCH_TYPE_ARRAY,
-} from "@/libs/utils/client/searchValue";
-import { DAYS_FILTER_ARR } from "@/libs/utils/client/commonValues";
+} from "@/libs/utils/client/contants/searchValue";
+import { DAYS_FILTER_ARR } from "@/libs/utils/client/contants/commonValues";
 import {
   SearchAllData,
   SearchResultQueriesData,

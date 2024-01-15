@@ -8,8 +8,11 @@ import {
   getSearchPlaylists,
   getSearchUsers,
 } from "@/libs/utils/client/fetchers";
-import { SEARCH_ORDER_BY, SEARCH_TYPE } from "@/libs/utils/client/searchValue";
-import { DAYS_FILTER } from "@/libs/utils/client/commonValues";
+import {
+  SEARCH_ORDER_BY,
+  SEARCH_TYPE,
+} from "@/libs/utils/client/contants/searchValue";
+import { DAYS_FILTER } from "@/libs/utils/client/contants/commonValues";
 import { SearchResultQueriesData } from "@/libs/types/searchType";
 
 const UseSearchQueries = (

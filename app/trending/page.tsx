@@ -14,7 +14,10 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { DAYS_FILTER, RECENT_FILTER } from "@/libs/utils/client/commonValues";
+import {
+  DAYS_FILTER,
+  RECENT_FILTER,
+} from "@/libs/utils/client/contants/commonValues";
 
 const Page = async () => {
   const queryClient = new QueryClient();

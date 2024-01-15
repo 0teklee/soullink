@@ -7,13 +7,11 @@ import Title from "@/components/common/module/Title";
 import SongTable from "@/components/common/song/table/SongTable";
 import CommentSection from "@/components/common/comments/CommentSection";
 import process from "process";
-import { playlistDefault } from "@/libs/utils/client/commonValues";
 import {
   ArrowDownTrayIcon,
   HeartIcon,
   PauseIcon,
   PlayIcon,
-  // ShareIcon,
 } from "@heroicons/react/24/outline";
 import {
   HeartIcon as HeartIconSolid,
@@ -29,6 +27,7 @@ import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import UseCustomizeStyle from "@/libs/utils/hooks/useCustomizeStyle";
+import { playlistDefault } from "@/libs/utils/client/contants/fallbackValues";
 
 const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   const router = useRouter();

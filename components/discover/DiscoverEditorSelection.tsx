@@ -8,7 +8,7 @@ import { getEditorPlaylists } from "@/libs/utils/client/fetchers";
 import {
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
-} from "@/libs/utils/client/commonValues";
+} from "@/libs/utils/client/contants/commonValues";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
 const DiscoverEditorSelection = () => {

@@ -7,7 +7,7 @@ import ImageCardItem from "@/components/common/carousel/img-card/ImageCardItem";
 import { fillEmptyPlaylist } from "@/libs/utils/client/commonUtils";
 import { getItemMotionInitial } from "@/libs/utils/client/framerMotionUtils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { interval5Seconds } from "@/libs/utils/client/commonValues";
+import { interval5Seconds } from "@/libs/utils/client/contants/commonValues";
 
 const ImageCardContainer = ({ playlists }: { playlists?: PlaylistType[] }) => {
   const [activeIndex, setActiveIndex] = useState(0);
