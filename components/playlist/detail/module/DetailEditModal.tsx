@@ -23,8 +23,8 @@ import {
 import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
 import useSetModal from "@/libs/utils/hooks/useSetModal";
 import SongTable from "@/components/common/song/table/SongTable";
-import { playlistDefault } from "@/libs/utils/client/commonValues";
 import ColorPicker from "@/components/common/module/ColorPicker";
+import { playlistDefault } from "@/libs/utils/client/contants/fallbackValues";
 
 const DetailEditModal = () => {
   const queryClient = useQueryClient();

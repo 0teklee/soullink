@@ -5,7 +5,7 @@ import {
   commonMoods,
   QUERY_CACHE_TIME,
   QUERY_STALE_TIME,
-} from "@/libs/utils/client/commonValues";
+} from "@/libs/utils/client/contants/commonValues";
 import { filterMoodPlaylists } from "@/libs/utils/client/commonUtils";
 import Title from "@/components/common/module/Title";
 import ImageCardContainer from "@/components/common/carousel/img-card/ImageCardContainer";

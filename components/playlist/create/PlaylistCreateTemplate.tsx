@@ -24,7 +24,7 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { commonMoods } from "@/libs/utils/client/commonValues";
+import { commonMoods } from "@/libs/utils/client/contants/commonValues";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import {
   formatMoodBgColor,

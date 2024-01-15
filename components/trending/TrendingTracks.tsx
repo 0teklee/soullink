@@ -6,7 +6,10 @@ import SongTable from "@/components/common/song/table/SongTable";
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
 import { getTrendingSongs } from "@/libs/utils/client/fetchers";
 import { useQuery } from "@tanstack/react-query";
-import { DAYS_FILTER, DAYS_FILTER_ARR } from "@/libs/utils/client/commonValues";
+import {
+  DAYS_FILTER,
+  DAYS_FILTER_ARR,
+} from "@/libs/utils/client/contants/commonValues";
 import FiltersDropdown from "@/components/common/playlist/module/FiltersDropdown";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 

@@ -7,12 +7,12 @@ import {
   QUERY_STALE_TIME,
   RECENT_FILTER,
   RECENT_FILTER_ARR,
-} from "@/libs/utils/client/commonValues";
+} from "@/libs/utils/client/contants/commonValues";
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/solid";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";
 import PlaylistGallery from "@/components/common/playlist/gallery-list/PlaylistGallery";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getTrendingMainPlaylists } from "@/libs/utils/client/fetchers";
 
 const TrendingMainList = () => {
@@ -22,7 +22,7 @@ const TrendingMainList = () => {
   );
   const [isSlider, setIsSlider] = useState(false);
 
-  const { data: trendingPlaylistData } = useSuspenseQuery({
+  const { data: trendingPlaylistData } = useQuery({
     queryKey: ["trendingMain", period, recentPlayedFilter],
     queryFn: () => getTrendingMainPlaylists(period, recentPlayedFilter),
     gcTime: QUERY_CACHE_TIME,

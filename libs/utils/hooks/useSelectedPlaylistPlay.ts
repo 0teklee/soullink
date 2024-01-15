@@ -6,7 +6,7 @@ import {
   postRecentPlayed,
 } from "@/libs/utils/client/fetchers";
 import { useMutation } from "@tanstack/react-query";
-import { INTERVAL_5MINS_MS } from "@/libs/utils/client/commonValues";
+import { INTERVAL_5MINS_MS } from "@/libs/utils/client/contants/commonValues";
 import { setRecentPlaylistIdLocalStorage } from "@/libs/utils/client/commonUtils";
 import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
 import { useRef } from "react";

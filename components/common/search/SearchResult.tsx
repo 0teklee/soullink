@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Title from "@/components/common/module/Title";
-import { SEARCH_TYPE } from "@/libs/utils/client/searchValue";
+import { SEARCH_TYPE } from "@/libs/utils/client/contants/searchValue";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import { UserType } from "@/libs/types/userType";
 import PlaylistListContainer from "@/components/common/playlist/column-list/PlaylistListContainer";

@@ -6,8 +6,8 @@ import {
   QUERY_STALE_TIME,
   RECENT_FILTER,
   RECENT_FILTER_ARR,
-} from "@/libs/utils/client/commonValues";
-import { useSuspenseQueries } from "@tanstack/react-query";
+} from "@/libs/utils/client/contants/commonValues";
+import { useQueries } from "@tanstack/react-query";
 import {
   getFilteredCategoriesPlaylists,
   getTrendingCategoriesPlaylists,
@@ -30,7 +30,7 @@ const TrendingCategoriesList = () => {
   );
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 
-  const [trendingCategoriesQuery, categoriesFilterQuery] = useSuspenseQueries({
+  const [trendingCategoriesQuery, categoriesFilterQuery] = useQueries({
     queries: [
       {
         queryKey: ["trendingCategories", period, recentPlayedFilter],
