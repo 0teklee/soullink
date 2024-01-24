@@ -165,6 +165,7 @@ const TableItem = ({
             onClick={() => {
               setSongList((prev) => prev.filter((_, idx) => idx !== index));
             }}
+            aria-label={`delete song ${song.title}`}
           >
             <MinusCircleIcon
               className={` hover:text-gray-100`}

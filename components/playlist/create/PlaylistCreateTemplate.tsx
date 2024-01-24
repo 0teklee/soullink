@@ -285,6 +285,7 @@ const PlaylistCreateTemplate = () => {
                       categories?.filter((c) => c !== category),
                     );
                   }}
+                  aria-label={`delete category ${category}`}
                 >
                   <XMarkIcon className={`w-4 h-4 text-gray-300`} />
                 </button>

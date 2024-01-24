@@ -171,7 +171,11 @@ const PlayerController = ({
           className={`flex items-center max-w-5xl gap-2 xs:flex-0 xs:w-sm xs:gap-4`}
         >
           {!isListFirst && (
-            <button className={`xs:hidden`} onClick={handlePrevList}>
+            <button
+              className={`xs:hidden`}
+              aria-label={`previous song`}
+              onClick={handlePrevList}
+            >
               <Image
                 src={`/image/player/prev_song.svg`}
                 width={24}
@@ -185,6 +189,7 @@ const PlayerController = ({
             onClick={() => {
               handlePrev();
             }}
+            aria-label={`previous 3 seconds`}
           >
             <Image
               src={`/image/player/prev.svg`}
@@ -197,6 +202,7 @@ const PlayerController = ({
             onClick={() => {
               setPlayerState((prev) => ({ ...prev, playing: !playing }));
             }}
+            aria-label={`play or pause`}
           >
             {playing ? (
               <Image
@@ -214,7 +220,11 @@ const PlayerController = ({
               />
             )}
           </button>
-          <button className={`xs:hidden`} onClick={handleNext}>
+          <button
+            aria-label={`next 3 seconds`}
+            className={`xs:hidden`}
+            onClick={handleNext}
+          >
             <Image
               src={`/image/player/next.svg`}
               width={24}
@@ -223,7 +233,11 @@ const PlayerController = ({
             />
           </button>
           {!isListLast && (
-            <button className={`xs:hidden`} onClick={handleNextList}>
+            <button
+              aria-label={`next song`}
+              className={`xs:hidden`}
+              onClick={handleNextList}
+            >
               <Image
                 src={`/image/player/next_song.svg`}
                 width={24}
@@ -239,6 +253,7 @@ const PlayerController = ({
             }}
           >
             <button
+              aria-label={`volume`}
               onClick={() => {
                 setPlayerState((prev) => ({ ...prev, muted: !muted }));
               }}
@@ -301,6 +316,7 @@ const PlayerController = ({
           <div className={`relative flex items-center`}>
             <button
               className={`xs:order-2 xs:flex-2`}
+              aria-label={`playlist`}
               onClick={() => {
                 if (!songList.length) {
                   return;
@@ -339,7 +355,11 @@ const PlayerController = ({
             </p>
           </div>
           <div className={`flex items-center gap-2 xs:order-2 xs:flex-2`}>
-            <button className={`xs:hidden`} onClick={handleLikePlaylist}>
+            <button
+              aria-label={`like playlist`}
+              className={`xs:hidden`}
+              onClick={handleLikePlaylist}
+            >
               {!playlist?.isSongTable && isPlaylistLiked && (
                 <Image
                   src={`/image/common/playlist_liked.svg`}
@@ -357,7 +377,7 @@ const PlayerController = ({
                 />
               )}
             </button>
-            <button onClick={handleLikeSong}>
+            <button aria-label={`like song`} onClick={handleLikeSong}>
               {isSongLiked ? (
                 <SolidHeartIcon
                   className={`text-primary`}
