@@ -31,6 +31,7 @@ const FiltersList = ({
             }
             controller.slidePrev();
           }}
+          aria-label={`previous filter`}
         >
           <ChevronLeftIcon className={`w-6 h-6 text-white`} />
         </button>
@@ -73,6 +74,7 @@ const FiltersList = ({
             }
             controller.slideNext();
           }}
+          aria-label={`next filter`}
         >
           <ChevronRightIcon className={`w-6 h-6 text-white`} />
         </button>

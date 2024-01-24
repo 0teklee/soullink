@@ -160,6 +160,7 @@ const PlaylistListItem = ({
                     <button
                       onClick={handleLikePlaylist}
                       className={`flex items-center justify-center`}
+                      aria-label={`unlike playlist`}
                     >
                       <HeartIcon
                         className={`w-4 h-4 text-primary hover:text-gray-500`}
@@ -169,6 +170,7 @@ const PlaylistListItem = ({
                     <button
                       onClick={handleLikePlaylist}
                       className={`flex items-center justify-center`}
+                      aria-label={`like playlist`}
                     >
                       <OutlineHeartIcon
                         className={`w-4 h-4 text-gray-500 hover:text-primary`}

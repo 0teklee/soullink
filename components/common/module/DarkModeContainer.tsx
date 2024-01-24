@@ -14,6 +14,7 @@ const DarkModeContainer = ({ children }: { children: ReactNode }) => {
           <button
             className={`text-white`}
             onClick={() => setDarkMode(!darkMode)}
+            aria-label="light mode"
           >
             <SunIcon className={`w-6 h-6 hover:text-yellow-300`} />
           </button>
@@ -21,6 +22,7 @@ const DarkModeContainer = ({ children }: { children: ReactNode }) => {
           <button
             className={`text-black`}
             onClick={() => setDarkMode(!darkMode)}
+            aria-label="dark mode"
           >
             <MoonIcon className={`w-6 h-6 hover:text-gray-400`} />
           </button>

@@ -107,10 +107,10 @@ const ImageCardContainer = ({ playlists }: { playlists?: PlaylistType[] }) => {
         <div
           className={`absolute top-1/2 -translate-y-1/2 flex gap-3 items-center justify-between w-full group-hover:text-primary group-hover:opacity-100 opacity-0 xs:z-30`}
         >
-          <button onClick={handlePrev}>
+          <button aria-label={`previous playlist`} onClick={handlePrev}>
             <ChevronLeftIcon className={`w-12 h-12 mix-blend-difference`} />
           </button>
-          <button onClick={handleNext}>
+          <button aria-label={`next playlist`} onClick={handleNext}>
             <ChevronRightIcon className={`w-12 h-12 mix-blend-difference`} />
           </button>
         </div>
