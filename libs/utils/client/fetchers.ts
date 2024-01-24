@@ -38,7 +38,6 @@ export const getMainPageFriendsPlaylists = async (
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/friends?userId=${
       userId ? userId : ""
     }`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.mainData.friendsList;
@@ -61,7 +60,6 @@ export const getTimelinePlaylists = async (
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/main/timeline?userId=${
       id ? id : ""
     }&lastId=${lastId || ""}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.timelinePlaylists;
 };
@@ -71,7 +69,6 @@ export const getRecentPlaylists = async (
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/user/recent?userId=${id ? id : ""}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.recentPlayed;
 };
@@ -81,7 +78,6 @@ export const getLocalRecentPlaylists = async (
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recent?id=${id}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.trendingPlayLists;
 };
@@ -91,7 +87,6 @@ export const getLocalRecentPlaylists = async (
 export const getSinglePlaylist = async (id: string): Promise<PlaylistType> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/${id}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const resData: { data: PlaylistType } = await res.json();
   return resData.data;
@@ -115,7 +110,6 @@ export const getDiscoverMoodPlaylists = async (
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/recommend?userId=${
       userId || ""
     }`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.moodPlayLists;
 };
@@ -123,7 +117,6 @@ export const getDiscoverMoodPlaylists = async (
 export const getEditorPlaylists = async (): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/editor`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.editorPlayLists;
@@ -134,7 +127,6 @@ export const getRecommendedPlaylists = async (
 ): Promise<PlaylistType[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/recommend?userId=${userId}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.userRecommendPlaylist;
 };
@@ -151,7 +143,6 @@ export const getTrendingMainPlaylists = async (
     }/api/playlist/list/recent/trending?recent=${period}&recentPlayed=${
       recentPlayed || ""
     }`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.trendingMainPlaylist;
@@ -164,7 +155,6 @@ export const getCategoriesPlaylists = async (
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/categories/new?userId=${
       userId || ""
     }`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data;
@@ -183,7 +173,6 @@ export const getTrendingCategoriesPlaylists = async (
     }/api/playlist/list/recent/category?recent=${period}&recentPlayed=${
       recentPlayed || ""
     }`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return {
@@ -204,7 +193,6 @@ export const getFilteredCategoriesPlaylists = async (
     }/api/playlist/list/categories/filter?recent=${period}&categories=${JSON.stringify(
       categories,
     )}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return {
@@ -223,7 +211,6 @@ export const getMoodPlaylists = async (
     }/api/playlist/list/mood?param=${param}&recent=${period}&userId=${
       userId || ""
     }`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   ).then((res) => res.json());
   return res.moodPlayLists;
 };
@@ -233,7 +220,6 @@ export const getMoodLists = async (
 ): Promise<{ name: string; count: number }[]> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/mood/count?recent=${period}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.moodCount;
@@ -348,7 +334,6 @@ export const getTrendingSongs = async (
 ): Promise<TrendingSongPlaylistType> => {
   const res = await fetch(
     `${process.env.NEXT_APP_BASE_URL}/api/playlist/list/trending-songs?recent=${period}`,
-    { next: { tags: ["playlist"], revalidate: 0 } },
   );
   const data = await res.json();
   return data.trendingData;

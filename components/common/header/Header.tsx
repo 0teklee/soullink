@@ -51,7 +51,7 @@ const Header = () => {
             Create list
           </Link>
           <Link
-            className={`px-3 py-1 text-gray-500 dark:text-warmGray-50  hover:text-primary rounded-lg`}
+            className={`px-3 py-1 text-warmGray-50  hover:text-primary rounded-lg`}
             href={`/support`}
           >
             Support

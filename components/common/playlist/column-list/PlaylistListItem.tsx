@@ -97,15 +97,13 @@ const PlaylistListItem = ({
       <div
         className={` 
       grid ${
-        index ? "grid-cols-4" : "grid-cols-3"
+        index ? "grid-cols-5" : "grid-cols-4"
       } grid-rows-1  px-2 py-3 gap-y-0 gap-x-3  
         items-center border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-400 xs:gap-x-4 lg:gap-x-24
            lg:grid-cols-3`}
       >
         <div
-          className={`relative flex items-center justify-start gap-2 ${
-            index ? "col-span-2" : "w-80"
-          } overflow-ellipsis lg:col-span-2`}
+          className={`relative flex items-center justify-start gap-2 col-span-2 overflow-ellipsis lg:col-span-2`}
         >
           <div
             className={`flex items-center justify-center w-10 ${
