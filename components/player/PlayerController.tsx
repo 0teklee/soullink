@@ -288,6 +288,7 @@ const PlayerController = ({
             onChange={(e) => {
               playerCur?.seekTo(Number(e.target.value));
             }}
+            aria-label={`song progress`}
           />
         </div>
         {/*<button className={`xs:hidden`}>*/}
