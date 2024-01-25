@@ -49,6 +49,18 @@ https://github.com/0teklee/soullink/assets/89988500/8d10f6de-d098-41a9-a1ae-e040
 - Google OAuth를 이용한 사용자 가입 및 로그인 기능 구현
 - 팔로우/언팔로우 기능 및 비공개 댓글 기능 구현
 
+## Performance Inspection
+- 2024/01/25 updated
+
+### Landing
+<img width="715" alt="스크린샷 2024-01-25 22 11 47" src="https://github.com/0teklee/soullink/assets/89988500/8ecfbbe8-ff09-4f8c-ad18-fd4799214bb5">
+
+### Trending
+<img width="711" alt="스크린샷 2024-01-25 22 11 53" src="https://github.com/0teklee/soullink/assets/89988500/033dc021-3d9d-4a72-b8b2-25ea240f6b58">
+
+### Discover
+<img width="710" alt="스크린샷 2024-01-25 22 12 33" src="https://github.com/0teklee/soullink/assets/89988500/eafcf787-9dee-4ce4-8e15-7645e6288a02">
+
 ## EN
 
 ### Overview
