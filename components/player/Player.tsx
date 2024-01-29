@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject, useEffect, useMemo, useRef } from "react";
+import React, { RefObject, useEffect, useMemo } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -26,25 +26,30 @@ const Player = ({
   songListIndex: number;
   playerRef: RefObject<PlayerProps>;
 }) => {
-  const browserCloseRef = useRef<HTMLVideoElement>(null);
   const { playing, volume, muted } = playerState;
+  const [browserHiddenProps, setBrowserHiddenProps] = React.useState({
+    muted: false,
+    playing: false,
+  });
 
   const songListSrcset = useMemo(() => {
     return handleSourceSet(songListIndex, songList);
   }, [songListIndex, songList]);
 
   const handleVisibilityChange = () => {
-    if (document.visibilityState === "hidden") {
-      setPlayerState((prev) => ({
-        ...prev,
+    if (document.visibilityState === "hidden" && navigator.maxTouchPoints > 0) {
+      setBrowserHiddenProps((prev) => ({
         muted: true,
         playing: true,
       }));
-      console.log(
-        "hidden playerRef, playerState",
-        playerRef.current,
-        playerState,
-      );
+      console.log("browser hidden in mobile");
+    }
+
+    if (document.visibilityState !== "hidden" && navigator.maxTouchPoints > 0) {
+      setBrowserHiddenProps((prev) => ({
+        muted: false,
+        playing: prev.playing,
+      }));
     }
   };
 
@@ -64,9 +69,9 @@ const Player = ({
         autoPlay={true}
         playsinline
         url={song}
-        playing={playing}
+        playing={playing || browserHiddenProps.playing}
         volume={volume}
-        muted={muted}
+        muted={muted || browserHiddenProps.muted}
         onBuffer={() => {
           setPlayerState({
             ...playerState,
@@ -125,6 +130,7 @@ const Player = ({
             });
           }
         }}
+        stopOnUnmount={false}
         controls={true}
       >
         {songListSrcset?.map((song) => (
