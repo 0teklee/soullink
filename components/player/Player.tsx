@@ -40,6 +40,11 @@ const Player = ({
         muted: true,
         playing: true,
       }));
+      console.log(
+        "hidden playerRef, playerState",
+        playerRef.current,
+        playerState,
+      );
     }
   };
 
