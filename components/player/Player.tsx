@@ -33,18 +33,24 @@ const Player = ({
     return handleSourceSet(songListIndex, songList);
   }, [songListIndex, songList]);
 
-  const handleUnloadChange = () => {
-    playerRef.current?.seekTo(playerState?.durationSec || 0);
-    if (!!browserCloseRef?.current) {
-      browserCloseRef.current.currentTime = playerState?.durationSec;
-      browserCloseRef.current.play();
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      playerRef.current?.seekTo(playerState?.durationSec || 0);
+      if (!!browserCloseRef?.current) {
+        browserCloseRef.current.currentTime = playerState?.durationSec;
+        browserCloseRef.current.play();
+      }
+    } else {
+      if (playerRef.current) {
+        playerRef.current.play();
+      }
     }
   };
 
   useEffect(() => {
-    window.addEventListener("beforeunload", handleUnloadChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
-      window.removeEventListener("beforeunload", handleUnloadChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -120,18 +126,19 @@ const Player = ({
         }}
         controls={true}
       />
-      <video
+      <audio
         ref={browserCloseRef}
         className={`hidden`}
         autoPlay={true}
         playsInline={true}
         muted={true}
         controls={true}
+        src={songListSrcset?.[0]?.src}
       >
         {songListSrcset?.map((song) => (
           <source key={`src_${song.src}`} src={song.src} />
         ))}
-      </video>
+      </audio>
     </>
   );
 };
