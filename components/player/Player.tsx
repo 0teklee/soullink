@@ -35,14 +35,10 @@ const Player = ({
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden") {
-      playerRef.current?.seekTo(playerState?.durationSec || 0);
       if (!!browserCloseRef?.current) {
         browserCloseRef.current.currentTime = playerState?.durationSec;
         browserCloseRef.current.play();
-      }
-    } else {
-      if (playerRef.current) {
-        playerRef.current.play();
+        console.log("browser closed", browserCloseRef?.current);
       }
     }
   };
