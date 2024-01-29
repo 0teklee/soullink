@@ -120,7 +120,7 @@ const Player = ({
         }}
         controls={true}
       />
-      <video
+      <audio
         ref={browserCloseRef}
         className={`hidden`}
         autoPlay={true}
@@ -131,7 +131,7 @@ const Player = ({
         {songListSrcset?.map((song) => (
           <source key={`src_${song.src}`} src={song.src} />
         ))}
-      </video>
+      </audio>
     </>
   );
 };
