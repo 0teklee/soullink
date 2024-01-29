@@ -34,13 +34,17 @@ const Player = ({
   }, [songListIndex, songList]);
 
   const handleVisibilityChange = () => {
-    browserCloseRef?.current?.play();
-
     if (document.visibilityState === "hidden") {
-      if (!!browserCloseRef?.current) {
-        browserCloseRef.current.currentTime = playerState?.durationSec;
-        console.log("browser closed", browserCloseRef?.current);
-      }
+      setPlayerState((prev) => ({
+        ...prev,
+        muted: true,
+        playing: true,
+      }));
+      console.log(
+        "hidden playerRef, playerState",
+        playerRef.current,
+        playerState,
+      );
     }
   };
 
@@ -121,15 +125,6 @@ const Player = ({
             });
           }
         }}
-        controls={true}
-      />
-      <ReactPlayer
-        //@ts-ignore
-        ref={browserCloseRef}
-        className={`hidden`}
-        autoPlay={true}
-        playsInline={true}
-        muted={true}
         controls={true}
       >
         {songListSrcset?.map((song) => (
