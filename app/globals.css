@@ -74,3 +74,104 @@
     @apply bg-background text-foreground;
   }
 }
+
+.range {
+  margin: auto;
+  -webkit-appearance: none;
+  position: relative;
+  overflow: hidden;
+  height: 12px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.range::-webkit-slider-runnable-track
+{
+  background: #ddd;
+  border: none;
+}
+
+.range::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background-color: #01FF00;
+  border: 2px solid #fff;
+  box-shadow: -100vw 0 0 99vw #00FF11;
+  border-radius: 50%;
+}
+
+.volume_slider {
+  -webkit-appearance: slider-vertical;
+  accent-color: #01FF00;
+  height: 5rem;
+}
+
+.overflow-fadeout:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255, 0.5) 99%);
+  width: 50px;
+  height: 100%;
+}
+
+.text-bg-difference {
+  mix-blend-mode: difference;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+
+    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
+    --secondary-glow: linear-gradient(
+            to bottom right,
+            rgba(1, 65, 255, 0),
+            rgba(1, 65, 255, 0),
+            rgba(1, 65, 255, 0.3)
+    );
+
+    --tile-start-rgb: 2, 13, 46;
+    --tile-end-rgb: 2, 5, 19;
+    --tile-border: conic-gradient(
+            #ffffff80,
+            #ffffff40,
+            #ffffff30,
+            #ffffff20,
+            #ffffff10,
+            #ffffff10,
+            #ffffff80
+    );
+
+    --callout-rgb: 20, 20, 20;
+    --callout-border-rgb: 108, 108, 108;
+    --card-rgb: 100, 100, 100;
+    --card-border-rgb: 200, 200, 200;
+  }
+}
+
+.full-screen-div {
+  @apply w-screen xs:my-3 py-12 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px];
+}
+
+.sideways-scroll {
+  width: 100%;
+  white-space: nowrap;
+  line-clamp: 1;
+}
+
+.sideways-scroll:hover {
+  animation: scroll-text 10s linear infinite;
+}
+
+@keyframes scroll-text {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
