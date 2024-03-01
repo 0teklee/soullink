@@ -38,6 +38,8 @@ export default function RootLayout({
           name="google-site-verification"
           content={process.env.GOOGLE_SITE_VERIFICATION}
         />
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
       </head>
       <body>
         <RecoilRootProvider>
