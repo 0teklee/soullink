@@ -164,9 +164,9 @@ const PlayerController = ({
 
   return (
     <div
-      className={`w-screen px-5 py-3 bg-white border-t-[1px] border-gray-200 xs:py-3 xs:px-3`}
+      className={`w-screen px-5 py-3 bg-white dark:bg-black border-t-[1px] border-gray-200 dark:text-gray-50  xs:py-3 xs:px-3`}
     >
-      <div className={`flex items-center justify-between gap-6 px-5 xs:px-0`}>
+      <div className={`flex items-center justify-between gap-6 px-5 xs:px-0 `}>
         <div
           className={`flex items-center max-w-5xl gap-2 xs:flex-0 xs:w-sm xs:gap-4`}
         >
@@ -177,6 +177,7 @@ const PlayerController = ({
               onClick={handlePrevList}
             >
               <Image
+                className={`dark:invert`}
                 src={`/image/player/prev_song.svg`}
                 width={24}
                 height={24}
@@ -192,6 +193,7 @@ const PlayerController = ({
             aria-label={`previous 3 seconds`}
           >
             <Image
+              className={`dark:invert`}
               src={`/image/player/prev.svg`}
               width={24}
               height={24}
@@ -206,6 +208,7 @@ const PlayerController = ({
           >
             {playing ? (
               <Image
+                className={`dark:invert`}
                 src={`/image/player/pause.svg`}
                 width={24}
                 height={24}
@@ -213,6 +216,7 @@ const PlayerController = ({
               />
             ) : (
               <Image
+                className={`dark:invert`}
                 src={`/image/player/play.svg`}
                 width={24}
                 height={24}
@@ -226,6 +230,7 @@ const PlayerController = ({
             onClick={handleNext}
           >
             <Image
+              className={`dark:invert`}
               src={`/image/player/next.svg`}
               width={24}
               height={24}
@@ -239,6 +244,7 @@ const PlayerController = ({
               onClick={handleNextList}
             >
               <Image
+                className={`dark:invert`}
                 src={`/image/player/next_song.svg`}
                 width={24}
                 height={24}
@@ -259,6 +265,7 @@ const PlayerController = ({
               }}
             >
               <Image
+                className={`dark:invert`}
                 src={`/image/player/${!muted ? "volume.svg" : "mute.svg"}`}
                 width={24}
                 height={24}
@@ -277,11 +284,13 @@ const PlayerController = ({
         <div
           className={`flex-1 flex items-center justify-evenly gap-4 xs:flex-0 xs:order-3 xs:gap-0 xs:max-w-fit xs:pr-3`}
         >
-          <p className={`text-xs text-gray-900 whitespace-nowrap`}>
+          <p
+            className={`text-xs text-gray-900 dark:text-gray-50 whitespace-nowrap`}
+          >
             {isLoading ? `loading..` : `${played} / ${duration}`}
           </p>
           <input
-            className={`relative w-full h-2 mx-10 rounded-lg xs:hidden focus:appearance-none range`}
+            className={`relative w-full h-2 mx-10 rounded-lg xs:hidden focus:appearance-none range dark:`}
             type={`range`}
             value={playedSec}
             max={durationSec}
@@ -346,11 +355,13 @@ const PlayerController = ({
           <div
             className={`max-w-[200px] overflow-x-hidden xs:max-w-[90px] xs:order-1 xs:flex-1 xs:text-center`}
           >
-            <p className={`sideways-scroll text-xs text-gray-900 font-medium`}>
+            <p
+              className={`sideways-scroll text-xs text-gray-900 dark:text-gray-100 font-medium`}
+            >
               {songList[songListIndex]?.title}
             </p>
             <p
-              className={`sideways-scroll text-xs text-gray-600 font-normal xs:hidden`}
+              className={`sideways-scroll text-xs text-gray-600 dark:text-gray-50 font-normal xs:hidden`}
             >
               {songList[songListIndex]?.artist}
             </p>
@@ -387,7 +398,7 @@ const PlayerController = ({
                 />
               ) : (
                 <HeartIcon
-                  className={`text-gray-400 bg-white`}
+                  className={`text-gray-400 bg-white dark:text-gray-50 dark:bg-black`}
                   width={24}
                   height={24}
                 />
