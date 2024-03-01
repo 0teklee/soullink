@@ -70,7 +70,7 @@ const DiscoverMoodLists = ({ userId }: { userId?: string }) => {
               </div>
               {isDropdownOpen && (
                 <div
-                  className={`absolute flex flex-col gap-1 items-start justify-start bg-white dark:bg-gray-500 rounded-lg z-30 overflow-hidden `}
+                  className={`absolute flex flex-col gap-1 items-start justify-start bg-white dark:bg-black rounded-lg z-30 overflow-hidden `}
                 >
                   {commonMoods.map((mood, index) => (
                     <div
@@ -79,7 +79,7 @@ const DiscoverMoodLists = ({ userId }: { userId?: string }) => {
                         setIsDropdownOpen(false);
                       }}
                       key={`${mood}-${index}`}
-                      className={`flex items-center justify-start gap-1 w-full p-2 text-xl text-gray-700 dark:text-warmGray-50 bg-white dark:bg-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600 ${moodTextColor} font-semibold cursor-pointer `}
+                      className={`flex items-center justify-start gap-1 w-full p-2 text-xl text-gray-700 dark:text-warmGray-50 bg-white dark:bg-black hover:bg-gray-50 dark:hover:bg-gray-600 ${moodTextColor} font-semibold cursor-pointer `}
                     >
                       <p>{mood}</p>
                     </div>

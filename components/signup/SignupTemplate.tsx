@@ -118,7 +118,7 @@ const SignupTemplate = () => {
 
   return (
     <section
-      className={`flex flex-col items-center gap-12 py-6 xs:px-3 xs:overflow-y-scroll xs:gap-6 dark:bg-gray-600 xs:h-screen xs:pt-6 xs:pb-24`}
+      className={`flex flex-col items-center gap-12 py-6 xs:px-3 xs:overflow-y-scroll xs:gap-6 dark:bg-black xs:h-screen xs:pt-6 xs:pb-24`}
     >
       <Title size={`h1`} text={`Sign up`} />
       <form

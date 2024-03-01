@@ -190,7 +190,7 @@ const PlaylistListItem = ({
                 {isLikedByDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className={`absolute top-5 left-0 px-3 py-2 bg-white border border-gray-300 rounded dark:bg-gray-500 z-10`}
+                    className={`absolute top-5 left-0 px-3 py-2 bg-white border border-gray-300 rounded dark:bg-black z-10`}
                   >
                     {likedBy?.map((user) => (
                       <div
@@ -265,7 +265,9 @@ const PlaylistListItem = ({
           >
             {songs.length} songs
           </button>
-          <p className={`text-sm xs:hidden`}>{description}</p>
+          <p className={`text-sm xs:hidden line-clamp-2 overflow-ellipsis`}>
+            {description}
+          </p>
         </div>
         <div className={`${isLarge && "hidden"} lg:hidden`}>
           <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>

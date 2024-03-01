@@ -75,7 +75,7 @@ const PlaylistSliderItem = ({
         >
           {isOnHover && (
             <div
-              className={`bg-white text-xs text-gray-700 dark:bg-gray-600 dark:text-warmGray-50 whitespace-nowrap`}
+              className={`bg-white text-xs text-gray-700 dark:bg-black dark:text-warmGray-50 whitespace-nowrap`}
             >
               {isUserLikedPlaylist
                 ? `unlike this playlist`

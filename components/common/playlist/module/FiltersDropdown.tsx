@@ -50,7 +50,7 @@ const FiltersDropdown = ({
       {isDropdownOpen && (
         <div className={`absolute top-8 left-0  z-20 ease-out duration-75`}>
           <div
-            className={`flex flex-col gap-2 w-full bg-white dark:bg-gray-500 border border-gray-300 rounded-md shadow-lg`}
+            className={`flex flex-col gap-2 w-full bg-white dark:bg-black border border-gray-300 rounded-md shadow-lg`}
           >
             {filters.map((filter, index) => (
               <button
