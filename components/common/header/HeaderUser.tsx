@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
-import { useRouter } from "next/navigation";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
 import { darkModeState } from "@/libs/recoil/atoms";
 import { useRecoilState } from "recoil";
@@ -16,7 +15,6 @@ const HeaderUser = () => {
   const userSession = session as UserSessionType;
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [isLogin, setIsLogin] = useState(!!userSession?.userId);
-  const router = useRouter();
   const listRef = useRef<HTMLDivElement>(null);
   const isLoading = status === "loading";
 
@@ -78,6 +76,7 @@ const HeaderUser = () => {
             <HeaderMenuItem
               isLogin={isLogin}
               userSession={userSession}
+              login={login}
               logout={logout}
               setDarkMode={setDarkMode}
               darkMode={darkMode}

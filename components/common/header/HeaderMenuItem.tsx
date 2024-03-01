@@ -3,13 +3,13 @@ import HeaderLink from "@/components/common/header/HeaderLink";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { signIn } from "next-auth/react";
 import { SetterOrUpdater } from "recoil";
 import { clsx } from "clsx";
 
 interface HeaderMenuItemProps {
   isLogin: boolean;
   userSession: any;
+  login: () => void;
   logout: () => void;
   setDarkMode: SetterOrUpdater<boolean>;
   darkMode: boolean;
@@ -18,6 +18,7 @@ interface HeaderMenuItemProps {
 const HeaderMenuItem = ({
   isLogin,
   userSession,
+  login,
   logout,
   setDarkMode,
   darkMode,
@@ -50,9 +51,7 @@ const HeaderMenuItem = ({
           <HeaderButton onClick={() => router.push(`/signup`)}>
             Sign up
           </HeaderButton>
-          <HeaderButton onClick={async () => await signIn("google")}>
-            Login
-          </HeaderButton>
+          <HeaderButton onClick={async () => await login()}>Login</HeaderButton>
         </>
       )}
       <HeaderLink href={`/discover`}>Discover</HeaderLink>
