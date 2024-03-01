@@ -3,17 +3,22 @@ import Image from "next/image";
 import HeaderUser from "@/components/common/header/HeaderUser";
 import Link from "next/link";
 import HeaderSearch from "@/components/common/header/HeaderSearch";
-import { NextFont } from "next/dist/compiled/@next/font";
 import { clsx } from "clsx";
+import { Open_Sans } from "next/font/google";
 
-const Header = ({ font }: { font: NextFont }) => {
+const OpenSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+});
+
+const Header = () => {
   return (
     <div
       className={clsx(
-        `fixed flex items-center justify-between w-screen px-8 py-3`,
-        `bg-gray-100 text-gray-900 border-b-2 border-primary z-50 `,
-        `dark:text-gray-50 dark:bg-black xs:py-2 xs:px-2 `,
-        font.className,
+        `fixed top-0 flex items-center justify-between w-screen px-8 py-3`,
+        `bg-gray-100 text-gray-900 border-b-2 border-primary z-50`,
+        `dark:text-gray-50 dark:bg-black xs:py-2 xs:px-2`,
+        OpenSans.className,
       )}
     >
       <div className={`flex items-center w-full h-full gap-6 xs:flex-1`}>

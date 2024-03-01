@@ -11,6 +11,7 @@ import Link from "next/link";
 import { darkModeState } from "@/libs/recoil/atoms";
 import { useRecoilState } from "recoil";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { clsx } from "clsx";
 
 const HeaderUser = () => {
   const { data: session, status } = useSession();
@@ -49,7 +50,7 @@ const HeaderUser = () => {
   return (
     <div ref={listRef}>
       <div
-        className={`flex-1 flex items-center w-full font-medium gap-6 xs:hidden`}
+        className={`flex-1 flex items-center w-full font-medium gap-6 xs:hidden dark:bg-black`}
       >
         {!isLoading && !isLogin && (
           <>
@@ -164,7 +165,12 @@ const HeaderUser = () => {
         />
         {isListClicked && !isLoading && isLogin && (
           <div
-            className={`fixed top-12 left-0 flex flex-col w-screen items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={clsx(
+              `fixed top-12 left-0 flex flex-col w-screen`,
+              `items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm`,
+              `whitespace-nowrap bg-white border border-gray-300 rounded`,
+              `dark:bg-black dark:border-gray-700 dark:text-warmGray-50`,
+            )}
           >
             <button
               className={`w-full px-3 py-1 text-start hover:bg-gray-200 hover:text-white`}
@@ -231,7 +237,12 @@ const HeaderUser = () => {
         )}
         {isListClicked && !isLoading && !isLogin && (
           <div
-            className={`fixed top-12 left-0 flex flex-col w-screen items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm whitespace-nowrap bg-white border border-gray-300 rounded `}
+            className={clsx(
+              `fixed top-12 left-0 flex flex-col w-screen`,
+              `items-start gap-3 p-2 text-gray-900 dark:text-warmGray-100 text-sm`,
+              `whitespace-nowrap bg-white border border-gray-300 rounded`,
+              `dark:bg-black dark:border-gray-700 dark:text-warmGray-50`,
+            )}
           >
             <button
               className={`w-full px-3 py-1 text-start hover:text-primary`}
