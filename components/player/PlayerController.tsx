@@ -335,6 +335,7 @@ const PlayerController = ({
               }}
             >
               <Image
+                className={`dark:invert`}
                 src={`/image/player/list.svg`}
                 alt={`playlists`}
                 width={24}
@@ -374,6 +375,7 @@ const PlayerController = ({
             >
               {!playlist?.isSongTable && isPlaylistLiked && (
                 <Image
+                  className={`dark:invert`}
                   src={`/image/common/playlist_liked.svg`}
                   alt={`playlist_liked`}
                   width={24}
@@ -382,6 +384,7 @@ const PlayerController = ({
               )}
               {!playlist?.isSongTable && !isPlaylistLiked && (
                 <Image
+                  className={`dark:invert`}
                   src={`/image/common/playlist_like.svg`}
                   alt={`playlist_like`}
                   width={24}

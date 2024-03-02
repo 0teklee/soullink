@@ -69,7 +69,7 @@ const HeaderUser = () => {
               `w-screen max-w-xs p-2`,
               `text-gray-900 text-sm whitespace-nowrap`,
               `bg-white border border-gray-300 rounded`,
-              `xs:w-screen xs:fixed xs:top-12 xs:left-0`,
+              `xs:w-screen xs:fixed xs:top-12 xs:left-0 xs:max-w-none`,
               `dark:bg-black dark:border-gray-700 dark:text-warmGray-50`,
             )}
           >
