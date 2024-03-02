@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import { motion, useAnimationControls } from "framer-motion";
 import TopListItem from "@/components/common/playlist/screen-width-slider/TopListItem";
+import { clsx } from "clsx";
 
 const TopListContainter = ({ playlists }: { playlists: PlaylistType[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,7 +34,10 @@ const TopListContainter = ({ playlists }: { playlists: PlaylistType[] }) => {
   return (
     <div className={`h-top-list-container`}>
       <div
-        className={`w-screen xs:-mx-4 desktop:-mx-[400px] xl:-mx-24 3xl:-mx-48`}
+        className={clsx(
+          `w-screen`,
+          `xs:-mx-4 md:-mx-2 xl:-mx-24 3xl:-mx-48 desktop:-mx-[400px] `,
+        )}
       >
         <div className={`relative w-full h-full `}>
           <motion.div animate={controls}>

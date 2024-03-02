@@ -9,6 +9,7 @@ import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
+import { clsx } from "clsx";
 
 const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
   const { data: session } = useSession() as { data: UserSessionType };
@@ -24,6 +25,7 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
     fontColor,
     bgColor,
   } = playlist;
+
   const { nickname } = author;
   const cover = coverImage || `/image/common/default_cover_image.svg`;
   const { playing, handleChangePlaylistState } = useSelectedPlaylistPlay(
@@ -34,7 +36,11 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
 
   return (
     <div
-      className={`w-full h-full xs:my-2 py-4 xs:py-2 xs:px-4 xl:px-24 3xl:px-48 desktop:px-[400px]`}
+      className={clsx(
+        `w-full h-full`,
+        `xs:my-2 py-4 xs:py-2 xs:px-4`,
+        `lg:px-2 xl:px-24 3xl:px-48 desktop:px-[400px]`,
+      )}
       style={{
         backgroundColor: bgColor,
         color: fontColor,
@@ -67,9 +73,12 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
             </div>
           </div>
         </div>
-        <div className={`flex flex-col items-start gap-3`}>
+        <div className={`flex flex-col items-start gap-3 w-full`}>
           <div
-            className={`flex flex-col items-start gap-1 w-full xs:items-center `}
+            className={clsx(
+              `flex flex-col items-start gap-1 w-full xs:items-center `,
+              `whitespace-nowrap`,
+            )}
           >
             <p
               className={`text-2xl font-semibold cursor-pointer hover:underline hover:after:content-['⇢'] hover:after:ml-1`}
@@ -91,7 +100,11 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
               onClick={() => {
                 router.push(`/user/${formatPathName(nickname)}`);
               }}
-              className={`flex justify-center items-center text-base font-normal gap-2 cursor-pointer`}
+              className={clsx(
+                `flex justify-center items-center gap-2`,
+                `text-base font-normal`,
+                `cursor-pointer`,
+              )}
             >
               <p>by</p>
               <div className={`flex justify-center items-center gap-1`}>
@@ -111,11 +124,7 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
               </div>
             </div>
           </div>
-          <div
-            className={`flex flex-col justify-start items-start gap-0.5 xs:line-clamp-1 xs:truncate`}
-          >
-            <p>{description}</p>
-          </div>
+          <p className={clsx(`w-full`, `line-clamp-2`)}>{description}</p>
         </div>
       </div>
     </div>
