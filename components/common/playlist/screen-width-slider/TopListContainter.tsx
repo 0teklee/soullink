@@ -28,7 +28,7 @@ const TopListContainter = ({ playlists }: { playlists: PlaylistType[] }) => {
   }, [currentIndex]);
 
   useEffect(() => {
-    // setInterval(handleDelay, 1000 * 10);
+    setInterval(handleDelay, 1000 * 10);
   }, []);
 
   return (
