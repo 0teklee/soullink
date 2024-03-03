@@ -1,17 +1,13 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/playerType";
 import { clsx } from "clsx";
+import usePlayerState from "@/components/player/usePlayerState";
 
 const VolumeDropdown = ({
-  playerState,
-  setPlayerState,
   setIsVolumeDropdownOpen,
 }: {
-  playerState: PlayerType;
-  setPlayerState: SetterOrUpdater<PlayerType>;
   setIsVolumeDropdownOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { playerState, setPlayerState } = usePlayerState();
   const { volume, muted } = playerState;
   return (
     <div
