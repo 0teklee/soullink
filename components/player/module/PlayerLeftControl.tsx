@@ -4,13 +4,6 @@ import usePlayerState from "@/components/player/usePlayerState";
 import Image from "next/image";
 import PlayerLeftButtons from "@/components/player/module/PlayerLeftButtons";
 
-interface PlayerLeftControlProps {
-  handlePrevList: () => void;
-  handleNextList: () => void;
-  playing: boolean;
-  muted: boolean;
-}
-
 const PlayerLeftControl = () => {
   const [isVolumeDropdownOpen, setIsVolumeDropdownOpen] = useState(false);
 
