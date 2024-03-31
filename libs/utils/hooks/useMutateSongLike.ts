@@ -31,6 +31,11 @@ const useSongLike = (
       if (!userId || !userId) {
         throw new Error("User is not logged in");
       }
+
+      if (!songId) {
+        throw new Error("Song id is not provided");
+      }
+
       return postSongLike({ songId, userId: userId || "" });
     },
     onMutate: ({ songId, userId, optimisticSetter }) => {
