@@ -1,6 +1,7 @@
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
@@ -14,9 +15,9 @@ model User {
   email               String                 @unique
   nickname            String                 @unique @db.Char(20)
   bio                 String                 @db.Char(120)
-  profilePic          String?                @db.LongText()
-  fontColor           String?                @db.LongText()
-  bgColor             String?                @db.LongText()
+  profilePic          String?                @db.Text()
+  fontColor           String?                @db.Text()
+  bgColor             String?                @db.Text()
   isBlocked           Boolean
   isEditor            Boolean                @default(false)
   blockReason         String                 @default("NULL")
@@ -34,8 +35,6 @@ model User {
   website             String?
   CommentLikedByUsers CommentLikedByUsers[]
   recentPlay          RecentPlay[]
-
-  @@fulltext([nickname])
 }
 
 model Follow {
@@ -51,12 +50,12 @@ model Playlist {
   id          String                 @id @default(uuid())
   title       String                 @unique @db.VarChar(40)
   coverImage  String?                @db.Text()
-  description String                 @db.MediumText
+  description String                 @db.Text()
   author      User                   @relation(fields: [authorId], references: [id])
   authorId    String
   songs       PlaylistSong[]
-  bgColor     String?                @db.LongText()
-  fontColor   String?                @db.LongText()
+  bgColor     String?                @db.Text()
+  fontColor   String?                @db.Text()
   comments    Comment[]
   likedBy     PlaylistLikedByUsers[]
   likedCount  Int                    @default(0)
@@ -68,16 +67,12 @@ model Playlist {
   recentPlay  RecentPlay[]
   mood        Mood                   @relation(fields: [moodId], references: [id])
   moodId      String
-
-  @@fulltext([title, description])
 }
 
 model Category {
   id        String     @id @default(uuid())
   name      String     @unique @db.VarChar(30)
   playlists Playlist[]
-
-  @@fulltext([name])
 }
 
 model Mood {
@@ -113,8 +108,6 @@ model Song {
   playedCount  Int?               @default(0)
   thumbnail    String?
   PlaylistSong PlaylistSong[]
-
-  @@fulltext([title, artist])
 }
 
 model PlaylistSong {
