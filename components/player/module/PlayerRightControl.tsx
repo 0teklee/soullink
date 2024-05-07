@@ -5,13 +5,13 @@ import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 import useMutateSongLike from "@/libs/utils/hooks/useMutateSongLike";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ListMenuContainer from "@/components/player/module/ListMenuContainer";
 import usePlayerState from "@/components/player/usePlayerState";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
+import { useModalStore } from "@/libs/store";
 
 const PlayerRightControl = () => {
   const listDropdownRef = React.useRef<HTMLDivElement>(null);
@@ -20,7 +20,7 @@ const PlayerRightControl = () => {
   const { data: userSession } = useSession() as { data: UserSessionType };
   const { userId } = userSession || "";
 
-  const { songListIndex, selectedPlayList, setPlayerState, currentSong } =
+  const { currentSongListIndex, selectedPlayList, currentSong } =
     usePlayerState();
 
   const isUserPlaylistLiked =
@@ -47,7 +47,7 @@ const PlayerRightControl = () => {
   const [isSongLiked, setIsSongLiked] = useState(!!isUserSongLiked);
   const [isPlaylistLiked, setIsPlaylistLiked] = useState(isUserPlaylistLiked);
 
-  const { setModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
 
   const { playlistLikeMutate } = useMutatePlaylistLike(
     playlistId,
@@ -141,8 +141,7 @@ const PlayerRightControl = () => {
           <div ref={listDropdownRef}>
             <ListMenuContainer
               playlist={selectedPlayList}
-              setPlayerState={setPlayerState}
-              curIndex={songListIndex}
+              curIndex={currentSongListIndex}
               songList={songList}
             />
           </div>
