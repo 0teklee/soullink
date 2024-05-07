@@ -5,8 +5,8 @@ import { useSession } from "next-auth/react";
 import { CommentPayloadType, UserSessionType } from "@/libs/types/userType";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postComment } from "@/libs/utils/client/fetchers";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useModalStore } from "@/libs/store";
 
 const CommentInput = ({
   postId,
@@ -15,7 +15,7 @@ const CommentInput = ({
   postId: string;
   isProfile?: boolean;
 }) => {
-  const { setModal: setLoginModalOpen } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
 
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
@@ -53,7 +53,7 @@ const CommentInput = ({
   const handlePostComment = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isLoggedIn || !payload.userId) {
-      setLoginModalOpen(MODAL_TYPE.LOGIN);
+      setModal(MODAL_TYPE.LOGIN);
       return;
     }
 

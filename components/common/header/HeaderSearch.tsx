@@ -2,11 +2,12 @@
 
 import React from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useModalStore } from "@/libs/store";
 
 const HeaderSearch = () => {
-  const { setModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
+
   return (
     <div
       className="flex-1 flex items-center justify-center w-full gap-2 group cursor-pointer"

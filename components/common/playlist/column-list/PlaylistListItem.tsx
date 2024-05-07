@@ -21,8 +21,8 @@ import { HeartIcon } from "@heroicons/react/24/solid";
 import CategoriesList from "@/components/common/category/list/CategoriesList";
 import useSelectedPlaylistPlay from "@/libs/utils/hooks/useSelectedPlaylistPlay";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useModalStore } from "@/libs/store";
 
 const PlaylistListItem = ({
   playlist,
@@ -42,7 +42,7 @@ const PlaylistListItem = ({
     userId,
   );
 
-  const { setModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
 
   const {
     id: playlistId,

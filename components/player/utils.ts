@@ -1,7 +1,6 @@
 import React from "react";
 import { PlayerProps, SongType } from "@/libs/types/song&playlistType";
-import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/playerType";
+import { playerGlobalStore } from "@/libs/store";
 
 export const handleSourceSet = (
   currentIndex?: number,
@@ -24,7 +23,6 @@ export const handleSourceSet = (
 const handlePlayerKeyPress = (
   e: React.KeyboardEvent<Document> | KeyboardEvent,
   playerRef: React.RefObject<PlayerProps>,
-  setPlayerState: SetterOrUpdater<PlayerType>,
 ) => {
   if (
     e.target instanceof Element &&
@@ -36,7 +34,7 @@ const handlePlayerKeyPress = (
   switch (e.key) {
     case " ":
       e.preventDefault();
-      setPlayerState((prev) => {
+      playerGlobalStore.setState((prev) => {
         return { ...prev, playing: !prev.playing };
       });
       break;
@@ -50,11 +48,17 @@ const handlePlayerKeyPress = (
       break;
     case "ArrowUp":
       e.preventDefault();
-      setPlayerState((prev) => ({ ...prev, volume: prev.volume + 0.1 }));
+      playerGlobalStore.setState((prev) => ({
+        ...prev,
+        volume: prev.volume + 0.1,
+      }));
       break;
     case "ArrowDown":
       e.preventDefault();
-      setPlayerState((prev) => ({ ...prev, volume: prev.volume - 0.1 }));
+      playerGlobalStore.setState((prev) => ({
+        ...prev,
+        volume: prev.volume - 0.1,
+      }));
       break;
   }
 };

@@ -23,16 +23,16 @@ import { formatPathName } from "@/libs/utils/client/formatter";
 import useMutatePlaylistLike from "@/libs/utils/hooks/useMutatePlaylistLike";
 import { useQuery } from "@tanstack/react-query";
 import { getSinglePlaylist } from "@/libs/utils/client/fetchers";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 import UseCustomizeStyle from "@/libs/utils/hooks/useCustomizeStyle";
 import { playlistDefault } from "@/libs/utils/client/contants/fallbackValues";
+import { useModalStore } from "@/libs/store";
 
 const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
   const router = useRouter();
 
-  const { setModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
 
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
 

@@ -1,5 +1,4 @@
 import { PlaylistType, SongType } from "@/libs/types/song&playlistType";
-import { SetterOrUpdater } from "recoil";
 import {
   FollowerOptionNullable,
   FollowingOptionNullable,
@@ -60,33 +59,37 @@ export interface ShareDownloadModalPropsType {
   bgColor?: string;
 }
 
-export interface UseModalStateMap {
-  [MODAL_TYPE.FOLLOW]: [
-    FollowModalPropsType,
-    SetterOrUpdater<FollowModalPropsType | null>,
-  ];
-  [MODAL_TYPE.PLAYLIST_EDIT]: [
-    PlaylistEditPropsType | null,
-    SetterOrUpdater<PlaylistEditPropsType | null>,
-  ];
-  [MODAL_TYPE.PLAYLIST_DOWNLOAD]: [
-    ShareDownloadModalPropsType | null,
-    SetterOrUpdater<ShareDownloadModalPropsType | null>,
-  ];
-  [MODAL_TYPE.SONG_TABLE]: [
-    SongTableModalPropsType | null,
-    SetterOrUpdater<SongTableModalPropsType | null>,
-  ];
-  [MODAL_TYPE.SONG]: [
-    SongModalPropsType | null,
-    SetterOrUpdater<SongModalPropsType | null>,
-  ];
-  [MODAL_TYPE.ERROR]: [
-    ErrorModalPropsType | null,
-    SetterOrUpdater<ErrorModalPropsType | null>,
-  ];
-  [MODAL_TYPE.DELETE]: [
-    DeleteModalPropsType | null,
-    SetterOrUpdater<DeleteModalPropsType | null>,
-  ];
+export type CommonModalProps =
+  | PlaylistEditPropsType
+  | ShareDownloadModalPropsType
+  | FollowModalPropsType
+  | SongTableModalPropsType
+  | SongModalPropsType
+  | DeleteModalPropsType
+  | ErrorModalPropsType
+  | null;
+
+export interface CommonModalState {
+  isModalOpen: boolean;
+  modalType: MODAL_TYPE | null;
+  followModalProps: FollowModalPropsType | null;
+  playlistEditModalProps: PlaylistEditPropsType | null;
+  playlistDownloadModalProps: ShareDownloadModalPropsType | null;
+  songTableModalProps: SongTableModalPropsType | null;
+  songModalProps: SongModalPropsType | null;
+  deleteModalProps: DeleteModalPropsType | null;
+  errorModalProps: ErrorModalPropsType | null;
+  setModal: (
+    type: MODAL_TYPE,
+    props?:
+      | PlaylistEditPropsType
+      | ShareDownloadModalPropsType
+      | FollowModalPropsType
+      | SongTableModalPropsType
+      | SongModalPropsType
+      | DeleteModalPropsType
+      | ErrorModalPropsType
+      | null,
+  ) => void;
+  setModalOpen: (isOpen: boolean) => void;
 }

@@ -1,14 +1,16 @@
 import { PlaylistType } from "@/libs/types/song&playlistType";
-import { useRecoilState } from "recoil";
 
-import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
+import { playerGlobalStore, selectedPlaylistStore } from "@/libs/store";
+import { useStore } from "zustand";
 
 export const useSetPlaylistFromSongTable = (
   songId: string,
   targetPlaylist?: PlaylistType,
 ) => {
-  const [currentPlaylist, setCurrentPlaylist] = useRecoilState(playlistState);
-  const [currentPlayer, setCurrentPlayer] = useRecoilState(playerGlobalState);
+  const { playing, currentSongListIndex } = useStore(playerGlobalStore);
+  const { id: selectedId, songs: selectedSongs } = selectedPlaylistStore(
+    (state) => ({ id: state?.id, songs: state?.songs }),
+  );
 
   if (!targetPlaylist) {
     return;
@@ -17,42 +19,45 @@ export const useSetPlaylistFromSongTable = (
   const { songs: targetSongs } = targetPlaylist;
   const targetSongIndex = targetSongs.findIndex((song) => song.id === songId);
 
-  const isSongPlaying =
-    currentPlaylist &&
-    currentPlayer &&
-    currentPlayer.playing &&
-    targetPlaylist.id === currentPlaylist?.id &&
-    songId === currentPlaylist?.songs[currentPlayer.currentSongListIndex]?.id;
+  const isTargetSongPlaying =
+    !!selectedId &&
+    playing &&
+    targetPlaylist.id === selectedId &&
+    selectedSongs &&
+    songId === selectedSongs[currentSongListIndex]?.id;
 
-  const updatePlaylist = (playlist: PlaylistType) => {
-    setCurrentPlaylist(playlist);
-    setCurrentPlayer({
-      ...currentPlayer,
+  const updatePlaylist = (_playlist: PlaylistType) => {
+    selectedPlaylistStore.setState(_playlist);
+    playerGlobalStore.setState((prev) => ({
+      ...prev,
       currentSongListIndex: targetSongIndex || 0,
       playing: true,
-    });
+    }));
   };
 
   const updateCurrentPlaySong = () => {
-    if (currentPlayer.playing && isSongPlaying) {
-      setCurrentPlayer((prev) => ({ ...prev, playing: false }));
+    if (playing && isTargetSongPlaying) {
+      playerGlobalStore.setState((prev) => ({ ...prev, playing: false }));
       return;
     }
 
-    setCurrentPlayer({
-      ...currentPlayer,
+    playerGlobalStore.setState((prev) => ({
+      ...prev,
       currentSongListIndex: targetSongIndex,
       playing: true,
-    });
+    }));
   };
 
   const playSongFromTable = (playlist: PlaylistType) => {
-    if (!currentPlaylist || currentPlaylist.id !== playlist.id) {
+    if (!selectedId || selectedId !== playlist.id) {
       return updatePlaylist(playlist);
     }
 
     return updateCurrentPlaySong();
   };
 
-  return { playSongFromTable, currentPlayer, currentPlaylist, isSongPlaying };
+  return {
+    playSongFromTable,
+    isSongPlaying: isTargetSongPlaying,
+  };
 };

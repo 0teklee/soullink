@@ -6,20 +6,18 @@ import {
   SONG_DEFAULT_VALUE,
 } from "@/libs/utils/client/contants/commonValues";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 import SubmitPage from "@/components/playlist/module/song-modal/SubmitPage";
 import YoutubeSearchPage from "@/components/playlist/module/song-modal/YoutubeSearchPage";
+import { useModalStore } from "@/libs/store";
 
 const PlaylistSongModal = () => {
-  const { setModal, setModalOpenState, useModalState } = useSetModal();
-  const [songModalProps, setSongModalProps] = useModalState<
-    UseModalStateMap[MODAL_TYPE.SONG]
-  >(MODAL_TYPE.SONG);
-
-  const [playlistEditProps] = useModalState<
-    UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
-  >(MODAL_TYPE.PLAYLIST_EDIT);
+  const setModal = useModalStore((state) => state.setModal);
+  const setModalOpen = useModalStore((state) => state.setModalOpen);
+  const songModalProps = useModalStore((state) => state.songModalProps);
+  const playlistEditProps = useModalStore(
+    (state) => state.playlistEditModalProps,
+  );
 
   const { isEdit } = songModalProps || {};
   const { userId, playlistData } = playlistEditProps || {};
@@ -56,12 +54,12 @@ const PlaylistSongModal = () => {
       return;
     }
 
-    setSongModalProps((prev) => ({
-      ...prev,
+    setModal(MODAL_TYPE.PLAYLIST_EDIT, {
+      ...playlistEditProps,
       modalSong: songValue,
-    }));
+    });
 
-    setModalOpenState(false);
+    setModalOpen(false);
   };
 
   return (
@@ -77,7 +75,7 @@ const PlaylistSongModal = () => {
             setModal(MODAL_TYPE.PLAYLIST_EDIT);
             return;
           }
-          setModalOpenState(false);
+          setModalOpen(false);
         }}
         className={`absolute top-2 right-3 text-gray-400 text-base`}
       >
@@ -101,7 +99,7 @@ const PlaylistSongModal = () => {
           songValue={songValue}
           setSongValue={setSongValue}
           urlType={urlType}
-          setModalOpenState={setModalOpenState}
+          setModalOpenState={setModalOpen}
           setPage={setPage}
         />
       )}

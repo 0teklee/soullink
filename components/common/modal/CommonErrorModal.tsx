@@ -1,18 +1,15 @@
 import React from "react";
-import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
 import { useRouter } from "next/navigation";
 import {
   ArrowPathIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { useModalStore } from "@/libs/store";
 
 const CommonErrorModal = () => {
   const router = useRouter();
-  const { setModalOpenState, useModalState } = useSetModal();
-  const [errorModalProps] = useModalState<UseModalStateMap[MODAL_TYPE.ERROR]>(
-    MODAL_TYPE.ERROR,
-  );
+  const setModalOpen = useModalStore((state) => state.setModalOpen);
+  const errorModalProps = useModalStore((state) => state.errorModalProps);
   const { error, resetErrorBoundary } = errorModalProps || {};
   const errorMessage =
     error && error.message ? error.message : "An Error occurred.";
@@ -34,7 +31,7 @@ const CommonErrorModal = () => {
               resetErrorBoundary();
             }
             router.back();
-            setModalOpenState(false);
+            setModalOpen(false);
           }}
           className={`px-4 py-2 bg-gray-300 text-white rounded-md`}
         >
@@ -45,7 +42,7 @@ const CommonErrorModal = () => {
             if (resetErrorBoundary) {
               resetErrorBoundary();
             }
-            setModalOpenState(false);
+            setModalOpen(false);
           }}
           className={`flex items-center gap-1 px-4 py-2 bg-primary text-white rounded-md`}
         >

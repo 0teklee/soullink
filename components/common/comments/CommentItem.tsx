@@ -18,8 +18,8 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useModalStore } from "@/libs/store";
 
 const CommentItem = ({
   commentProps,
@@ -33,7 +33,8 @@ const CommentItem = ({
   fontColor?: string;
 }) => {
   const [isLikedByDropdownOpen, setIsLikedByDropdownOpen] = useState(false);
-  const { setModal, setModalOpenState } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
+  const setModalOpen = useModalStore((state) => state.setModalOpen);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -81,7 +82,7 @@ const CommentItem = ({
       queryClient.invalidateQueries({
         queryKey: ["commentList"],
       });
-      setModalOpenState(false);
+      setModalOpen(false);
     },
     onError: (error) => {
       console.log(error);

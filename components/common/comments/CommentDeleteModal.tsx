@@ -1,17 +1,12 @@
 import React from "react";
 import Title from "@/components/common/module/Title";
-import {
-  DeleteModalPropsType,
-  MODAL_TYPE,
-  UseModalStateMap,
-} from "@/libs/types/modalType";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { DeleteModalPropsType } from "@/libs/types/modalType";
+import { useModalStore } from "@/libs/store";
 
 const CommentDeleteModal = () => {
-  const { setModalOpenState, useModalState } = useSetModal();
-  const [deleteModalProps] = useModalState<UseModalStateMap[MODAL_TYPE.DELETE]>(
-    MODAL_TYPE.DELETE,
-  );
+  const deleteModalProps = useModalStore((state) => state.deleteModalProps);
+  const setModalOpenState = useModalStore((state) => state.setModalOpen);
+
   const { mutate } = deleteModalProps as DeleteModalPropsType;
   return (
     <div className={`flex flex-col gap-3`}>

@@ -5,16 +5,16 @@ import { PlaylistType } from "@/libs/types/song&playlistType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
+import { useModalStore } from "@/libs/store";
 
 const PlaylistGallery = ({ playlists }: { playlists?: PlaylistType[] }) => {
   const { data: session } = useSession() as { data: UserSessionType };
   const { userId } = session || {};
   const router = useRouter();
-  const { setModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
 
   return (
     <>

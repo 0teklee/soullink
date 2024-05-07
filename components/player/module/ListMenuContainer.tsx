@@ -5,17 +5,13 @@ import ListMenuItem from "@/components/player/module/ListMenuItem";
 import { PlayerListItem, PlaylistType } from "@/libs/types/song&playlistType";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { SetterOrUpdater } from "recoil";
-import { PlayerType } from "@/libs/types/playerType";
 
 const ListMenuContainer = ({
   curIndex,
-  setPlayerState,
   songList,
   playlist,
 }: {
   curIndex: number;
-  setPlayerState: SetterOrUpdater<PlayerType>;
   songList: PlayerListItem[];
   playlist: PlaylistType | null;
 }) => {
@@ -56,7 +52,6 @@ const ListMenuContainer = ({
           <ListMenuItem
             key={`${song.id}_${index}`}
             {...song}
-            setPlayerState={setPlayerState}
             curIndex={curIndex}
             index={index}
           />

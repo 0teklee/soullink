@@ -4,16 +4,15 @@ import React, { RefObject, useCallback, useRef, useState } from "react";
 import Image from "next/image";
 
 import { downloadPlaylistPng } from "@/libs/utils/client/commonUtils";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
-import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import ColorPicker from "@/components/common/module/ColorPicker";
+import { useModalStore } from "@/libs/store";
 
 const ShareDownloadModal = () => {
-  const { useModalState, setModalOpenState } = useSetModal();
-  const [shareDownloadState] = useModalState<
-    UseModalStateMap[MODAL_TYPE.PLAYLIST_DOWNLOAD]
-  >(MODAL_TYPE.PLAYLIST_DOWNLOAD);
+  const setModalOpen = useModalStore((state) => state.setModalOpen);
+  const shareDownloadState = useModalStore(
+    (state) => state.playlistDownloadModalProps,
+  );
 
   const { title, author, coverImage, songs, fontColor } =
     shareDownloadState || {};
@@ -35,7 +34,7 @@ const ShareDownloadModal = () => {
 
   const downloadPng = useCallback(
     async (imgName: string, targetRef: RefObject<HTMLElement>) =>
-      downloadPlaylistPng(imgName, targetRef, setModalOpenState),
+      downloadPlaylistPng(imgName, targetRef, setModalOpen),
     [title, downloadRef],
   );
 

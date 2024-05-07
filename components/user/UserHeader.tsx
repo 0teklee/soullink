@@ -24,10 +24,10 @@ import useTimer from "@/libs/utils/hooks/useTimer";
 import { handleImageUpload } from "@/libs/utils/client/commonUtils";
 import { useRouter } from "next/navigation";
 import DomPurifiedText from "@/components/common/module/DOMPurifiedText";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 
 import ColorPicker from "@/components/common/module/ColorPicker";
+import { useModalStore } from "@/libs/store";
 
 const UserHeader = ({
   userProfile,
@@ -37,8 +37,7 @@ const UserHeader = ({
   userId?: string;
 }) => {
   const queryClient = useQueryClient();
-  const { setModal: setLoginModalOpen } = useSetModal();
-  const { setModal: setFollowModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
 
   const router = useRouter();
 
@@ -134,7 +133,7 @@ const UserHeader = ({
     }
 
     if (!userId) {
-      setLoginModalOpen(MODAL_TYPE.LOGIN);
+      setModal(MODAL_TYPE.LOGIN);
       return;
     }
     followMutate();
@@ -391,7 +390,7 @@ const UserHeader = ({
               >
                 <button
                   onClick={() => {
-                    setFollowModal(MODAL_TYPE.FOLLOW, {
+                    setModal(MODAL_TYPE.FOLLOW, {
                       follows: following,
                       isFollower: false,
                       profileNickname: nickname,
@@ -402,7 +401,7 @@ const UserHeader = ({
                 </button>
                 <button
                   onClick={() => {
-                    setFollowModal(MODAL_TYPE.FOLLOW, {
+                    setModal(MODAL_TYPE.FOLLOW, {
                       follows: followers,
                       isFollower: true,
                       profileNickname: nickname,

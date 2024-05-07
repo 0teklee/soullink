@@ -3,15 +3,14 @@ import HeaderLink from "@/components/common/header/HeaderLink";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { formatPathName } from "@/libs/utils/client/formatter";
-import { SetterOrUpdater } from "recoil";
 import { clsx } from "clsx";
+import { useDarkModeStore } from "@/libs/store";
 
 interface HeaderMenuItemProps {
   isLogin: boolean;
   userSession: any;
   login: () => void;
   logout: () => void;
-  setDarkMode: SetterOrUpdater<boolean>;
   darkMode: boolean;
 }
 
@@ -20,7 +19,6 @@ const HeaderMenuItem = ({
   userSession,
   login,
   logout,
-  setDarkMode,
   darkMode,
 }: HeaderMenuItemProps) => {
   const router = useRouter();
@@ -62,7 +60,7 @@ const HeaderMenuItem = ({
       )}
       <button
         className={`self-end px-3 py-1 hover:bg-gray-200 hover:text-white`}
-        onClick={() => setDarkMode((prev) => !prev)}
+        onClick={() => useDarkModeStore.setState((prev) => !prev)}
       >
         {darkMode ? (
           <SunIcon className={`w-6 h-6 text-orange-500`} />
