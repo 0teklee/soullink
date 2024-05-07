@@ -1,53 +1,52 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
+import { playerGlobalStore, selectedPlaylistStore } from "@/libs/store";
 import { useEffect, useRef } from "react";
 import { PlayerProps } from "@/libs/types/song&playlistType";
+import { useStore } from "zustand";
 
 const UsePlayerState = () => {
-  const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
-  const selectedPlayList = useRecoilValue(playlistState);
+  const { currentSongListIndex, playing } = playerGlobalStore((state) => ({
+    currentSongListIndex: state.currentSongListIndex,
+    playing: state.playing,
+  }));
+
+  const selectedPlayList = useStore(selectedPlaylistStore);
 
   const playerRef = useRef<PlayerProps>(null);
   const prevSongId = useRef<string | null>(null);
 
-  const songListIndex = playerState.currentSongListIndex;
-
-  const selectedSongList = selectedPlayList?.songs || [];
+  const selectedSongList = selectedPlaylistStore((state) => state?.songs || []);
   const currentSong =
     selectedSongList.length > 0
-      ? selectedSongList[songListIndex]
+      ? selectedSongList[currentSongListIndex]
       : { id: "", title: "", artist: "", url: "", likedUsers: [] };
 
   const isSongListEmpty = selectedSongList.length === 0;
   const songId = currentSong && currentSong?.id;
 
   const song =
-    playerState &&
     selectedSongList &&
     selectedSongList?.length > 0 &&
-    selectedSongList[songListIndex]?.url
-      ? selectedSongList[songListIndex].url
+    selectedSongList[currentSongListIndex]?.url
+      ? selectedSongList[currentSongListIndex].url
       : "";
 
   useEffect(() => {
     if (!selectedPlayList) {
-      setPlayerState((prev) => ({
+      playerGlobalStore.setState((prev) => ({
         ...prev,
         playing: false,
       }));
     }
-  }, [playerState.playing]);
+  }, [playing]);
 
   return {
     playerRef,
-    playerState,
-    setPlayerState,
     selectedPlayList,
     selectedSongList,
     isSongListEmpty,
     currentSong,
     song,
-    songListIndex,
+    currentSongListIndex,
     songId,
     prevSongId,
   };

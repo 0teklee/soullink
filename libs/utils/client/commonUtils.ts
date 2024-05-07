@@ -3,8 +3,20 @@ import { PlaylistMoodType, PlaylistType } from "@/libs/types/song&playlistType";
 import { fetcherImagePost } from "@/libs/utils/client/fetchers";
 import { RefObject } from "react";
 import { toPng } from "html-to-image";
-import { SetterOrUpdater } from "recoil";
 import { playlistDefault } from "@/libs/utils/client/contants/fallbackValues";
+import {
+  CommonModalProps,
+  CommonModalState,
+  DeleteModalPropsType,
+  ErrorModalPropsType,
+  FollowModalPropsType,
+  MODAL_TYPE,
+  PlaylistEditPropsType,
+  ShareDownloadModalPropsType,
+  SongModalPropsType,
+  SongTableModalPropsType,
+} from "@/libs/types/modalType";
+import { playerGlobalStore, selectedPlaylistStore } from "@/libs/store";
 
 export const isNowMoreThanTargetTime = (
   startedAt: Dayjs | null | Date,
@@ -163,7 +175,7 @@ export const handleImageUpload = (callback: (imageVal: string) => void) => {
 export const downloadPlaylistPng = async (
   imageName: string,
   componentRef: RefObject<HTMLElement>,
-  setModalOpenState: SetterOrUpdater<boolean>,
+  setModalOpenState: (state: boolean) => void,
 ) => {
   if (componentRef.current === null) {
     return;
@@ -272,5 +284,66 @@ export const formatSongOptimisticSetter = (
       }
       return song;
     }),
+  };
+};
+
+export const reduceCommonModal = (
+  type: MODAL_TYPE,
+  props: CommonModalProps | undefined,
+  state: CommonModalState,
+) => ({
+  modalType: type,
+  isModalOpen: true,
+  followModalProps:
+    type === MODAL_TYPE.FOLLOW
+      ? (props as FollowModalPropsType)
+      : state.followModalProps,
+  playlistEditModalProps:
+    type === MODAL_TYPE.PLAYLIST_EDIT
+      ? (props as PlaylistEditPropsType)
+      : state.playlistEditModalProps,
+  playlistDownloadModalProps:
+    type === MODAL_TYPE.PLAYLIST_DOWNLOAD
+      ? (props as ShareDownloadModalPropsType)
+      : state.playlistDownloadModalProps,
+  songTableModalProps:
+    type === MODAL_TYPE.SONG_TABLE
+      ? (props as SongTableModalPropsType)
+      : state.songTableModalProps,
+  songModalProps:
+    type === MODAL_TYPE.SONG
+      ? (props as SongModalPropsType)
+      : state.songModalProps,
+  deleteModalProps:
+    type === MODAL_TYPE.DELETE
+      ? (props as DeleteModalPropsType)
+      : state.deleteModalProps,
+  errorModalProps:
+    type === MODAL_TYPE.ERROR
+      ? (props as ErrorModalPropsType)
+      : state.errorModalProps,
+});
+
+export const reduceCommonModalOpen = (
+  isOpen: boolean,
+  state: CommonModalState,
+) => ({
+  isModalOpen: isOpen,
+  followModalProps: !isOpen ? null : state.followModalProps,
+  playlistEditModalProps: !isOpen ? null : state.playlistEditModalProps,
+  playlistDownloadModalProps: !isOpen ? null : state.playlistDownloadModalProps,
+  songTableModalProps: !isOpen ? null : state.songTableModalProps,
+  songModalProps: !isOpen ? null : state.songModalProps,
+  deleteModalProps: !isOpen ? null : state.deleteModalProps,
+  errorModalProps: !isOpen ? null : state.errorModalProps,
+});
+
+export const getIsSelectedPlaying = (id?: string) => {
+  const selectedId = selectedPlaylistStore((state) => state?.id || "");
+
+  const isPlaying = playerGlobalStore((state) => state.playing);
+
+  return {
+    playing: !!id && selectedId === id && isPlaying,
   };
 };

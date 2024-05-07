@@ -4,8 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
 import useClickOutside from "@/libs/utils/hooks/useClickOutside";
-import { darkModeState } from "@/libs/recoil/atoms";
-import { useRecoilState } from "recoil";
+import { useDarkModeStore } from "@/libs/store";
 import ProfileImage from "@/components/common/atom/ProfileImage";
 import HeaderMenuItem from "@/components/common/header/HeaderMenuItem";
 import { clsx } from "clsx";
@@ -13,7 +12,7 @@ import { clsx } from "clsx";
 const HeaderUser = () => {
   const { data: session, status } = useSession();
   const userSession = session as UserSessionType;
-  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
+  const darkMode = useDarkModeStore();
   const [isLogin, setIsLogin] = useState(!!userSession?.userId);
   const listRef = useRef<HTMLDivElement>(null);
   const isLoading = status === "loading";
@@ -78,7 +77,6 @@ const HeaderUser = () => {
               userSession={userSession}
               login={login}
               logout={logout}
-              setDarkMode={setDarkMode}
               darkMode={darkMode}
             />
           </div>

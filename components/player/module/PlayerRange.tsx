@@ -1,9 +1,17 @@
 import React from "react";
 import usePlayerState from "@/components/player/usePlayerState";
+import { playerGlobalStore } from "@/libs/store";
 
 const PlayerRange = () => {
-  const { playerState, playerRef } = usePlayerState();
-  const { isLoading, played, duration, playedSec, durationSec } = playerState;
+  const { playerRef } = usePlayerState();
+  const { isLoading, played, duration, playedSec, durationSec } =
+    playerGlobalStore((state) => ({
+      isLoading: state.isLoading,
+      played: state.played,
+      duration: state.duration,
+      playedSec: state.playedSec,
+      durationSec: state.durationSec,
+    }));
   return (
     <div
       className={`flex-1 flex items-center justify-evenly gap-4 xs:flex-0 xs:order-3 xs:gap-0 xs:max-w-fit xs:pr-3`}

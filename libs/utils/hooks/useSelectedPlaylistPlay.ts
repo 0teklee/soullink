@@ -1,4 +1,3 @@
-import { useRecoilState } from "recoil";
 import { PlaylistType } from "@/libs/types/song&playlistType";
 import dayjs, { Dayjs } from "dayjs";
 import {
@@ -7,9 +6,13 @@ import {
 } from "@/libs/utils/client/fetchers";
 import { useMutation } from "@tanstack/react-query";
 import { INTERVAL_5MINS_MS } from "@/libs/utils/client/contants/commonValues";
-import { setRecentPlaylistIdLocalStorage } from "@/libs/utils/client/commonUtils";
-import { playerGlobalState, playlistState } from "@/libs/recoil/atoms";
+import {
+  getIsSelectedPlaying,
+  setRecentPlaylistIdLocalStorage,
+} from "@/libs/utils/client/commonUtils";
+import { playerGlobalStore, selectedPlaylistStore } from "@/libs/store";
 import { useRef } from "react";
+import { useStore } from "zustand";
 
 const UseSelectedPlaylistPlay = (
   playlistData?: PlaylistType,
@@ -17,9 +20,8 @@ const UseSelectedPlaylistPlay = (
 ) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [playerState, setPlayerState] = useRecoilState(playerGlobalState);
-  const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
-  const { playing } = playerState;
+  const selectedPlaylist = useStore(selectedPlaylistStore);
+  const { playing } = getIsSelectedPlaying(playlistData?.id);
 
   const { mutate: postPlaylistPlayedTime } = useMutation({
     mutationFn: ({ id, time }: { id: string; time: number }) =>
@@ -54,7 +56,7 @@ const UseSelectedPlaylistPlay = (
     });
     handleRecentPlayed(playlist.id);
 
-    if (selectedPlaylist) {
+    if (!!selectedPlaylist) {
       setRecentPlaylistIdLocalStorage(selectedPlaylist.id);
     }
   };
@@ -65,7 +67,10 @@ const UseSelectedPlaylistPlay = (
     const startedAt = dayjs();
 
     if (selectedPlaylist && selectedPlaylist.id === playlist.id) {
-      setPlayerState((prev) => ({ ...playerState, playing: !prev.playing }));
+      playerGlobalStore.setState((prev) => ({
+        ...prev,
+        playing: !prev.playing,
+      }));
       return;
     }
 
@@ -77,18 +82,12 @@ const UseSelectedPlaylistPlay = (
       handlePostActions(playlist, startedAt);
     }, INTERVAL_5MINS_MS);
 
-    setSelectedPlaylist(playlistData);
-    setPlayerState((prev) => ({
-      ...prev,
-      playing: true,
-      currentSongListIndex: 0,
-    }));
+    selectedPlaylistStore.setState(() => playlistData);
   };
 
   return {
     handleChangePlaylistState,
-    playing:
-      selectedPlaylist && selectedPlaylist.id === playlistData?.id && playing,
+    playing,
   };
 };
 

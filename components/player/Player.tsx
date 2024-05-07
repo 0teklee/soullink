@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   formatPlayedSeconds,
   formatSecondsToString,
@@ -12,6 +12,8 @@ import handlePlayerKeyPress, {
 import usePlayerState from "@/components/player/usePlayerState";
 import dayjs from "dayjs";
 import useSongCountUpdater from "@/libs/utils/hooks/useSongCountUpdater";
+import { playerGlobalStore } from "@/libs/store";
+import { useStore } from "zustand";
 
 const Player = () => {
   const {
@@ -20,19 +22,54 @@ const Player = () => {
     songId,
     prevSongId,
     selectedSongList: songList,
-    playerState,
-    setPlayerState,
-    songListIndex,
+    currentSongListIndex,
     playerRef,
   } = usePlayerState();
 
   const { handleSongChange } = useSongCountUpdater();
 
-  const { playing, volume, muted } = playerState;
+  const { playing, volume, muted, songStartedAt } = useStore(playerGlobalStore);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   const songListSrcset = useMemo(() => {
-    return handleSourceSet(songListIndex, songList);
-  }, [songListIndex, songList]);
+    return handleSourceSet(currentSongListIndex, songList);
+  }, [currentSongListIndex, songList]);
+
+  const handleVisibilityChange = () => {
+    if (
+      !audioContextRef?.current ||
+      !audioContextRef.current?.state ||
+      !playerRef?.current ||
+      !playerRef?.current.getInternalPlayer ||
+      typeof document === "undefined"
+    ) {
+      return;
+    }
+
+    const player = playerRef.current.getInternalPlayer() as HTMLMediaElement;
+
+    if (document.hidden) {
+      const audioSource = audioContextRef.current.createMediaElementSource(
+        player as HTMLMediaElement,
+      );
+      audioSource.connect(audioContextRef.current.destination);
+      return;
+    }
+
+    if (audioContextRef.current.state === "suspended") {
+      audioContextRef.current.resume().then(() => {
+        if (
+          audioContextRef?.current &&
+          audioContextRef?.current.state === "running"
+        ) {
+          playerGlobalStore.setState((prev) => ({
+            ...prev,
+            playing: true,
+          }));
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     if (!songId) {
@@ -42,27 +79,57 @@ const Player = () => {
       prevSongId.current = songId;
     }
 
-    if (playerState?.songStartedAt) {
+    if (songStartedAt) {
       handleSongChange(prevSongId.current);
       prevSongId.current = songId;
     }
 
-    setPlayerState({
-      ...playerState,
+    playerGlobalStore.setState((prev) => ({
+      ...prev,
       songStartedAt: dayjs(new Date()),
-    });
+    }));
   }, [currentSong]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      handlePlayerKeyPress(e, playerRef, setPlayerState);
+      handlePlayerKeyPress(e, playerRef);
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [setPlayerState, playerRef]);
+  }, [playerRef]);
+
+  useEffect(() => {
+    if (
+      !audioContextRef.current ||
+      typeof document === "undefined" ||
+      typeof window === "undefined"
+    ) {
+      return;
+    }
+
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        window.navigator.userAgent,
+      );
+
+    if (!isMobile) {
+      return;
+    }
+
+    if (!audioContextRef.current || typeof document === "undefined") {
+      return;
+    }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    audioContextRef.current = new AudioContext();
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   return (
     <>
@@ -77,33 +144,33 @@ const Player = () => {
         volume={volume}
         muted={muted}
         onBuffer={() => {
-          setPlayerState({
-            ...playerState,
+          playerGlobalStore.setState((prev) => ({
+            ...prev,
             isLoading: true,
-          });
+          }));
         }}
         onBufferEnd={() => {
-          setPlayerState({
-            ...playerState,
+          playerGlobalStore.setState((prev) => ({
+            ...prev,
             isLoading: false,
-          });
+          }));
         }}
         onReady={(ReactPlayer) => {
-          setPlayerState({
-            ...playerState,
+          playerGlobalStore.setState((prev) => ({
+            ...prev,
             duration: formatSecondsToString(ReactPlayer.getDuration(), true),
             durationSec: ReactPlayer.getDuration(),
             isLoading: false,
-          });
+          }));
         }}
         onPlay={() => {
-          setPlayerState({
-            ...playerState,
+          playerGlobalStore.setState((prev) => ({
+            ...prev,
             isLoading: false,
-          });
+          }));
         }}
         onProgress={(state) => {
-          setPlayerState((prev) => ({
+          playerGlobalStore.setState((prev) => ({
             ...prev,
             played: formatSecondsToString(
               prev.durationSec > state.playedSeconds
@@ -122,14 +189,14 @@ const Player = () => {
           }));
         }}
         onEnded={() => {
-          if (songListIndex + 1 < songList.length) {
-            setPlayerState((prev) => {
+          if (currentSongListIndex + 1 < songList.length) {
+            playerGlobalStore.setState((prev) => {
               return {
                 ...prev,
                 playing: true,
                 played: "00:00",
                 playedSec: 0,
-                currentSongListIndex: songListIndex + 1,
+                currentSongListIndex: currentSongListIndex + 1,
               };
             });
           }

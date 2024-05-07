@@ -10,7 +10,6 @@ import useTimer from "@/libs/utils/hooks/useTimer";
 import { formatSongNames } from "@/libs/utils/client/formatter";
 import { YoutubeItem } from "@/libs/types/youtubeTypes";
 import { SongType } from "@/libs/types/song&playlistType";
-import { SetterOrUpdater } from "recoil";
 import Loading from "@/components/common/module/Loading";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
 
@@ -18,7 +17,7 @@ interface SearchPageProps {
   songValue: SongType;
   setSongValue: React.Dispatch<React.SetStateAction<SongType>>;
   urlType: string;
-  setModalOpenState: SetterOrUpdater<boolean>;
+  setModalOpenState: (state: boolean) => void;
   setPage: React.Dispatch<React.SetStateAction<string>>;
 }
 

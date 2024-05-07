@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, ReactNode, SetStateAction, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import ModalPortal from "@/components/common/modal/CommonMordalPortal";
 
 const ModalContainer = ({
@@ -9,7 +9,7 @@ const ModalContainer = ({
   isOutsideClick,
 }: {
   children: ReactNode[] | ReactNode;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsModalOpen: (value: boolean) => void;
   isOutsideClick: boolean;
 }) => {
   useEffect(() => {
@@ -60,7 +60,7 @@ const CommonModal = ({
 }: {
   children: ReactNode[] | ReactNode;
   isModalOpen: boolean;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsModalOpen: (value: boolean) => void;
   isOutsideClick?: boolean;
 }) => (
   <>

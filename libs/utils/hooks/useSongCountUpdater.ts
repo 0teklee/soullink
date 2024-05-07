@@ -1,17 +1,15 @@
 "use client";
-import { useRecoilValue } from "recoil";
 import { useMutation } from "@tanstack/react-query";
 import { postSongCount } from "@/libs/utils/client/fetchers";
 import dayjs from "dayjs";
-import { playerGlobalState } from "@/libs/recoil/atoms";
+import { playerGlobalStore } from "@/libs/store";
+import { useStore } from "zustand";
 
 const UseSongCountUpdater = () => {
-  const playerState = useRecoilValue(playerGlobalState);
+  const { songStartedAt, durationSec } = useStore(playerGlobalStore);
   const { mutate: postSongPlayedCount } = useMutation({
     mutationFn: ({ id }: { id: string }) => postSongCount(id),
   });
-
-  const { songStartedAt, durationSec } = playerState;
 
   const handleSongChange = (songId: string) => {
     if (!songStartedAt || !durationSec) {

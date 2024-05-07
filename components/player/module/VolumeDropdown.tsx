@@ -1,14 +1,14 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { clsx } from "clsx";
-import usePlayerState from "@/components/player/usePlayerState";
+import { useStore } from "zustand";
+import { playerGlobalStore } from "@/libs/store";
 
 const VolumeDropdown = ({
   setIsVolumeDropdownOpen,
 }: {
   setIsVolumeDropdownOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { playerState, setPlayerState } = usePlayerState();
-  const { volume, muted } = playerState;
+  const { volume, muted } = useStore(playerGlobalStore);
   return (
     <div
       onMouseEnter={() => {
@@ -31,7 +31,7 @@ const VolumeDropdown = ({
         min={0}
         max={100}
         onChange={(e) => {
-          setPlayerState((prev) => ({
+          playerGlobalStore.setState((prev) => ({
             ...prev,
             muted: false,
             volume: Number(e.target.value) / 100,

@@ -20,22 +20,23 @@ import {
   formatEditPlaylistValid,
   formatPathName,
 } from "@/libs/utils/client/formatter";
-import { MODAL_TYPE, UseModalStateMap } from "@/libs/types/modalType";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { MODAL_TYPE } from "@/libs/types/modalType";
 import SongTable from "@/components/common/song/table/SongTable";
 import ColorPicker from "@/components/common/module/ColorPicker";
 import { playlistDefault } from "@/libs/utils/client/contants/fallbackValues";
+import { useModalStore } from "@/libs/store";
 
 const DetailEditModal = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { setModal, setModalOpenState, useModalState } = useSetModal();
-  const [playlistEditModalState, setPlaylistEditState] = useModalState<
-    UseModalStateMap[MODAL_TYPE.PLAYLIST_EDIT]
-  >(MODAL_TYPE.PLAYLIST_EDIT);
+  const setModal = useModalStore((state) => state.setModal);
+  const setModalOpen = useModalStore((state) => state.setModalOpen);
+  const playlistEditModalProps = useModalStore(
+    (state) => state.playlistEditModalProps,
+  );
 
-  const { userId, playlistData } = playlistEditModalState || {};
+  const { userId, playlistData } = playlistEditModalProps || {};
   const {
     title,
     description,
@@ -85,7 +86,7 @@ const DetailEditModal = () => {
         return;
       }
       router.push(`/playlist/${formatPathName(res.playlistTitle)}`);
-      setModalOpenState(false);
+      setModalOpen(false);
     },
   });
 
@@ -139,7 +140,7 @@ const DetailEditModal = () => {
   }, [customFontColor, customBgColor]);
 
   useEffect(() => {
-    if (!playlistEditModalState || !playlistEditModalState?.addedSongList) {
+    if (!playlistEditModalProps || !playlistEditModalProps?.addedSongList) {
       return;
     }
 
@@ -151,7 +152,7 @@ const DetailEditModal = () => {
       setCustomBgColor(bgColor);
     }
 
-    setSongList(playlistEditModalState.addedSongList);
+    setSongList(playlistEditModalProps.addedSongList);
   }, []);
 
   return (
@@ -244,7 +245,7 @@ const DetailEditModal = () => {
               setIsMaxSongList(true);
               return;
             }
-            setPlaylistEditState({
+            setModal(MODAL_TYPE.PLAYLIST_EDIT, {
               addedSongList: songList,
               playlistData: {
                 ...playlistData,
@@ -326,7 +327,7 @@ const DetailEditModal = () => {
         <button
           className={`flex items-center justify-center gap-3 px-4 py-2 text-sm font-medium text-pink-700 bg-white ring-1 ring-pink-700 rounded-md hover:bg-red-500 hover:text-white`}
           onClick={() => {
-            setModalOpenState(false);
+            setModalOpen(false);
           }}
         >
           <p>Cancel</p>
@@ -334,7 +335,7 @@ const DetailEditModal = () => {
         <button
           disabled={!isValid}
           onClick={() => {
-            setModalOpenState(false);
+            setModalOpen(false);
             handleSubmit(editPayload, playlistId, userId);
           }}
           className={`flex items-center justify-center gap-3 px-4 py-2 text-primary ring-1 ring-primary hover:bg-primary hover:text-white rounded-md hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed`}

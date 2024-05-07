@@ -4,8 +4,8 @@ import React, { ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import ErrorFallback from "@/components/common/error/ErrorFallback";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
+import { useModalStore } from "@/libs/store";
 
 const ReactQueryErrorBoundary = ({
   children,
@@ -14,7 +14,8 @@ const ReactQueryErrorBoundary = ({
   children: ReactNode[] | ReactNode;
   isLayout?: boolean;
 }) => {
-  const { setModal } = useSetModal();
+  const setModal = useModalStore((state) => state.setModal);
+
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (

@@ -74,3 +74,18 @@ export const INTERVAL_5MINS_MS = 5 * 60 * 1000;
 
 export const QUERY_CACHE_TIME = 5 * 60 * 1000;
 export const QUERY_STALE_TIME = QUERY_CACHE_TIME - interval5Seconds;
+
+export const PLAYER_INIT_STATE = {
+  playing: false,
+  played: "00:00",
+  duration: "00:00",
+  playedSec: 0,
+  durationSec: 0,
+  volume: 0.8,
+  muted: false,
+  seeking: false,
+  isLoading: false,
+  currentSongListIndex: 0,
+  startedAt: null,
+  songStartedAt: null,
+};

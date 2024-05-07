@@ -13,7 +13,6 @@ import {
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
 import { useRouter } from "next/navigation";
-import { useRecoilState } from "recoil";
 import {
   getSingleUserProfile,
   postCreatePlaylist,
@@ -30,16 +29,13 @@ import {
   formatMoodBgColor,
   formatPathName,
 } from "@/libs/utils/client/formatter";
-import { SongModalPropsState } from "@/libs/recoil/modalAtoms";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import { useForm } from "react-hook-form";
+import { useModalStore } from "@/libs/store";
 
 const PlaylistCreateTemplate = () => {
-  const [songModalState, setSongModalProps] =
-    useRecoilState(SongModalPropsState);
-
-  const { setModal } = useSetModal();
+  const songModalState = useModalStore((state) => state.songModalProps);
+  const setModal = useModalStore((state) => state.setModal);
 
   const { data: session } = useSession() as { data: UserSessionType };
   const userId = session?.userId;
@@ -161,7 +157,7 @@ const PlaylistCreateTemplate = () => {
       return;
     }
     setSongList(handleSongChange(songList));
-    setSongModalProps(null);
+    setModal(MODAL_TYPE.SONG, null);
   }, [songModalState?.modalSong]);
 
   useEffect(() => {

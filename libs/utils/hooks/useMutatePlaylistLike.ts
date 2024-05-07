@@ -2,13 +2,12 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postPlaylistLike } from "@/libs/utils/client/fetchers";
-import { useRecoilState } from "recoil";
-import { playlistState } from "@/libs/recoil/atoms";
-import useSetModal from "@/libs/utils/hooks/useSetModal";
+import { selectedPlaylistStore, useModalStore } from "@/libs/store";
 import { MODAL_TYPE } from "@/libs/types/modalType";
 import { Dispatch, SetStateAction } from "react";
 import { formatPlaylistOptimisticSetter } from "@/libs/utils/client/commonUtils";
 import useTimer from "@/libs/utils/hooks/useTimer";
+import { useStore } from "zustand";
 
 const UseMutatePlaylistLike = (
   playlistId?: string,
@@ -16,14 +15,13 @@ const UseMutatePlaylistLike = (
   optimisticSetter?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const queryClient = useQueryClient();
-  const { setModal: setLoginModal } = useSetModal();
-  const [selectedPlaylist, setSelectedPlaylist] = useRecoilState(playlistState);
+  const setModal = useModalStore((state) => state.setModal);
+  const selectedPlaylist = useStore(selectedPlaylistStore);
 
   const { mutate } = useMutation({
     mutationFn: ({
       playlistId,
       userId,
-      optimisticSetter,
     }: {
       playlistId: string;
       userId: string;
@@ -35,11 +33,13 @@ const UseMutatePlaylistLike = (
       }
 
       if (userId && selectedPlaylist && selectedPlaylist.id === playlistId) {
-        setSelectedPlaylist((prev) => {
+        selectedPlaylistStore.setState((prev) => {
           if (!prev) {
             return prev;
           }
-          return formatPlaylistOptimisticSetter(userId, playlistId, prev);
+          return {
+            ...formatPlaylistOptimisticSetter(userId, playlistId, prev),
+          };
         });
       }
     },
@@ -49,9 +49,8 @@ const UseMutatePlaylistLike = (
       });
 
       if (selectedPlaylist && selectedPlaylist.id === res.playlistId) {
-        setSelectedPlaylist({
-          ...selectedPlaylist,
-          likedBy: res.likedBy,
+        selectedPlaylistStore.setState((prev) => {
+          return { ...prev, likedBy: res.likedBy };
         });
       }
     },
@@ -59,7 +58,7 @@ const UseMutatePlaylistLike = (
 
   const playlistLikeHandler = () => {
     if (!userId) {
-      setLoginModal(MODAL_TYPE.LOGIN);
+      setModal(MODAL_TYPE.LOGIN);
       return;
     }
 
