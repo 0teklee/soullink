@@ -147,7 +147,11 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           {/*    } font-medium`}*/}
           {/*  />*/}
           {/*</button>*/}
-          <button className={`relative w-5 h-5`} onClick={handleDownloadModal}>
+          <button
+            className={`relative w-5 h-5`}
+            onClick={handleDownloadModal}
+            aria-label={`share-playlist-cover-button`}
+          >
             <ArrowDownTrayIcon
               className={`w-5 h-5 ${
                 fontColor || "text-gray-700 dark:text-warmGray-50"
@@ -227,6 +231,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           <button
             onClick={handleLikePlaylist}
             className={`flex items-center gap-3`}
+            aria-label={`like-playlist-button`}
           >
             <div className={`relative w-8 h-8`}>
               {isUserLikedPlaylist ? (

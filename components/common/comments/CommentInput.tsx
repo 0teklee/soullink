@@ -86,6 +86,7 @@ const CommentInput = ({
             onChange={handleTextareaChange}
             value={payload.comment}
             maxLength={200}
+            aria-label={`comment-textarea`}
           />
           <div
             className={`absolute bottom-2.5 right-2 flex items-center gap-2 text-sm text-gray-700 dark:text-warmGray-50`}
@@ -105,6 +106,7 @@ const CommentInput = ({
                 setPayload((prev) => ({ ...prev, isPrivate: !prev.isPrivate }));
               }}
               checked={isPrivate}
+              aria-label={`private-checkbox`}
             />
             <span>private</span>
           </div>

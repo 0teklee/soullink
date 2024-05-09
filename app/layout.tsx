@@ -4,7 +4,7 @@ import NextAuthSessionProvider from "@/components/common/module/NextAuthSessionP
 import ReactQueryClientProvider from "@/components/common/react-query-provider/ReactQueryClientProvider";
 import CommonModalProvider from "@/components/common/modal/CommonModalProvider";
 import ReactQueryErrorBoundary from "@/components/common/react-query-provider/ReactQueryErrorBoundary";
-import { IBM_Plex_Sans_KR } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 import AuthUserNavigator from "@/components/common/module/AuthUserNavigator";
 import { clsx } from "clsx";
 import Header from "@/components/common/header/Header";
@@ -15,7 +15,7 @@ export const metadata = {
   description: "share your playlists",
 };
 
-const ibmPlexSansKr = IBM_Plex_Sans_KR({
+const ibmPlexSansKr = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });

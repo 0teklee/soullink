@@ -100,7 +100,8 @@ const PlaylistListItem = ({
         index ? "grid-cols-5" : "grid-cols-4"
       } grid-rows-1  px-2 py-3 gap-y-0 gap-x-3  
         items-center border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-400 xs:gap-x-4 lg:gap-x-24
-           lg:grid-cols-3`}
+           lg:grid-cols-3
+           `}
       >
         <div
           className={`relative flex items-center justify-start gap-2 col-span-2 overflow-ellipsis lg:col-span-2`}
@@ -139,7 +140,7 @@ const PlaylistListItem = ({
             </div>
           </div>
           <div
-            className={`flex flex-col items-start gap-3 max-w-lg overflow-x-hidden`}
+            className={`flex flex-col items-start gap-3 max-w-lg overflow-hidden`}
           >
             <div>
               <div
@@ -148,7 +149,7 @@ const PlaylistListItem = ({
                 }}
                 className={`sideways-scroll cursor-pointer text-lg text-gray-900 dark:text-warmGray-100 font-medium hover:text-primary xs:text-xs lg:text-start`}
               >
-                <p className={``}>{title}</p>
+                <p>{title}</p>
               </div>
               <div
                 className={`relative flex items-center gap-2 text-xs text-gray-500 dark:text-warmGray-50 font-medium`}
