@@ -76,12 +76,12 @@ const TopListItem = ({ playlist }: { playlist: PlaylistType }) => {
         <div className={`flex flex-col items-start gap-3 w-full`}>
           <div
             className={clsx(
-              `flex flex-col items-start gap-1 w-full xs:items-center `,
+              `flex flex-col items-start xs:items-center gap-1 w-full  overflow-hidden`,
               `whitespace-nowrap`,
             )}
           >
             <p
-              className={`text-2xl font-semibold cursor-pointer hover:underline hover:after:content-['⇢'] hover:after:ml-1`}
+              className={`text-2xl font-semibold cursor-pointer hover:underline hover:after:content-['⇢'] hover:after:ml-1 sideways-scroll xs:text-center w-full`}
               onClick={() => {
                 router.push(`/playlist/${formatPathName(title)}`);
               }}

@@ -12,7 +12,7 @@ const MainFriendsPlaylists = async ({ userId }: { userId?: string }) => {
       {dataAvailable && (
         <section className={`flex flex-col items-start w-full gap-4`}>
           <Title text={`Friends are listening to..`} size={`h1`} />
-          <div className={`flex flex-wrap items-start justify-start gap-3`}>
+          <div className={`flex flex-wrap items-start justify-between w-full`}>
             <FriendsListContainer data={data} />
           </div>
         </section>

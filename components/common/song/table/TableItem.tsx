@@ -116,7 +116,10 @@ const TableItem = ({
         <>
           <td className={`py-2`}>
             <div className={`flex items-center gap-3`}>
-              <button className={`relative w-6 h-6`}>
+              <button
+                className={`relative w-6 h-6`}
+                aria-label={`like-playlist-button`}
+              >
                 {isUserLikedSong ? (
                   <HeartIconSolid
                     className={`w-full h-full text-primary hover:text-gray-500`}
@@ -143,6 +146,7 @@ const TableItem = ({
                 onClick={() => {
                   handlePlaySong();
                 }}
+                aria-label={`play-playlist-button`}
               >
                 {isSongPlaying ? (
                   <PauseIcon
