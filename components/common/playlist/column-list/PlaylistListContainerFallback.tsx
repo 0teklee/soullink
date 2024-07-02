@@ -17,7 +17,6 @@ const PlaylistListContainerFallback = ({
       <div className={`flex flex-col gap-0 w-full dark:text-gray-50`}>
         {playlistListDefault.map((playlist, index) => (
           <PlaylistListItem
-            isLarge={isLarge}
             key={`fallback_playlist_list_${playlist.id}_${index}`}
             index={isIndex ? index : undefined}
             playlist={playlist}
