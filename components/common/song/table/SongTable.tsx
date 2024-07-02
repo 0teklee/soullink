@@ -43,42 +43,32 @@ const SongTable = ({
 
   return (
     <>
-      <div className={`self-stretch px-5 xs:px-0`}>
+      <div className={`self-stretch px-0 lg:px-5`}>
         <table className={`w-full px-12 table-auto`}>
-          <thead className={`border-b border-gray-300`}>
-            <tr className={`text-gray-500 dark:text-warmGray-50 text-lg`}>
-              <th
-                className={`text-start opacity-0 ${isNotCreate && "xs:hidden"}`}
-              >
+          <thead
+            className={`hidden lg:table-header-group border-b border-gray-300`}
+          >
+            <tr className={`text-gray-500 dark:text-gray-50 text-lg`}>
+              <th className={`text-start opacity-0 ${isNotCreate && ""}`}>
                 no.
               </th>
-              <th
-                className={`text-start font-light ${
-                  isNotCreate && "xs:hidden"
-                }`}
-              >
+              <th className={`text-start font-light ${isNotCreate && ""}`}>
                 TITLE
               </th>
-              <th
-                className={`text-start font-light ${
-                  isNotCreate && "xs:hidden"
-                }`}
-              >
+              <th className={`text-start font-light ${isNotCreate && ""}`}>
                 ARTIST
               </th>
               {isNotCreate && (
                 <>
-                  <th className={`text-start opacity-0 xs:hidden`}>
-                    Like & Add
-                  </th>
-                  <th className={`text-start font-light md:hidden`}>PLAYED</th>
+                  <th className={`text-start opacity-0 `}>Like & Add</th>
+                  <th className={`text-start font-light `}>PLAYED</th>
                   {isNotCreate && playlist && (
-                    <th className={`text-start opacity-0 xs:hidden`}>PLAY</th>
+                    <th className={`text-start opacity-0 `}>PLAY</th>
                   )}
                 </>
               )}
               {isCreate && (
-                <th className={`w-0 opacity-0 xs:hidden`}>Delete</th>
+                <th className={`w-0 opacity-0 hidden lg:block`}>Delete</th>
               )}
             </tr>
           </thead>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import HeaderSearch from "@/components/common/header/HeaderSearch";
 import { clsx } from "clsx";
 import { Open_Sans } from "next/font/google";
+import { cn } from "@/libs/utils/client/ui";
 
 const OpenSans = Open_Sans({
   subsets: ["latin"],
@@ -15,13 +16,14 @@ const Header = () => {
   return (
     <div
       className={clsx(
-        `fixed top-0 flex items-center justify-between w-screen px-8 py-3`,
+        `fixed top-0 flex items-center justify-between w-screen`,
+        `py-2 px-2 lg:px-8 lg:py-3`,
         `bg-gray-100 text-gray-900 border-b-2 border-primary z-50`,
-        `dark:text-gray-50 dark:bg-black xs:py-2 xs:px-2`,
+        `dark:text-gray-50 dark:bg-black `,
         OpenSans.className,
       )}
     >
-      <div className={`flex items-center w-full h-full gap-6 xs:flex-1`}>
+      <div className={`flex items-center w-full h-full gap-6 flex-1`}>
         <Link
           className={`flex items-center justify-start gap-2 text-primary hover:text-opacity-70 `}
           href={`/`}
@@ -34,14 +36,13 @@ const Header = () => {
               fill={true}
             />
           </div>
-          <h1
-            className={`text-xl text-primary font-bold md:hidden desktop:box`}
-          >
-            SOUL LINK
-          </h1>
         </Link>
         <div
-          className={`flex items-center justify-start gap-4 text-normal  whitespace-nowrap font-normal md:text-sm xs:hidden`}
+          className={cn(
+            `hidden`,
+            `md:flex items-center justify-start gap-4 text-normal whitespace-nowrap font-normal md:text-sm`,
+            `dark:text-gray-50 dark:bg-black`,
+          )}
         >
           <Link
             href={`/discover`}

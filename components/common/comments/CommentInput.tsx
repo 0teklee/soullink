@@ -78,7 +78,7 @@ const CommentInput = ({
       className={`flex flex-col items-start justify-center gap-3 w-full my-3 border-b border-dashed border-gray-300`}
     >
       <div className={`flex flex-col items-start justify-center gap-1 w-full`}>
-        <div className={`relative w-full text-gray-700 dark:text-warmGray-50`}>
+        <div className={`relative w-full text-gray-700 dark:text-gray-50`}>
           <textarea
             className={`w-full ${
               comment.length > 0 ? "h-24" : "h-full"
@@ -89,14 +89,14 @@ const CommentInput = ({
             aria-label={`comment-textarea`}
           />
           <div
-            className={`absolute bottom-2.5 right-2 flex items-center gap-2 text-sm text-gray-700 dark:text-warmGray-50`}
+            className={`absolute bottom-2.5 right-2 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-50`}
           >
             <p>{payload.comment.length} / </p>
             <p>200</p>
           </div>
         </div>
         <div
-          className={`flex items-center justify-between w-full text-sm text-gray-700 dark:text-warmGray-50 font-medium`}
+          className={`flex items-center justify-between w-full text-sm text-gray-700 dark:text-gray-50 font-medium`}
         >
           <div className={`flex items-center justify-between gap-2`}>
             <input

@@ -63,13 +63,14 @@ const HeaderUser = () => {
         {isListClicked && !isLoading && (
           <div
             className={clsx(
-              `fixed top-14 right-0 flex flex-col items-start gap-3`,
+              `fixed  flex flex-col items-start gap-3`,
               `flex flex-col items-start gap-3`,
-              `w-screen max-w-xs p-2`,
+              `w-screen p-2`,
+              `w-screen xs:fixed top-12 left-0`,
+              `lg:top-14 lg:left-[unset] lg:right-0 lg:max-w-xs`,
               `text-gray-900 text-sm whitespace-nowrap`,
               `bg-white border border-gray-300 rounded`,
-              `xs:w-screen xs:fixed xs:top-12 xs:left-0 xs:max-w-none`,
-              `dark:bg-black dark:border-gray-700 dark:text-warmGray-50`,
+              `dark:bg-black dark:border-gray-700 dark:text-gray-50`,
             )}
           >
             <HeaderMenuItem

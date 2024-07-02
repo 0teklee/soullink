@@ -62,7 +62,7 @@ const PlayerLeftControl = () => {
     >
       {!isListFirst && (
         <button
-          className={`xs:hidden`}
+          className={`hidden lg:block`}
           aria-label={`previous song`}
           onClick={handlePrevList}
         >
@@ -76,7 +76,7 @@ const PlayerLeftControl = () => {
         </button>
       )}
       <button
-        className={`xs:hidden`}
+        className={`hidden lg:block`}
         onClick={() => {
           handlePrev();
         }}
@@ -111,7 +111,7 @@ const PlayerLeftControl = () => {
       </button>
       <button
         aria-label={`next 3 seconds`}
-        className={`xs:hidden`}
+        className={`hidden lg:block`}
         onClick={handleNext}
       >
         <Image
@@ -125,7 +125,7 @@ const PlayerLeftControl = () => {
       {!isListLast && (
         <button
           aria-label={`next song`}
-          className={`xs:hidden`}
+          className={`hidden lg:block`}
           onClick={handleNextList}
         >
           <Image

@@ -14,7 +14,9 @@ const ProfileImage = ({
   isLogin,
 }: ProfileImageProps) => (
   <Image
-    className={`cursor-pointer rounded-full ${isLogin ? "bg-white" : ""}`}
+    className={`cursor-pointer rounded-full invert dark:invert-0 ${
+      isLogin ? "bg-white" : ""
+    }`}
     src={src || "/image/common/default_profile.svg"}
     alt={alt}
     fill={true}

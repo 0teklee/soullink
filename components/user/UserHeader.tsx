@@ -28,6 +28,7 @@ import { MODAL_TYPE } from "@/libs/types/modalType";
 
 import ColorPicker from "@/components/common/module/ColorPicker";
 import { useModalStore } from "@/libs/store";
+import { cn } from "@/libs/utils/client/ui";
 
 const UserHeader = ({
   userProfile,
@@ -165,23 +166,33 @@ const UserHeader = ({
   return (
     <>
       <div
-        className={`relative full-screen-div text-gray-700 dark:text-warmGray-50`}
+        className={`relative full-screen-div text-gray-700 dark:text-gray-50`}
         style={{
           backgroundColor: customBgColor,
           color: customFontColor,
         }}
       >
         <div
-          className={`flex items-start justify-start gap-5 w-full xs:my-3 pt-12 pb-4 xs:pt-1 xs:py-2 xs:px-4  bg-transparent xs:flex-col xs:items-center xs:justify-center `}
+          className={cn(
+            `flex  flex-col items-center justify-center gap-5`,
+            `lg:items-start lg:justify-start `,
+            `w-full my-3 pt-1 py-2 px-4`,
+            `lg:pt-12 lg:pb-4`,
+          )}
         >
           <div
             className={`profile-card relative flex flex-col items-center gap-y-3 z-10`}
           >
-            <div className={`group xs:relative`}>
+            <div className={`group relative`}>
               {!isProfileOwner && (
                 <div
                   onClick={handleFollow}
-                  className={`absolute -top-8 flex items-center justify-center gap-2 w-full cursor-pointer xs:h-full xs:top-0 xs:bg-black xs:bg-opacity-50 xs:opacity-0 xs:group-hover:opacity-100 xs:transition-opacity z-20`}
+                  className={cn(
+                    `absolute flex items-center justify-center gap-2 w-full h-full top-0`,
+                    `bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity`,
+                    `lg:-top-8 lg:h-fit`,
+                    `cursor-pointer z-20`,
+                  )}
                 >
                   <p className={`text-xl`}>
                     {isFollowing ? `Unfollow` : `Follow`}
@@ -280,10 +291,13 @@ const UserHeader = ({
             </div>
           </div>
           <div
-            className={`pt-12 flex flex-col items-start gap-4 w-full xs:items-center xs:pt-1`}
+            className={cn(
+              `flex flex-col items-start gap-4 lg:items-center`,
+              `w-full pt-1 lg:pt-12`,
+            )}
           >
             <div
-              className={`flex flex-col items-start justify-center gap-1 xs:items-center`}
+              className={`flex flex-col items-center lg:items-start justify-center gap-1`}
             >
               {isEditor && (
                 <div className={`flex items-center justify-start gap-2 `}>

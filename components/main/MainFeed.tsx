@@ -7,7 +7,7 @@ import PlaylistListContainer from "@/components/common/playlist/column-list/Play
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Loading from "@/components/common/module/Loading";
 
-const MainTimeline = ({ userId }: { userId?: string }) => {
+const MainFeed = ({ userId }: { userId?: string }) => {
   const [isLast, setIsLast] = useState<boolean>(false);
   const { data, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
@@ -42,7 +42,7 @@ const MainTimeline = ({ userId }: { userId?: string }) => {
 
   return (
     <section className={`flex flex-col items-start gap-3 w-full `}>
-      <Title size={`h1`} text={`Timeline`} />
+      <Title size={`h1`} text={`Feed`} />
       {data &&
         data?.pages &&
         data?.pages.map((page, idx) => (
@@ -55,11 +55,11 @@ const MainTimeline = ({ userId }: { userId?: string }) => {
       {data && data?.pages && data.pages.length === 0 && (
         <Title size={`h2`} text={`No playlists yet`} />
       )}
-      {isLoading && <Loading />}
-      {!isLoading && !isLast && (
+      {(isLoading || isFetchingNextPage) && <Loading />}
+      {!isLoading && !isLast && !isFetchingNextPage && (
         <div className={`flex justify-center w-full `}>
           <button
-            className={`text-primary text-md`}
+            className={`text-primary text-md hover:text-gray-500`}
             onClick={() => fetchNextPage()}
           >
             Load more
@@ -70,4 +70,4 @@ const MainTimeline = ({ userId }: { userId?: string }) => {
   );
 };
 
-export default MainTimeline;
+export default MainFeed;

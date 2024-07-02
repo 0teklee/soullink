@@ -54,17 +54,17 @@ const DiscoverMoodLists = ({ userId }: { userId?: string }) => {
                 className={`flex items-center justify-start gap-3 mb-1 text-xl  font-semibold cursor-pointer`}
               >
                 <p
-                  className={`text-gray-700 dark:text-warmGray-50 ${moodTextColor}`}
+                  className={`text-gray-700 dark:text-gray-50 ${moodTextColor}`}
                 >
                   {commonMoods[selectedIndex]}
                 </p>
                 {isDropdownOpen ? (
                   <ChevronUpIcon
-                    className={`w-5 h-5 text-gray-700 dark:text-warmGray-50`}
+                    className={`w-5 h-5 text-gray-700 dark:text-gray-50`}
                   />
                 ) : (
                   <ChevronDownIcon
-                    className={`w-5 h-5 text-gray-700 dark:text-warmGray-50`}
+                    className={`w-5 h-5 text-gray-700 dark:text-gray-50`}
                   />
                 )}
               </div>
@@ -79,7 +79,7 @@ const DiscoverMoodLists = ({ userId }: { userId?: string }) => {
                         setIsDropdownOpen(false);
                       }}
                       key={`${mood}-${index}`}
-                      className={`flex items-center justify-start gap-1 w-full p-2 text-xl text-gray-700 dark:text-warmGray-50 bg-white dark:bg-black hover:bg-gray-50 dark:hover:bg-gray-600 ${moodTextColor} font-semibold cursor-pointer `}
+                      className={`flex items-center justify-start gap-1 w-full p-2 text-xl text-gray-700 dark:text-gray-50 bg-white dark:bg-black hover:bg-gray-50 dark:hover:bg-gray-600 ${moodTextColor} font-semibold cursor-pointer `}
                     >
                       <p>{mood}</p>
                     </div>

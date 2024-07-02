@@ -19,7 +19,7 @@ const ErrorFallback = ({
     <div className={`flex flex-col items-center gap-3  w-full max-w-lg`}>
       <div className={`flex flex-col items-center gap-1`}>
         <ExclamationTriangleIcon
-          className={`w-8 h-8 text-gray-500 dark:text-warmGray-50`}
+          className={`w-8 h-8 text-gray-500 dark:text-gray-50`}
         />
         <p
           className={`text-md text-gray-900 dark:text-warmGray-100 font-semibold`}

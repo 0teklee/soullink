@@ -35,40 +35,31 @@ const config = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
-    colors: {
-      ...require("tailwindcss/colors"),
-      primary: "#000",
-      dark: "#000000",
-      upbeat: "#ff6f00",
-      chill: "#7bffb4",
-      relaxed: "#1a63fe",
-      melancholic: "#6e00d0",
     },
     extend: {
+      fontSize: {
+        xxs: "10px",
+        xs: "13px",
+      },
       screens: {
         desktop: { min: "1900px" },
         "3xl": { max: "1890px" },
         "2xl": { max: "1535px" },
-        xl: { max: "1279px" },
-        lg: { max: "1023px" },
-        md: { max: "767px" },
-        sm: { max: "639px" },
-        xs: { max: "480px" },
+        xl: { min: "1279px" },
+        xs: { min: "0px" },
       },
       colors: {
+        primary: "#000",
+        dark: "#000000",
+        upbeat: "#ff6f00",
+        chill: "#7bffb4",
+        relaxed: "#1a63fe",
+        melancholic: "#6e00d0",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -112,10 +103,6 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      height: {
-        "top-list-container": "375px",
-        "top-list-item": "340px",
       },
     },
   },

@@ -67,7 +67,18 @@ export const formatDateFilter = (param: string) => {
 export const formatSearchOrderBy = (
   param: string,
 ): {} | { [key: string]: string } => {
-  if (!param) return {};
+  if (!param)
+    return [
+      {
+        createdAt: "desc",
+      },
+      {
+        playedTime: "desc",
+      },
+      {
+        likedCount: "desc",
+      },
+    ];
 
   if (param === "RECENT,DESC") {
     return {

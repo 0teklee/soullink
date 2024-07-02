@@ -78,7 +78,7 @@ const ImageCardItem = ({
       </div>
       {!isDefault && index === activeIndex && (
         <div
-          className={`flex flex-col items-center gap-1 my-2 text-gray-700 dark:text-warmGray-50 `}
+          className={`flex flex-col items-center gap-1 my-2 text-gray-700 dark:text-gray-50 `}
         >
           <button
             onClick={() => {

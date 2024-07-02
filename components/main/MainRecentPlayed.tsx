@@ -2,12 +2,12 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import Title from "@/components/common/module/Title";
-import PlayListSlider from "@/components/common/playlist/playlist-slider/PlayListSlider";
 import { useQuery } from "@tanstack/react-query";
 import {
   getLocalRecentPlaylists,
   getRecentPlaylists,
 } from "@/libs/utils/client/fetchers";
+import CardCarouselContainer from "@/components/common/playlist/card-carousel/CardCarouselContainer";
 
 const MainRecentPlayed = ({
   userId,
@@ -53,7 +53,7 @@ const MainRecentPlayed = ({
       />
       <Suspense fallback={<div>Loading...</div>}>
         {isDataSuccess && recentPlayedPlayLists?.length > 0 && (
-          <PlayListSlider playlists={recentPlayedPlayLists} />
+          <CardCarouselContainer playlists={recentPlayedPlayLists} />
         )}
         {isDataSuccess && recentPlayedPlayLists?.length === 0 && (
           <Title text={`No recent listening history`} size={`h2`} />

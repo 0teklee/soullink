@@ -21,21 +21,17 @@ const ListMenuItem = ({ title, artist, index, curIndex }: IListMenuItem) => {
       }}
     >
       <div className={`flex items-center gap-4 `}>
-        <p className={`text-xs text-gray-700 dark:text-warmGray-50`}>
-          {index + 1}
-        </p>
+        <p className={`text-xs text-gray-700 dark:text-gray-50`}>{index + 1}</p>
         <div className={`overflow-x-hidden`}>
           <p
             className={`text-sm ${
-              isSelected
-                ? "text-primary"
-                : "text-gray-700 dark:text-warmGray-50"
+              isSelected ? "text-primary" : "text-gray-700 dark:text-gray-50"
             } font-medium sideways-scroll`}
           >
             {title}
           </p>
           <p
-            className={`text-xs text-gray-500 dark:text-warmGray-50 font-normal line-clamp-1 overflow-ellipsis`}
+            className={`text-xs text-gray-500 dark:text-gray-50 font-normal line-clamp-1 overflow-ellipsis`}
           >
             {artist}
           </p>

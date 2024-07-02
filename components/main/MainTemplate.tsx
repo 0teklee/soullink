@@ -1,11 +1,12 @@
 import React, { Suspense } from "react";
-import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
 import MainRecentPlayed from "@/components/main/MainRecentPlayed";
 import MainTodayList from "@/components/main/MainTodayList";
-import MainTimeline from "@/components/main/MainTimeline";
-import TopListContainter from "@/components/common/playlist/screen-width-slider/TopListContainter";
-import FriendsListFallback from "@/components/main/module/FriendsListFallback";
+import MainFeed from "@/components/main/MainFeed";
+import CardCarouselContainer from "@/components/common/playlist/card-carousel/CardCarouselContainer";
 import { playlistListDefault } from "@/libs/utils/client/contants/fallbackValues";
+import FriendsListFallback from "@/components/main/module/FriendsListFallback";
+import MainFriendsPlaylists from "@/components/main/MainFriendsPlaylists";
+import { cn } from "@/libs/utils/client/ui";
 
 const MainTemplate = ({
   userId,
@@ -15,19 +16,33 @@ const MainTemplate = ({
   userNickname?: string;
 }) => {
   return (
-    <div className={`flex flex-col items-start py-6 gap-12 `}>
-      <Suspense
-        fallback={<TopListContainter playlists={playlistListDefault} />}
+    <div
+      className={cn(
+        `flex flex-col lg:flex-row justify-stretch lg:items-start gap-16 lg:gap-3`,
+        `w-full py-6`,
+      )}
+    >
+      <div
+        className={cn(
+          `flex-1 flex flex-col items-stretch gap-12 lg:items-start lg:justify-center `,
+          `w-full lg:max-w-[70%] overflow-hidden`,
+        )}
       >
-        {/* @ts-expect-error Async Server Component */}
-        <MainTodayList />
-      </Suspense>
-      <MainTimeline userId={userId} />
-      <Suspense fallback={<FriendsListFallback />}>
-        {/* @ts-expect-error Async Server Component */}
-        <MainFriendsPlaylists userId={userId} />
-      </Suspense>
-      <MainRecentPlayed userId={userId} userNickname={userNickname} />
+        <Suspense
+          fallback={<CardCarouselContainer playlists={playlistListDefault} />}
+        >
+          {/* @ts-expect-error Async Server Component */}
+          <MainTodayList />
+        </Suspense>
+        <MainRecentPlayed userId={userId} userNickname={userNickname} />
+        <MainFeed userId={userId} />
+      </div>
+      <div className={`flex-shrink`}>
+        <Suspense fallback={<FriendsListFallback />}>
+          {/* @ts-expect-error Async Server Component */}
+          <MainFriendsPlaylists userId={userId} />
+        </Suspense>
+      </div>
     </div>
   );
 };

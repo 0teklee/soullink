@@ -55,12 +55,13 @@ const PlaylistSliderItem = ({
   return (
     <div className={`overflow-y-visible`}>
       <div
-        className={`flex justify-between items-center w-[400px] mb-2 lg:w-[300px] cursor-pointer`}
+        className={`flex justify-between items-center w-[300px] mb-2 cursor-pointer`}
       >
         <div
           onClick={() => {
             router.push(`/playlist/${formatPathName(playlistItem.title)}`);
           }}
+          className={`overflow-ellipsis line-clamp-1`}
         >
           <Title text={title} size={`h4`} />
         </div>
@@ -75,7 +76,7 @@ const PlaylistSliderItem = ({
         >
           {isOnHover && (
             <div
-              className={`bg-white text-xs text-gray-700 dark:bg-black dark:text-warmGray-50 whitespace-nowrap`}
+              className={`bg-white text-xs text-gray-700 dark:bg-black dark:text-gray-50 whitespace-nowrap`}
             >
               {isUserLikedPlaylist
                 ? `unlike this playlist`
@@ -101,7 +102,7 @@ const PlaylistSliderItem = ({
         onClick={() => {
           handleChangePlaylistState(playlistItem);
         }}
-        className={`relative xs:w-[300px] xs:h-[300px] lg:w-[300px] lg:h-[300px] 2xl:w-[400px] 2xl:h-[400px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
+        className={`relative w-[300px] h-[300px] hover:bg-black hover:bg-opacity-30 cursor-pointer`}
       >
         <Image
           className={`absolute object-cover hover:blur-md -z-10`}

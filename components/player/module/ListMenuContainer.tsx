@@ -42,7 +42,7 @@ const ListMenuContainer = ({
               onClick={() => {
                 router.push(`/user/${decodeURIComponent(author.nickname)}`);
               }}
-              className={`sideways-scroll text-sm text-gray-500 dark:text-warmGray-50 font-normal whitespace-nowrap hover:text-primary hover:underline`}
+              className={`sideways-scroll text-sm text-gray-500 dark:text-gray-50 font-normal whitespace-nowrap hover:text-primary hover:underline`}
             >
               by {`@${author.nickname}`}
             </button>

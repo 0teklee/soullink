@@ -1,6 +1,7 @@
 import React from "react";
 import usePlayerState from "@/components/player/usePlayerState";
 import { playerGlobalStore } from "@/libs/store";
+import { cn } from "@/libs/utils/client/ui";
 
 const PlayerRange = () => {
   const { playerRef } = usePlayerState();
@@ -14,15 +15,19 @@ const PlayerRange = () => {
     }));
   return (
     <div
-      className={`flex-1 flex items-center justify-evenly gap-4 xs:flex-0 xs:order-3 xs:gap-0 xs:max-w-fit xs:pr-3`}
+      className={cn(
+        `flex-1 flex items-center gap-4`,
+        `flex-0 order-3 gap-0 max-w-fit pr-3`,
+        `lg:flex-1 lg:order-[unset] lg:max-w-full lg:px-0`,
+      )}
     >
       <p
-        className={`text-xs text-gray-900 dark:text-gray-50 whitespace-nowrap`}
+        className={`mr-2 text-xs text-gray-900 dark:text-gray-50 whitespace-nowrap`}
       >
         {isLoading ? `loading..` : `${played} / ${duration}`}
       </p>
       <input
-        className={`relative w-full h-2 mx-10 rounded-lg xs:hidden focus:appearance-none range dark:`}
+        className={`relative w-full h-2 mx-10 rounded-lg hidden lg:block focus:appearance-none range dark:invert`}
         type={`range`}
         value={playedSec}
         max={durationSec}
