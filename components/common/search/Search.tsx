@@ -119,7 +119,7 @@ const Search = ({
             {!isCategory && (
               <div className={`flex items-center gap-2 xs:flex-wrap`}>
                 <p
-                  className={`whitespace-nowrap text-sm text-gray-700 dark:text-warmGray-50 font-medium`}
+                  className={`whitespace-nowrap text-sm text-gray-700 dark:text-gray-50 font-medium`}
                 >
                   Search Type:
                 </p>
@@ -143,7 +143,7 @@ const Search = ({
                 className={`flex items-center gap-2 xs:flex-col xs:items-start`}
               >
                 <p
-                  className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xs`}
+                  className={`text-sm text-gray-700 dark:text-gray-50 font-medium xs:text-xs`}
                 >
                   Mood:
                 </p>
@@ -161,7 +161,7 @@ const Search = ({
                 className={`flex items-center gap-2 xs:flex-col xs:items-start`}
               >
                 <p
-                  className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xs`}
+                  className={`text-sm text-gray-700 dark:text-gray-50 font-medium xs:text-xs`}
                 >
                   Filter:
                 </p>
@@ -185,7 +185,7 @@ const Search = ({
                 className={`flex items-center gap-2 xs:flex-col xs:items-start`}
               >
                 <p
-                  className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xs`}
+                  className={`text-sm text-gray-700 dark:text-gray-50 font-medium xs:text-xs`}
                 >
                   Created
                 </p>

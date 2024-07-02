@@ -85,7 +85,7 @@ const SearchResult = ({
         <div className={`flex flex-col items-start gap-5 w-full`}>
           <Title size={`h1`} text={`Playlists result`} />
           <div
-            className={`flex items-start gap-2 text-md text-gray-500 dark:text-warmGray-50`}
+            className={`flex items-start gap-2 text-md text-gray-500 dark:text-gray-50`}
           >
             <p>{searchPlaylistData ? searchPlaylistData.length : 0}</p>
             <p> results</p>
@@ -108,7 +108,7 @@ const SearchResult = ({
         <div className={`flex flex-col items-start gap-5 w-full`}>
           <Title size={`h1`} text={`Categories result`} />
           <div
-            className={`flex items-start gap-2 text-md text-gray-500 dark:text-warmGray-50`}
+            className={`flex items-start gap-2 text-md text-gray-500 dark:text-gray-50`}
           >
             <p>{searchCategoryData ? searchCategoryData.length : 0}</p>
             <p> results</p>
@@ -128,7 +128,7 @@ const SearchResult = ({
         <div className={`flex flex-col items-start gap-5 w-full`}>
           <Title size={`h1`} text={`Users result`} />
           <div
-            className={`flex items-start gap-2 text-md text-gray-500 dark:text-warmGray-50`}
+            className={`flex items-start gap-2 text-md text-gray-500 dark:text-gray-50`}
           >
             <p>{searchUserData ? searchUserData.length : 0}</p>
             <p> results</p>

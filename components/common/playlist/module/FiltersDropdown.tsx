@@ -32,17 +32,17 @@ const FiltersDropdown = ({
           <p
             className={`${
               customStyles || "text-sm font-medium"
-            } whitespace-nowrap text-gray-700 dark:text-warmGray-50 xs:text-xs`}
+            } whitespace-nowrap text-gray-700 dark:text-gray-50 xs:text-xs`}
           >
             {selectedFilterLabel || selectedFilter}
           </p>
           {isDropdownOpen ? (
             <ChevronUpIcon
-              className={`w-5 h-5 text-gray-700 dark:text-warmGray-50`}
+              className={`w-5 h-5 text-gray-700 dark:text-gray-50`}
             />
           ) : (
             <ChevronDownIcon
-              className={`w-5 h-5 text-gray-700 dark:text-warmGray-50`}
+              className={`w-5 h-5 text-gray-700 dark:text-gray-50`}
             />
           )}
         </div>
@@ -63,7 +63,7 @@ const FiltersDropdown = ({
                   setIsDropdownOpen(false);
                 }}
                 key={`filter_${filter}_${index}`}
-                className={`w-full px-4 py-2 text-xs text-gray-700 dark:text-warmGray-50 whitespace-nowrap hover:bg-gray-100 hover:text-primary ${
+                className={`w-full px-4 py-2 text-xs text-gray-700 dark:text-gray-50 whitespace-nowrap hover:bg-gray-100 hover:text-primary ${
                   selectedFilter === filter &&
                   `bg-primary text-white hover:text-white`
                 }`}

@@ -12,6 +12,7 @@ import usePlayerState from "@/components/player/usePlayerState";
 import { useSession } from "next-auth/react";
 import { UserSessionType } from "@/libs/types/userType";
 import { useModalStore } from "@/libs/store";
+import { cn } from "@/libs/utils/client/ui";
 
 const PlayerRightControl = () => {
   const listDropdownRef = React.useRef<HTMLDivElement>(null);
@@ -98,9 +99,12 @@ const PlayerRightControl = () => {
 
   return (
     <div
-      className={`flex items-center justify-evenly gap-2 xs:justify-start xs:flex-1 xs:gap-3`}
+      className={cn(
+        `flex items-center justify-start gap-3`,
+        `lg:justify-evenly lg:flex-grow-0 lg:gap-2`,
+      )}
     >
-      {/*<button className={`xs:hidden`}>*/}
+      {/*<button className={`hidden lg:block`}>*/}
       {/*  <Image*/}
       {/*    src={`/image/player/repeat.svg`}*/}
       {/*    width={24}*/}
@@ -109,7 +113,7 @@ const PlayerRightControl = () => {
       {/*  />*/}
       {/*</button>*/}
       <div
-        className={`album_cover relative w-8 h-8 bg-gray-300 overflow-hidden  xs:hidden`}
+        className={`album_cover relative w-8 h-8 bg-gray-300 overflow-hidden  hidden lg:block`}
       >
         <Image
           className={`object-cover rounded`}
@@ -156,15 +160,15 @@ const PlayerRightControl = () => {
           {currentSong?.title}
         </p>
         <p
-          className={`sideways-scroll text-xs text-gray-600 dark:text-gray-50 font-normal xs:hidden`}
+          className={`sideways-scroll text-xs text-gray-600 dark:text-gray-50 font-normal hidden lg:block`}
         >
           {currentSong?.artist}
         </p>
       </div>
-      <div className={`flex items-center gap-2 xs:order-2 xs:flex-2`}>
+      <div className={`flex items-center gap-2 order-2 flex-2`}>
         <button
           aria-label={`like playlist`}
-          className={`xs:hidden`}
+          className={`hidden lg:block`}
           onClick={handleLikePlaylist}
         >
           {!selectedPlayList?.isSongTable && isPlaylistLiked && (
@@ -186,7 +190,11 @@ const PlayerRightControl = () => {
             />
           )}
         </button>
-        <button aria-label={`like song`} onClick={handleLikeSong}>
+        <button
+          aria-label={`like song`}
+          onClick={handleLikeSong}
+          className={`ml-2 lg:ml-0`}
+        >
           {isSongLiked ? (
             <SolidHeartIcon className={`text-primary`} width={24} height={24} />
           ) : (

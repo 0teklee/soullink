@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { formatPathName } from "@/libs/utils/client/formatter";
 import { PlaylistType } from "@/libs/types/song&playlistType";
+import { cn } from "@/libs/utils/client/ui";
 
 const FullImageCardItem = ({ playlist }: { playlist: PlaylistType }) => {
   const { title, author, description, coverImage, songs, likedBy } = playlist;
@@ -28,24 +29,29 @@ const FullImageCardItem = ({ playlist }: { playlist: PlaylistType }) => {
               fill={true}
             />
             <div
-              className={`absolute top-0 left-0 flex items-center justify-start w-full h-full py-12 xs:px-4 xs:justify-center xl:px-24 3xl:px-48 desktop:px-[400px] z-[3] bg-black bg-opacity-40 opacity-0 hover:opacity-100`}
+              className={cn(
+                `absolute top-0 left-0`,
+                `flex items-center justify-center lg:justify-start`,
+                `w-full h-full py-12 px-4 lg:px-12 xl:px-24 3xl:px-48 desktop:px-[400px]`,
+                `z-[3] bg-black bg-opacity-40 opacity-0 hover:opacity-100`,
+              )}
             >
               <div
-                className={`flex flex-col items-start gap-3 xs:items-center xs:gap-0`}
+                className={`flex flex-col items-center lg:items-start gap-3 xs:gap-0`}
               >
                 <div
-                  className={`flex flex-col items-start gap-1 w-full xs:items-center xs:gap-0 text-white`}
+                  className={`flex flex-col items-center lg:items-start gap-1 w-full  xs:gap-0 text-white`}
                 >
                   {(isAuthorEditor || likedByEditorUser?.length > 0) && (
                     <div className={`flex items-center justify-start gap-2 `}>
-                      <div className={`relative w-5 h-5`}>
+                      <div className={`relative w-5 h-5 invert`}>
                         <Image
                           src={`/soullink_logo.png`}
                           alt={`author`}
                           fill={true}
                         />
                       </div>
-                      <p className={`text-base text-primary font-medium`}>
+                      <p className={`text-base text-white font-medium`}>
                         {`Featured by ${isAuthorEditor ? nickname : "editors"}`}
                       </p>
                     </div>
@@ -91,7 +97,7 @@ const FullImageCardItem = ({ playlist }: { playlist: PlaylistType }) => {
                   </div>
                 </div>
                 <div
-                  className={`flex flex-col justify-start items-start gap-0.5`}
+                  className={`flex flex-col justify-start items-start gap-0.5 text-white`}
                 >
                   <p>{description}</p>
                 </div>

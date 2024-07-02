@@ -27,7 +27,7 @@ const HeaderMenuItem = ({
       className={clsx(
         `flex flex-col items-start gap-2`,
         `w-full max-w-2xl`,
-        `dark:bg-black`,
+        `dark:bg-black dark:text-gray-50`,
       )}
     >
       {isLogin && (
@@ -52,9 +52,15 @@ const HeaderMenuItem = ({
           <HeaderButton onClick={async () => await login()}>Login</HeaderButton>
         </>
       )}
-      <HeaderLink href={`/discover`}>Discover</HeaderLink>
-      <HeaderLink href={`/trending`}>Trending</HeaderLink>
-      <HeaderLink href={`/search`}>Search</HeaderLink>
+      <HeaderLink className={`lg:hidden`} href={`/discover`}>
+        Discover
+      </HeaderLink>
+      <HeaderLink className={`lg:hidden`} href={`/trending`}>
+        Trending
+      </HeaderLink>
+      <HeaderLink className={`lg:hidden`} href={`/search`}>
+        Search
+      </HeaderLink>
       {isLogin && (
         <HeaderButton onClick={async () => await logout()}>Logout</HeaderButton>
       )}

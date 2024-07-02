@@ -236,7 +236,7 @@ const PlaylistCreateTemplate = () => {
             )}
           </div>
           <p
-            className={`mb-3 text-gray-500 dark:text-warmGray-50 text-base font-normal`}
+            className={`mb-3 text-gray-500 dark:text-gray-50 text-base font-normal`}
           >
             add cover
           </p>

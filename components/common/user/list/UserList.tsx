@@ -11,7 +11,7 @@ const UserList = ({ users }: { users: UserType[] }) => {
     <div className={`flex flex-col items-start w-full max-w-lg`}>
       {users.map((user, index) => (
         <div
-          className={`flex items-center justify-between gap-3 w-full py-1 group border-b border-dotted border-b-gray-300 text-gray-700 dark:text-warmGray-50 cursor-pointer hover:bg-gray-100`}
+          className={`flex items-center justify-between gap-3 w-full py-1 group border-b border-dotted border-b-gray-300 text-gray-700 dark:text-gray-50 cursor-pointer hover:bg-gray-100`}
           key={`${user.nickname}_${index}`}
           onClick={() => router.push(`/user/${user.nickname}`)}
         >

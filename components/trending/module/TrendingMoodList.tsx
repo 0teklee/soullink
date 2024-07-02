@@ -69,7 +69,7 @@ const TrendingMoodList = () => {
                 setSelectedMood(name as PlaylistMoodType);
               }}
               key={`${name}-${index}`}
-              className={`flex items-center justify-start gap-1 w-full px-2 py-1.5 text-xs rounded text-gray-700 dark:text-warmGray-50 ${formatMoodFontColor(
+              className={`flex items-center justify-start gap-1 w-full px-2 py-1.5 text-xs rounded text-gray-700 dark:text-gray-50 ${formatMoodFontColor(
                 name as PlaylistMoodType,
                 true,
               )}   font-semibold cursor-pointer `}

@@ -109,9 +109,7 @@ const TrendingCategoriesList = () => {
         />
       </div>
       <div className={`flex flex-wrap items-center gap-2 mb-2`}>
-        <p
-          className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium`}
-        >
+        <p className={`text-sm text-gray-700 dark:text-gray-50 font-medium`}>
           Categories :{" "}
         </p>
         <FiltersList
@@ -125,12 +123,12 @@ const TrendingCategoriesList = () => {
           }}
         >
           <MagnifyingGlassIcon
-            className={`w-5 h-5 text-md text-gray-500 dark:text-warmGray-50 font-medium `}
+            className={`w-5 h-5 text-md text-gray-500 dark:text-gray-50 font-medium `}
           />
         </button>
         {isSearchOn && (
           <input
-            className={`min-w-lg p-1 text-sm text-gray-700 dark:text-warmGray-50 rounded-lg bg-white outline-none border border-gray-300 
+            className={`min-w-lg p-1 text-sm text-gray-700 dark:text-gray-50 rounded-lg bg-white outline-none border border-gray-300 
               focus:border-primary focus:ring-1 focus:ring-primary focus:ring-opacity-50
               `}
             type={`text`}

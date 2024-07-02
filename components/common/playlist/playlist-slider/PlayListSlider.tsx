@@ -28,11 +28,6 @@ const PlayListSlider = ({ playlists }: { playlists: PlaylistType[] }) => {
               spaceBetween: 10,
               width: 400,
             },
-            "1920": {
-              slidesPerView: 4,
-              spaceBetween: 180,
-              width: 800,
-            },
           }}
         >
           {playlists.map((item, index) => {

@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSetPlaylistFromSongTable } from "@/libs/utils/hooks/useSetPlaylistFromSongTable";
 import useSongLike from "@/libs/utils/hooks/useMutateSongLike";
+import { cn } from "@/libs/utils/client/ui";
 
 const TableItem = ({
   song,
@@ -92,9 +93,13 @@ const TableItem = ({
           : undefined
       }
       key={`song_item_${song.title}_${index}`}
-      className={`text-gray-500 dark:text-warmGray-50 text-base xs:text-sm border-b-[1px] border-gray-200 hover:text-white hover:bg-black hover:bg-opacity-30 cursor-pointer`}
+      className={cn(
+        `text-gray-500 dark:text-gray-50 text-base text-xs lg:text-base`,
+        `border-b-[1px] border-gray-200 `,
+        `hover:text-white hover:bg-black hover:bg-opacity-30 cursor-pointer`,
+      )}
     >
-      <td className={`py-2 pl-2 xs:hidden`}>{index + 1}</td>
+      <td className={`py-2 pl-2 hidden lg:table-cell`}>{index + 1}</td>
       <td className={`py-2`}>
         <div className={`flex flex-col gap-0.5`}>
           <div className={`max-w-lg overflow-x-hidden md:max-w-[200px]`}>
@@ -138,8 +143,8 @@ const TableItem = ({
               </button>
             </div>
           </td>
-          <td className={`py-2 md:hidden`}>{song.playedCount}</td>
-          <td className={`py-2 xs:hidden`}>
+          <td className={`py-2 hidden lg:table-cell`}>{song.playedCount}</td>
+          <td className={`py-2 hidden lg:table-cell`}>
             {isNotCreate && playlist && (
               <button
                 className={`relative w-6 h-6`}
@@ -150,11 +155,11 @@ const TableItem = ({
               >
                 {isSongPlaying ? (
                   <PauseIcon
-                    className={`w-full h-full text-gray-500 dark:text-warmGray-50 hover:text-primary`}
+                    className={`w-full h-full text-gray-500 dark:text-gray-50 hover:text-primary`}
                   />
                 ) : (
                   <PlayIcon
-                    className={`w-full h-full text-gray-500 dark:text-warmGray-50 hover:text-primary`}
+                    className={`w-full h-full text-gray-500 dark:text-gray-50 hover:text-primary`}
                   />
                 )}
               </button>
@@ -163,9 +168,9 @@ const TableItem = ({
         </>
       )}
       {isCreate && !isCreateFavorite && setSongList && (
-        <td className={`flex items-center py-2 xs:hidden`}>
+        <td className={`hidden lg:flex items-center py-2`}>
           <button
-            className={`relative top-0.5 text-gray-500 dark:text-warmGray-50 text-sm font-medium`}
+            className={`relative top-0.5 text-gray-500 dark:text-gray-50 text-sm font-medium`}
             onClick={() => {
               setSongList((prev) => prev.filter((_, idx) => idx !== index));
             }}
@@ -180,9 +185,9 @@ const TableItem = ({
         </td>
       )}
       {isCreate && isCreateFavorite && setSongList && (
-        <td className={`flex items-center py-2 xs:hidden`}>
+        <td className={`hidden lg:flex items-center py-2`}>
           <button
-            className={`relative top-0.5 text-gray-500 dark:text-warmGray-50 text-sm font-medium`}
+            className={`relative top-0.5 text-gray-500 dark:text-gray-50 text-sm font-medium`}
             onClick={() => {
               setSongList((prev) => [...prev, song]);
             }}

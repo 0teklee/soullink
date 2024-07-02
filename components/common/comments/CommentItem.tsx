@@ -59,9 +59,7 @@ const CommentItem = ({
   const customFontColor900 = fontColor
     ? ""
     : "text-gray-900 dark:text-warmGray-100";
-  const customFontColor500 = fontColor
-    ? ""
-    : "text-gray-500 dark:text-warmGray-50";
+  const customFontColor500 = fontColor ? "" : "text-gray-500 dark:text-gray-50";
 
   const { mutate: likeCommentMutate } = useMutation({
     mutationFn: () => postLikeComment({ commentId, userId: userId || "" }),
@@ -172,7 +170,7 @@ const CommentItem = ({
                   />
                 ) : (
                   <HeartIcon
-                    className={`w-4 h-4 text-gray-500 dark:text-warmGray-50 hover:text-primary
+                    className={`w-4 h-4 text-gray-500 dark:text-gray-50 hover:text-primary
             `}
                   />
                 )}
@@ -185,7 +183,7 @@ const CommentItem = ({
                     }
                   }}
                 >
-                  <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+                  <p className={`text-xs text-gray-500 dark:text-gray-50`}>
                     {likedBy.length}
                   </p>
                 </button>

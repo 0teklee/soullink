@@ -133,7 +133,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
               />
               <p
                 className={`text-sm ${
-                  fontColor ? "" : "text-gray-500 dark:text-warmGray-50"
+                  fontColor ? "" : "text-gray-500 dark:text-gray-50"
                 }`}
               >
                 Edit playlist
@@ -143,7 +143,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           {/*<button className={`relative w-5 h-5`}>*/}
           {/*  <ShareIcon*/}
           {/*    className={`w-5 h-5 ${*/}
-          {/*      fontColor || "text-gray-700 dark:text-warmGray-50"*/}
+          {/*      fontColor || "text-gray-700 dark:text-gray-50"*/}
           {/*    } font-medium`}*/}
           {/*  />*/}
           {/*</button>*/}
@@ -154,7 +154,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
           >
             <ArrowDownTrayIcon
               className={`w-5 h-5 ${
-                fontColor || "text-gray-700 dark:text-warmGray-50"
+                fontColor || "text-gray-700 dark:text-gray-50"
               } font-medium`}
             />
           </button>
@@ -189,7 +189,7 @@ const DetailTemplate = ({ id, userId }: { id: string; userId?: string }) => {
         className={`relative flex items-center justify-center w-screen h-full overflow-hidden`}
       >
         <div
-          className={`relative xs:w-[300px] xs:h-[300px] 3xl:w-[500px] 3xl:h-[500px] desktop:w-[800px] desktop:h-[800px] z-1`}
+          className={`relative w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] desktop:w-[800px] desktop:h-[800px] z-1`}
         >
           <Image
             className={`object-cover z-[2]`}

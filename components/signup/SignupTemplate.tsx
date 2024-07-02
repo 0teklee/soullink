@@ -153,7 +153,7 @@ const SignupTemplate = () => {
               )}
             </div>
             <p
-              className={`absolute -bottom-5 text-gray-500 dark:text-warmGray-50 text-xs whitespace-nowrap`}
+              className={`absolute -bottom-5 text-gray-500 dark:text-gray-50 text-xs whitespace-nowrap`}
             >
               Add profile picture
             </p>
@@ -161,14 +161,14 @@ const SignupTemplate = () => {
           <div className={`flex flex-col items-start gap-3 w-full xs:max-w-xl`}>
             <div className={`flex flex-col items-start gap-1 w-full`}>
               <p
-                className={`text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
+                className={`text-gray-700 dark:text-gray-50 font-medium xs:text-xl xs:font-semibold`}
               >
                 Email
               </p>
               <p className={`text-xs text-gray-400 font-semibold`}>*required</p>
               <input
                 type={`text`}
-                className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+                className={`w-full p-2 text-gray-500 dark:text-gray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
                 maxLength={20}
                 placeholder={`email`}
                 value={emailValue}
@@ -188,7 +188,7 @@ const SignupTemplate = () => {
             </div>
             <div className={`flex flex-col items-start gap-1 w-full `}>
               <p
-                className={`text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
+                className={`text-gray-700 dark:text-gray-50 font-medium xs:text-xl xs:font-semibold`}
               >
                 Nickname
               </p>
@@ -207,7 +207,7 @@ const SignupTemplate = () => {
                     return event.target.value;
                   },
                 })}
-                className={`w-full p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+                className={`w-full p-2 text-gray-500 dark:text-gray-50 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
                 maxLength={20}
                 placeholder={`@nickname`}
                 value={nicknameValue}
@@ -215,7 +215,7 @@ const SignupTemplate = () => {
                   resetTimer(timer);
                 }}
               />
-              <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+              <p className={`text-xs text-gray-500 dark:text-gray-50`}>
                 {nicknameValue.length} / {20}
               </p>
               {!isDuplicateLoading && isDuplicateValue !== null && (
@@ -238,7 +238,7 @@ const SignupTemplate = () => {
                 <div
                   className={`flex items-center justify-start gap-2 whitespace-nowrap`}
                 >
-                  <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+                  <p className={`text-xs text-gray-500 dark:text-gray-50`}>
                     checking...
                   </p>
                   <Loading size={20} />
@@ -251,7 +251,7 @@ const SignupTemplate = () => {
           <Title size={`h2`} text={`Bio`} />
           <p className={`text-xs text-gray-300`}>*required</p>
           <textarea
-            className={`w-full max-w-4xl min-h-[100px] p-2 text-gray-500 dark:text-warmGray-50 bg-white border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
+            className={`w-full max-w-4xl min-h-[100px] p-2 text-gray-500 dark:text-gray-50 bg-white border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
             maxLength={120}
             placeholder={`Tell us about yourself`}
             {...register("bio", {
@@ -260,7 +260,7 @@ const SignupTemplate = () => {
               maxLength: 120,
             })}
           />
-          <p className={`text-xs text-gray-500 dark:text-warmGray-50`}>
+          <p className={`text-xs text-gray-500 dark:text-gray-50`}>
             {bioValue.length} / {120}
           </p>
           {errors.bio && (
@@ -276,7 +276,7 @@ const SignupTemplate = () => {
           </div>
           <div className={`flex flex-col items-start gap-2 w-full max-w-sm`}>
             <p
-              className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
+              className={`text-sm text-gray-700 dark:text-gray-50 font-medium xs:text-xl xs:font-semibold`}
             >
               website
             </p>
@@ -292,7 +292,7 @@ const SignupTemplate = () => {
           </div>
           <div className={`flex flex-col items-start gap-2 w-full max-w-sm`}>
             <p
-              className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
+              className={`text-sm text-gray-700 dark:text-gray-50 font-medium xs:text-xl xs:font-semibold`}
             >
               instagram
             </p>
@@ -308,7 +308,7 @@ const SignupTemplate = () => {
           </div>
           <div className={`flex flex-col items-start gap-2 w-full max-w-sm`}>
             <p
-              className={`text-sm text-gray-700 dark:text-warmGray-50 font-medium xs:text-xl xs:font-semibold`}
+              className={`text-sm text-gray-700 dark:text-gray-50 font-medium xs:text-xl xs:font-semibold`}
             >
               twitter
             </p>

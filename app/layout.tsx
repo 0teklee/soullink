@@ -42,9 +42,10 @@ export default function RootLayout({
               <Header />
               <main
                 className={clsx(
-                  "min-h-screen bg-white",
-                  "xs:my-10 py-12 xs:pt-4 xs:pb-12 xs:px-4 lg:px-12 2xl:px-24 desktop:px-48",
-                  "dark:bg-black dark:text-warmGray-50 dark:[&__input]:text-gray-700 dark:[&__textarea]:text-gray-700",
+                  "min-h-screen",
+                  "my-10 py-12 pt-4 pb-12 sm:px-4 lg:px-24 desktop:px-48",
+                  "overflow-x-hidden",
+                  "bg-white dark:bg-black dark:text-gray-50 dark:[&__input]:text-gray-700 dark:[&__textarea]:text-gray-700",
                 )}
               >
                 <ReactQueryErrorBoundary isLayout={true}>
