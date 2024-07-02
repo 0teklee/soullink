@@ -5,13 +5,14 @@ import { formatSongResponse } from "@/libs/utils/server/formatter";
 export async function GET(req: NextRequest) {
   const id = new URL(req.url).searchParams.get("id");
   const searchId = id ? (JSON.parse(id) as string[]) : null;
-  const whereParam = searchId
+
+  const whereParam = !!searchId
     ? {
         id: {
           in: searchId,
         },
       }
-    : {};
+    : { playedCount: { gte: 1 } };
 
   try {
     const trendingPlaylist = await prisma.playlist

@@ -34,18 +34,7 @@ export async function GET(req: NextRequest) {
             },
           ],
         },
-        orderBy: [
-          {
-            createdAt: "desc",
-          },
-          {
-            playedTime: "desc",
-          },
-          {
-            likedCount: "desc",
-          },
-          order,
-        ],
+        orderBy: order,
         select: {
           id: true,
           title: true,
@@ -128,7 +117,7 @@ export async function GET(req: NextRequest) {
       },
     );
   } catch (err) {
-    console.log("server error: ", err);
+    console.log("main trending server error: ", err);
     return new NextResponse(JSON.stringify({ message: "fail" }), {
       status: 500,
       statusText: "Internal Server Error",

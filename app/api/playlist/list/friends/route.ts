@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     // const now = dayjs();
     // const lastweek = now.subtract(1, "week");
     const userIdQuery = new URL(req.url).searchParams.get("userId");
+
     const userIdWhere = userIdQuery
       ? {
           OR: [
@@ -83,15 +84,17 @@ export async function GET(req: NextRequest) {
       .findMany({
         take: 20,
         where: userIdWhere,
-        orderBy: [
-          { playedCount: "desc" },
-          {
-            recentPlay: {
-              _count: "desc",
-            },
-          },
-          { likedCount: "desc" },
-        ],
+        orderBy: userIdQuery
+          ? [
+              { playedCount: "desc" },
+              {
+                recentPlay: {
+                  _count: "desc",
+                },
+              },
+              { likedCount: "desc" },
+            ]
+          : { createdAt: "desc" },
         select: {
           id: true,
           title: true,
@@ -154,10 +157,13 @@ export async function GET(req: NextRequest) {
     );
   } catch (err) {
     console.log("list/friends error: ", err);
-    return new NextResponse(JSON.stringify({ message: "fail" }), {
-      status: 500,
-      statusText: "Internal Server Error",
-    });
+    return new NextResponse(
+      JSON.stringify({ message: "fail", mainData: { friendsList: [] } }),
+      {
+        status: 500,
+        statusText: "Internal Server Error",
+      },
+    );
   }
 }
 
