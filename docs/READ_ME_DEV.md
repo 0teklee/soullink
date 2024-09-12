@@ -2,8 +2,7 @@
 **2023 06 ~ 2024** 
 ### Made by 0teklee
 
-### Demo
-https://github.com/0teklee/soullink/assets/89988500/8d10f6de-d098-41a9-a1ae-e040da3a7780
+<img width="1455" alt="image" src="https://github.com/user-attachments/assets/a6ccd652-c45c-4ff0-b902-9a73e333bbed">
 
 
 
